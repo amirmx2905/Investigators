@@ -1,4 +1,4 @@
-# Investigadores
+# Investigators
 
 A web platform connecting researchers in Mexico to collaborate on projects, articles, and events. Designed as a specialized networking tool for the CONACYT community, it helps researchers find collaborators based on expertise, fostering interdisciplinary cooperation.
 
@@ -15,7 +15,7 @@ This guide will help you set up the project on either Mac or Windows.
 #### 1. Clone the Repository
 ```bash
 git clone https://github.com/amirmx2905/Investigators.git
-cd investigators
+cd Investigators
 ```
 
 #### 2. Create a Virtual Environment
@@ -57,7 +57,7 @@ createdb investigators
 Create a `.env` file in the project root with the following content:
 ```env
 DB_ENGINE=django.db.backends.postgresql
-DB_NAME=investigadores
+DB_NAME=investigators
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
