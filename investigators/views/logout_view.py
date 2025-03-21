@@ -1,12 +1,11 @@
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def logout_view(request):
-    """
-    Vista para cerrar la sesión del usuario actual.
-    Redirecciona a la página de login después de cerrar sesión.
-    """
-    logout(request)
-    messages.success(request, 'Has cerrado sesión correctamente.')
-    return redirect('login')
+    request.session.flush()
+    response = HttpResponseRedirect(reverse('login'))
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+
+    return response

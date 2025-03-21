@@ -1,3 +1,4 @@
+<!-- filepath: /Users/amirmx2905/Desktop/Investigators/Investigators/investigators/templates/base.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -79,19 +80,21 @@
                     </div>
                 </div>
                 
-                {% if user.is_authenticated %}
+                {% if request.session.usuario_id %}
                 <div class="block">
                     <div class="ml-4 flex items-center space-x-4">
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="nav-link flex items-center">
-                                <span>{{ user.username }}</span>
+                                <span>Opciones</span>
                                 <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-gray-800 ring-1 ring-black ring-opacity-5">
-                                <a href="{% url 'admin:index' %}" class="dropdown-item">Panel de administración</a>
+                                <!--
+                                <a href="" class="dropdown-item">Panel de administración</a>
                                 <div class="border-t border-gray-700 my-1"></div>
+                                -->    
                                 <a href="{% url 'logout' %}" class="dropdown-item">Cerrar sesión</a>
                             </div>
                         </div>
@@ -111,7 +114,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
                 <div class="p-6">
-                    <!-- Aquí eliminamos el bloque de mensajes estáticos -->
                     {% block content %}{% endblock %}
                 </div>
             </div>
@@ -164,7 +166,6 @@
             }, duration);
         }
         
-        // Procesar mensajes de Django al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             {% if messages %}
                 {% for message in messages %}
