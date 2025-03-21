@@ -152,3 +152,8 @@ pip freeze
 
 ## License
 This project is licensed under the MIT License - see the `LICENSE` file for details.
+
+
+## Authors
+- [@amirmx2905](https://github.com/amirmx2905)
+- [@WatchfulInk](https://github.com/WatchfulInk)
