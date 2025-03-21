@@ -8,6 +8,11 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         try:
             investigador = Investigador.objects.get(correo=instance.email)
-            Usuario.objects.create(user=instance, investigador=investigador)  # Cambiar aquí
+            Usuario.objects.create(
+                nombre_usuario=instance.username,
+                user=instance,
+                rol='investigador',
+                id_investigador=investigador.id
+            )
         except Investigador.DoesNotExist:
             pass

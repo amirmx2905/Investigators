@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+import datetime
 
 class Unidad(models.Model):
     nombre = models.CharField(max_length=100)
@@ -33,7 +33,7 @@ class NivelEducacion(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"Nivel en {self.especialidad}"
+        return f"Nivel de {self.especialidad}"
     
     class Meta:
         verbose_name_plural = "Niveles de Educación"
@@ -99,7 +99,7 @@ class JefeArea(models.Model):
     activo = models.BooleanField(default=True)
     
     def __str__(self):
-        return f"{self.investigador} - {self.area}"
+        return f"{self.investigador} - Jefe de {self.area}"
     
     class Meta:
         verbose_name_plural = "Jefes de Área"
@@ -109,6 +109,9 @@ class Estudiante(models.Model):
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
     investigador = models.ForeignKey(Investigador, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
+    correo = models.EmailField(max_length=100, null=True, blank=True)
+    celular = models.CharField(max_length=20, blank=True, null=True)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
     
@@ -255,14 +258,91 @@ class DetEvento(models.Model):
         unique_together = ('evento', 'investigador')
 
 class Usuario(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)  # Permite valores nulos por ahora
-    investigador = models.OneToOneField(Investigador, on_delete=models.CASCADE)
+    ROLES = (
+        ('admin', 'Administrador'),
+        ('investigador', 'Investigador'),
+        ('estudiante', 'Estudiante'),
+        ('invitado', 'Invitado'),
+    )
+    
+    nombre_usuario = models.CharField(max_length=50, unique=True, default="usuario_temporal")
+    contrasena = models.CharField(max_length=255, null=True, blank=True)
+    rol = models.CharField(max_length=15, choices=ROLES, default='invitado')
+    id_investigador = models.IntegerField(null=True, blank=True)
+    id_estudiante = models.IntegerField(null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     ultimo_acceso = models.DateTimeField(null=True, blank=True)
     intentos_login = models.IntegerField(default=0)
     activo = models.BooleanField(default=True)
-    
+
     def __str__(self):
-        return f"Usuario de {self.investigador.nombre}"
+        return self.nombre_usuario
     
     class Meta:
         verbose_name_plural = "Usuarios"
+    
+    def get_perfil(self):
+        """Obtiene el perfil asociado según el rol del usuario"""
+        if self.rol == 'investigador' and self.id_investigador:
+            try:
+                return Investigador.objects.get(id=self.id_investigador)
+            except Investigador.DoesNotExist:
+                return None
+        elif self.rol == 'estudiante' and self.id_estudiante:
+            try:
+                return Estudiante.objects.get(id=self.id_estudiante)
+            except Estudiante.DoesNotExist:
+                return None
+        return None
+    
+    def get_nombre(self):
+        """Obtiene el nombre del usuario desde su perfil vinculado"""
+        perfil = self.get_perfil()
+        if perfil:
+            return perfil.nombre
+        return self.nombre_usuario  # Si no hay perfil, usa el nombre de usuario
+    
+    def get_correo(self):
+        """Obtiene el correo del usuario desde su perfil vinculado"""
+        perfil = self.get_perfil()
+        if perfil:
+            return perfil.correo
+        return None
+    
+    def check_password(self, raw_password):
+        """
+        Verifica si la contraseña ingresada coincide con la almacenada
+        """
+        from django.contrib.auth.hashers import check_password
+        return check_password(raw_password, self.contrasena)
+    
+    def set_password(self, raw_password):
+        """
+        Establece una nueva contraseña hasheada
+        """
+        from django.contrib.auth.hashers import make_password
+        self.contrasena = make_password(raw_password)
+    
+    def actualizar_ultimo_acceso(self):
+        """
+        Actualiza la fecha del último acceso al momento actual
+        """
+        self.ultimo_acceso = datetime.datetime.now()
+        self.save(update_fields=['ultimo_acceso'])
+    
+    def incrementar_intentos_login(self):
+        """
+        Incrementa el contador de intentos de login fallidos
+        y desactiva la cuenta si supera el límite
+        """
+        self.intentos_login += 1
+        if self.intentos_login >= 5:
+            self.activo = False
+        self.save(update_fields=['intentos_login', 'activo'])
+    
+    def resetear_intentos_login(self):
+        """
+        Resetea el contador de intentos de login fallidos
+        """
+        self.intentos_login = 0
+        self.save(update_fields=['intentos_login'])
