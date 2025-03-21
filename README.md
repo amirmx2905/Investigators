@@ -14,8 +14,8 @@ This guide will help you set up the project on either Mac or Windows.
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/investigadores.git
-cd investigadores
+git clone https://github.com/amirmx2905/Investigators.git
+cd investigators
 ```
 
 #### 2. Create a Virtual Environment
@@ -43,13 +43,13 @@ pip install -r requirements.txt
 
 **Mac/Linux:**
 ```bash
-createdb investigadores
+createdb investigators
 ```
 
 **Windows:**
 Use pgAdmin or run:
 ```powershell
-createdb investigadores
+createdb investigators
 ```
 
 **Configure environment variables:**
