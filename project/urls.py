@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from investigators.views import login_view, home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('investigators.urls')),
+    path('', login_view, name='login'),  # La vista de login será la raíz (/)
+    path('home/', home_view, name='home'),  # La vista de home estará en /home
+    path('', include('investigators.urls')),  # Incluye las URLs de la app
 ]

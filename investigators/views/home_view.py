@@ -1,14 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
+from investigators.decorators import login_required
 
-@login_required  # Esta decoración asegura que solo usuarios autenticados puedan acceder
+@login_required
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def home_view(request):
-    """
-    Vista para la página principal después del inicio de sesión.
-    Muestra un dashboard con información relevante para el investigador.
-    """
-    context = {
-        'nombre_usuario': request.user.get_full_name() or request.user.username,
-    }
-    
-    return render(request, 'home.html', context)
+    return render(request, 'home.html', {'usuario_nombre': request.session['usuario_nombre']})

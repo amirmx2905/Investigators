@@ -1,44 +1,34 @@
-from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.utils import timezone
 from django.contrib import messages
+from django.views.decorators.cache import cache_control
+from investigators.models import Usuario
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def login_view(request):
-    """
-    Vista para manejar la autenticación de usuarios mediante el sistema de autenticación de Django.
-    Actualiza también el último acceso del perfil del investigador asociado.
-    """
+    # Si el usuario ya está autenticado, redirigir al home
+    if 'usuario_id' in request.session:
+        return redirect('home')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                if hasattr(user, 'usuario'):
-                    user.usuario.ultimo_acceso = timezone.now()
-                    user.usuario.intentos_login = 0  
-                    user.usuario.save() 
-                return redirect('home')  # Cambiado de 'admin:index' a 'home'
-            else:
-                messages.error(request, 'Cuenta desactivada. Contacte al administrador.')
-        else:
-            try:
-                from ..models import Usuario
-                perfil = Usuario.objects.get(user__username=username)
-                perfil.intentos_login += 1                
-                if perfil.intentos_login >= 5:
-                    perfil.activo = False
-                    messages.error(request, 'Cuenta bloqueada por múltiples intentos fallidos.')
+
+        try:
+            # Busca al usuario en la base de datos
+            usuario = Usuario.objects.get(nombre_usuario=username)
+
+            # Verifica la contraseña
+            if usuario.check_password(password):
+                if usuario.activo:
+                    # Almacena los datos del usuario en la sesión
+                    request.session['usuario_id'] = usuario.id
+                    request.session['usuario_nombre'] = usuario.nombre_usuario
+                    return redirect('home')
                 else:
-                    messages.error(request, 'Credenciales inválidas. Por favor, intente nuevamente.')
-                
-                perfil.save()
-            except:
-                messages.error(request, 'Credenciales inválidas. Por favor, intente nuevamente.')
-            
-        return render(request, 'login.html', {'username': username})
-    
+                    messages.error(request, 'La cuenta está desactivada. Contacte al administrador.')
+            else:
+                messages.error(request, 'Credenciales inválidas. Por favor, inténtelo de nuevo.')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Credenciales inválidas. Por favor, inténtelo de nuevo.')
+
     return render(request, 'login.html')
