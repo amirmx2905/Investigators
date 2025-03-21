@@ -45,11 +45,30 @@
             .dropdown-item {
                 @apply block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white w-full text-left;
             }
+            /* Estilos para los toast */
+            .toast {
+                @apply fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 transform transition-all duration-500 ease-in-out translate-x-full;
+            }
+            .toast-success {
+                @apply bg-green-800 text-green-100 border border-green-700;
+            }
+            .toast-error {
+                @apply bg-red-800 text-red-100 border border-red-700;
+            }
+            .toast-info {
+                @apply bg-blue-800 text-blue-100 border border-blue-700;
+            }
+            .toast-show {
+                @apply translate-x-0;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+    <!-- Contenedor para los toasts -->
+    <div id="toast-container"></div>
+    
     <!-- Navbar -->
     <nav class="bg-gray-800 border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,10 +92,14 @@
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-gray-800 ring-1 ring-black ring-opacity-5">
                                 <a href="{% url 'admin:index' %}" class="dropdown-item">Panel de administración</a>
                                 <div class="border-t border-gray-700 my-1"></div>
-                                <a href="{% url 'admin:logout' %}" class="dropdown-item">Cerrar sesión</a>
+                                <a href="{% url 'logout' %}" class="dropdown-item">Cerrar sesión</a>
                             </div>
                         </div>
                     </div>
+                </div>
+                {% else %}
+                <div class="block">
+                    <a href="{% url 'login' %}" class="nav-link">Iniciar sesión</a>
                 </div>
                 {% endif %}
             </div>
@@ -88,16 +111,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700">
                 <div class="p-6">
-                    {% if messages %}
-                        <div class="messages mb-6">
-                            {% for message in messages %}
-                                <div class="p-4 mb-4 rounded-md {% if message.tags == 'error' %}bg-red-900 text-red-200{% elif message.tags == 'success' %}bg-green-900 text-green-200{% else %}bg-blue-900 text-blue-200{% endif %}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    
+                    <!-- Aquí eliminamos el bloque de mensajes estáticos -->
                     {% block content %}{% endblock %}
                 </div>
             </div>
@@ -113,6 +127,53 @@
 
     <!-- Alpine.js para el manejo del menú desplegable -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Script para el manejo de toasts -->
+    <script>
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <div class="mr-2">
+                        ${type === 'success' 
+                            ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
+                            : type === 'error' 
+                            ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
+                            : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                        }
+                    </div>
+                    <div>${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Mostrar el toast
+            setTimeout(() => {
+                toast.classList.add('toast-show');
+            }, 10);
+            
+            // Ocultar y eliminar el toast después de la duración especificada
+            setTimeout(() => {
+                toast.classList.remove('toast-show');
+                setTimeout(() => {
+                    container.removeChild(toast);
+                }, 500);
+            }, duration);
+        }
+        
+        // Procesar mensajes de Django al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+                {% for message in messages %}
+                    showToast('{{ message }}', '{{ message.tags }}');
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>
