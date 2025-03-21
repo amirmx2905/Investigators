@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Plataforma de Investigadores{% endblock %}
+
+{% block content %}
+<div class="container mx-auto">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-primary-300">Bienvenido, {{ nombre_usuario }}</h1>
+        <p class="text-gray-400 mt-2">Panel de control de la plataforma de Investigadores CONACYT</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Tarjeta de Proyectos -->
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-white">Proyectos</h2>
+                <span class="bg-primary-700 text-white text-xs px-2 py-1 rounded-full">5 activos</span>
+            </div>
+            <p class="text-gray-400 mb-4">Administra tus proyectos de investigación actuales.</p>
+            <a href="#" class="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center">
+                Ver todos
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Tarjeta de Artículos -->
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-white">Artículos</h2>
+                <span class="bg-primary-700 text-white text-xs px-2 py-1 rounded-full">12 publicados</span>
+            </div>
+            <p class="text-gray-400 mb-4">Revisa y gestiona tus publicaciones académicas.</p>
+            <a href="#" class="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center">
+                Ver todos
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Tarjeta de Eventos -->
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-white">Eventos</h2>
+                <span class="bg-primary-700 text-white text-xs px-2 py-1 rounded-full">2 próximos</span>
+            </div>
+            <p class="text-gray-400 mb-4">Mantente al día con los eventos académicos.</p>
+            <a href="#" class="text-primary-400 hover:text-primary-300 transition-colors inline-flex items-center">
+                Ver todos
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Actividad Reciente -->
+    <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-md">
+        <h2 class="text-xl font-semibold text-white mb-4">Actividad Reciente</h2>
+        <div class="space-y-4">
+            <div class="flex items-start">
+                <div class="bg-gray-700 rounded-full p-2 mr-4">
+                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-300">Se ha añadido un nuevo artículo: <span class="text-primary-300 font-medium">Avances en Inteligencia Artificial</span></p>
+                    <p class="text-gray-500 text-sm">Hace 2 días</p>
+                </div>
+            </div>
+            <div class="flex items-start">
+                <div class="bg-gray-700 rounded-full p-2 mr-4">
+                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-300">Recordatorio: <span class="text-primary-300 font-medium">Conferencia Internacional</span> en 5 días</p>
+                    <p class="text-gray-500 text-sm">Hace 1 semana</p>
+                </div>
+            </div>
+            <div class="flex items-start">
+                <div class="bg-gray-700 rounded-full p-2 mr-4">
+                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-300">Proyecto <span class="text-primary-300 font-medium">Análisis de Datos</span> actualizado con éxito</p>
+                    <p class="text-gray-500 text-sm">Hace 2 semanas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

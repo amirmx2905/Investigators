@@ -1,3 +1,23 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+admin.site.register(Unidad)
+admin.site.register(Area)
+admin.site.register(Especialidad)
+admin.site.register(NivelEducacion)
+admin.site.register(NivelSNII)
+admin.site.register(SNII)
+admin.site.register(Carrera)
+admin.site.register(TipoEstudiante)
+admin.site.register(Investigador)
+admin.site.register(JefeArea)
+admin.site.register(Estudiante)
+admin.site.register(Linea)
+admin.site.register(TipoHerramienta)
+admin.site.register(Herramienta)
+admin.site.register(Proyecto)
+admin.site.register(Articulo)
+admin.site.register(TipoEvento)
+admin.site.register(RolEvento)
+admin.site.register(Evento)
+admin.site.register(Usuario)
