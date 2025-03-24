@@ -1,4 +1,3 @@
-# filepath: /Users/amirmx2905/Desktop/Investigators/Investigators/backend/manage.py
 import os
 import sys
 
