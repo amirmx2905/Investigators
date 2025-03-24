@@ -10,17 +10,19 @@ function Home() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">¡Bienvenido a Investigators!</h1>
-        <p className="text-lg mb-6">Has iniciado sesión correctamente.</p>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Cerrar Sesión
-        </button>
-      </div>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+      <h1 className="text-4xl font-bold mb-6 text-center animate-fade-in">
+        Bienvenido a la Página Principal
+      </h1>
+      <p className="text-lg mb-8 text-gray-400 text-center">
+        Explora las funcionalidades de la aplicación.
+      </p>
+      <button
+        onClick={handleLogout}
+        className="cursor-pointer bg-red-600 text-white py-2 px-6 rounded hover:bg-red-700 transition duration-300 transform hover:scale-105"
+      >
+        Cerrar Sesión
+      </button>
     </div>
   );
 }
