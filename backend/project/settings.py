@@ -1,6 +1,8 @@
 from pathlib import Path
-import os
 from dotenv import load_dotenv
+from datetime import timedelta
+import os
+
 
 load_dotenv()
 
@@ -37,6 +39,19 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 ROOT_URLCONF = 'project.urls'
 
