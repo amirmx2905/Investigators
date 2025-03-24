@@ -1,13 +1,35 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    navigate('/');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("toastShown");
+    navigate("/");
   };
+
+  useEffect(() => {
+    const toastShown = localStorage.getItem("toastShown");
+    if (location.state?.loginSuccess && !toastShown) {
+      toast.success("Inicio de sesión exitoso", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        closeButton: false,
+      });
+      localStorage.setItem("toastShown", "true");
+    }
+  }, [location.state]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
@@ -23,6 +45,7 @@ function Home() {
       >
         Cerrar Sesión
       </button>
+      <ToastContainer />
     </div>
   );
 }
