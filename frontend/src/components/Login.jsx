@@ -12,13 +12,22 @@ function Login() {
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const formRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if device is mobile/small screen
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     if (currentUser) {
       navigate("/home");
     }
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.innerHTML = `
       @keyframes pulseGlow {
         0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
@@ -52,6 +61,13 @@ function Login() {
         opacity: 0.4;
         animation: gridPulse 15s ease infinite;
         will-change: opacity;
+      }
+      
+      @media (max-width: 768px) {
+        .cyber-grid {
+          background-size: 30px 30px;
+          transform: perspective(1000px) rotateX(60deg) scale(3) translateY(-5%);
+        }
       }
       
       @keyframes gridPulse {
@@ -120,6 +136,41 @@ function Login() {
         100% { transform: translate(0, 0); }
       }
       
+      /* Mobile animation adjustments */
+      @media (max-width: 768px) {
+        @keyframes floatLT {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(-50px, 0); }
+          50% { transform: translate(-50px, -50px); }
+          75% { transform: translate(0, -50px); }
+          100% { transform: translate(0, 0); }
+        }
+        
+        @keyframes floatRT {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(50px, 0); }
+          50% { transform: translate(50px, -50px); }
+          75% { transform: translate(0, -50px); }
+          100% { transform: translate(0, 0); }
+        }
+        
+        @keyframes floatLB {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(-50px, 0); }
+          50% { transform: translate(-50px, 50px); }
+          75% { transform: translate(0, 50px); }
+          100% { transform: translate(0, 0); }
+        }
+        
+        @keyframes floatRB {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(50px, 0); }
+          50% { transform: translate(50px, 50px); }
+          75% { transform: translate(0, 50px); }
+          100% { transform: translate(0, 0); }
+        }
+      }
+      
       .glowing-border {
         animation: pulseGlow 4s infinite;
         will-change: box-shadow;
@@ -148,6 +199,12 @@ function Login() {
       
       .field-animation:focus {
         transform: scale(1.01);
+      }
+      
+      @media (max-width: 768px) {
+        .field-animation:focus {
+          transform: scale(1.005);
+        }
       }
       
       .button-hover-effect {
@@ -223,27 +280,31 @@ function Login() {
 
     let lastTime = 0;
     const handleMouseMove = (e) => {
+      if (window.innerWidth < 768) return; // Disable tilt effect on mobile
+
       const now = Date.now();
       if (now - lastTime < 16) return;
       lastTime = now;
-      
+
       if (formRef.current) {
         const rect = formRef.current.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width;
         const y = (e.clientY - rect.top) / rect.height;
-        
+
         setMousePosition({
           x: 0.5 + (x - 0.5) * 0.1,
-          y: 0.5 + (y - 0.5) * 0.1
+          y: 0.5 + (y - 0.5) * 0.1,
         });
       }
     };
-    
-    window.addEventListener('mousemove', handleMouseMove);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("resize", checkMobile);
 
     return () => {
       document.head.removeChild(style);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", checkMobile);
     };
   }, [currentUser, navigate]);
 
@@ -266,7 +327,7 @@ function Login() {
 
     setIsLoading(true);
     const result = await login(username, password);
-    
+
     if (result.success) {
       localStorage.removeItem("toastShown");
       setUsername("");
@@ -300,79 +361,87 @@ function Login() {
   };
 
   const tiltStyle = {
-    transform: `perspective(1000px) 
-                rotateX(${(mousePosition.y - 0.5) * 5}deg) 
-                rotateY(${(mousePosition.x - 0.5) * 5}deg)`
+    transform: isMobile
+      ? "none"
+      : `perspective(1000px) 
+              rotateX(${(mousePosition.y - 0.5) * 5}deg) 
+              rotateY(${(mousePosition.x - 0.5) * 5}deg)`,
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden px-4 py-8">
       {/* Rejilla de fondo cyber */}
       <div className="cyber-grid"></div>
-      
-      {/* Partículas grandes - reducidas a 4 para mejorar rendimiento */}
-      <div className="particle float-lt w-96 h-96 bg-blue-600 top-10 left-10"></div>
-      <div className="particle float-rt w-80 h-80 bg-indigo-600 top-10 right-10"></div>
-      <div className="particle float-rb w-72 h-72 bg-purple-600 bottom-10 right-10"></div>
-      <div className="particle float-lb w-64 h-64 bg-cyan-600 bottom-10 left-10"></div>
-      
-      {/* Partículas medianas */}
-      <div className="small-particle float-zigzag w-32 h-32 bg-blue-400 top-1/3 left-1/5"></div>
-      <div className="small-particle float-diagonal w-28 h-28 bg-indigo-400 bottom-1/3 right-1/5"></div>
-      <div className="small-particle float-diagonal2 w-24 h-24 bg-violet-400 top-1/2 right-1/4"></div>
-      <div className="small-particle float-zigzag w-20 h-20 bg-purple-400 bottom-1/2 left-1/4"></div>
-      
-      {/* Partículas pequeñas - se mantienen 8 para equilibrar rendimiento */}
-      <div className="tiny-particle float-circle w-16 h-16 bg-blue-300 top-1/6 left-1/6"></div>
-      <div className="tiny-particle float-diagonal w-12 h-12 bg-indigo-300 bottom-1/6 right-1/6"></div>
-      <div className="tiny-particle float-diagonal2 w-14 h-14 bg-purple-300 top-2/3 right-1/5"></div>
-      <div className="tiny-particle float-circle w-10 h-10 bg-cyan-300 bottom-2/3 left-1/5"></div>
-      <div className="tiny-particle float-zigzag w-12 h-12 bg-teal-300 top-3/5 right-2/5"></div>
-      <div className="tiny-particle float-zigzag w-16 h-16 bg-sky-300 bottom-3/5 left-2/5"></div>
-      <div className="tiny-particle float-lt w-8 h-8 bg-blue-200 top-1/3 right-1/3"></div>
-      <div className="tiny-particle float-rb w-10 h-10 bg-violet-200 bottom-1/3 left-1/3"></div>
-      
-      <div 
-        ref={formRef}
-        className="relative z-10"
-        style={tiltStyle}
-      >
+
+      {/* Partículas grandes - reducidas para mejorar rendimiento */}
+      <div className="particle float-lt md:w-96 md:h-96 w-64 h-64 bg-blue-600 top-10 left-10"></div>
+      <div className="particle float-rt md:w-80 md:h-80 w-56 h-56 bg-indigo-600 top-10 right-10"></div>
+      <div className="particle float-rb md:w-72 md:h-72 w-48 h-48 bg-purple-600 bottom-10 right-10"></div>
+      <div className="particle float-lb md:w-64 md:h-64 w-40 h-40 bg-cyan-600 bottom-10 left-10"></div>
+
+      {/* Partículas medianas - Solo se muestran en pantallas más grandes */}
+      <div className="small-particle float-zigzag md:w-32 md:h-32 w-20 h-20 bg-blue-400 top-1/3 left-1/5 hidden md:block"></div>
+      <div className="small-particle float-diagonal md:w-28 md:h-28 w-16 h-16 bg-indigo-400 bottom-1/3 right-1/5 hidden md:block"></div>
+      <div className="small-particle float-diagonal2 md:w-24 md:h-24 w-14 h-14 bg-violet-400 top-1/2 right-1/4"></div>
+      <div className="small-particle float-zigzag md:w-20 md:h-20 w-12 h-12 bg-purple-400 bottom-1/2 left-1/4"></div>
+
+      {/* Partículas pequeñas - Reducidas en móvil */}
+      <div className="tiny-particle float-circle md:w-16 md:h-16 w-8 h-8 bg-blue-300 top-1/6 left-1/6 hidden md:block"></div>
+      <div className="tiny-particle float-diagonal md:w-12 md:h-12 w-6 h-6 bg-indigo-300 bottom-1/6 right-1/6 hidden md:block"></div>
+      <div className="tiny-particle float-diagonal2 md:w-14 md:h-14 w-8 h-8 bg-purple-300 top-2/3 right-1/5 hidden md:block"></div>
+      <div className="tiny-particle float-circle md:w-10 md:h-10 w-6 h-6 bg-cyan-300 bottom-2/3 left-1/5 hidden md:block"></div>
+
+      <div ref={formRef} className="relative z-10" style={tiltStyle}>
         <form
           onSubmit={handleLogin}
           noValidate
-          className="bg-gray-800/80 backdrop-blur-md p-10 rounded-lg shadow-2xl w-[28rem] transition duration-500 glowing-border border border-blue-500/30"
+          className="bg-gray-800/80 backdrop-blur-md p-6 md:p-10 rounded-lg shadow-2xl w-full sm:w-[400px] md:w-[450px] transition duration-500 glowing-border border border-blue-500/30"
         >
-          <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 appear-up">Investigators</h1>
-          
-          <div className="mb-6 appear-up" style={{animationDelay: '0.1s'}}>
-            <label className="block text-sm font-medium mb-2 text-blue-300">Usuario</label>
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 appear-up">
+            Investigators
+          </h1>
+
+          <div
+            className="mb-5 md:mb-6 appear-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <label className="block text-sm font-medium mb-2 text-blue-300">
+              Usuario
+            </label>
             <input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 field-animation"
-              style={{backdropFilter: 'blur(4px)'}}
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 field-animation"
+              style={{ backdropFilter: "blur(4px)" }}
             />
           </div>
-          
-          <div className="mb-8 appear-up" style={{animationDelay: '0.2s'}}>
-            <label className="block text-sm font-medium mb-2 text-blue-300">Contraseña</label>
+
+          <div
+            className="mb-6 md:mb-8 appear-up"
+            style={{ animationDelay: "0.2s" }}
+          >
+            <label className="block text-sm font-medium mb-2 text-blue-300">
+              Contraseña
+            </label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 field-animation"
-              style={{backdropFilter: 'blur(4px)'}}
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-gray-700/70 border border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 field-animation"
+              style={{ backdropFilter: "blur(4px)" }}
             />
           </div>
-          
-          <div className="appear-up" style={{animationDelay: '0.3s'}}>
+
+          <div className="appear-up" style={{ animationDelay: "0.3s" }}>
             <button
               type="submit"
               disabled={isLoading}
-              className={`cursor-pointer w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transform hover:scale-105 shadow-lg button-hover-effect h-12 flex items-center justify-center ${isLoading ? 'button-loading opacity-90' : ''}`}
+              className={`cursor-pointer w-full bg-blue-600 text-white py-2.5 md:py-3 rounded-lg hover:bg-blue-700 transform hover:scale-105 shadow-lg button-hover-effect h-11 md:h-12 flex items-center justify-center ${
+                isLoading ? "button-loading opacity-90" : ""
+              }`}
             >
               {isLoading ? (
                 <div className="dots flex justify-center">
@@ -387,7 +456,7 @@ function Login() {
           </div>
         </form>
       </div>
-      
+
       <ToastContainer />
     </div>
   );
