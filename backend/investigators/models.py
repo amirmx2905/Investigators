@@ -31,6 +31,7 @@ class Especialidad(models.Model):
 
 class NivelEducacion(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    nivel = models.CharField(max_length=50, blank=True, null=True)
     
     def __str__(self):
         return f"Nivel de {self.especialidad}"
@@ -59,10 +60,9 @@ class SNII(models.Model):
 
 class Carrera(models.Model):
     nombre = models.CharField(max_length=100)
-    escuela = models.CharField(max_length=100)
     
     def __str__(self):
-        return f"{self.nombre} - {self.escuela}"
+        return self.nombre
     
     class Meta:
         verbose_name_plural = "Carreras"
@@ -112,6 +112,7 @@ class Estudiante(models.Model):
     correo = models.EmailField(max_length=100, null=True, blank=True)
     celular = models.CharField(max_length=20, blank=True, null=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
+    escuela = models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
     
