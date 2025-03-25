@@ -439,7 +439,6 @@ function Layout({ children }) {
         opacity: 0.8;
       }
       
-      /* Línea de escaneo para menú abierto */
       .scanline {
         position: absolute;
         width: 100%;

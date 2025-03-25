@@ -15,7 +15,6 @@ function Login() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if device is mobile/small screen
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -136,7 +135,6 @@ function Login() {
         100% { transform: translate(0, 0); }
       }
       
-      /* Mobile animation adjustments */
       @media (max-width: 768px) {
         @keyframes floatLT {
           0% { transform: translate(0, 0); }
@@ -280,7 +278,7 @@ function Login() {
 
     let lastTime = 0;
     const handleMouseMove = (e) => {
-      if (window.innerWidth < 768) return; // Disable tilt effect on mobile
+      if (window.innerWidth < 768) return;
 
       const now = Date.now();
       if (now - lastTime < 16) return;
@@ -379,17 +377,15 @@ function Login() {
       <div className="particle float-rb md:w-72 md:h-72 w-48 h-48 bg-purple-600 bottom-10 right-10"></div>
       <div className="particle float-lb md:w-64 md:h-64 w-40 h-40 bg-cyan-600 bottom-10 left-10"></div>
 
-      {/* Partículas medianas - Solo se muestran en pantallas más grandes */}
-      <div className="small-particle float-zigzag md:w-32 md:h-32 w-20 h-20 bg-blue-400 top-1/3 left-1/5 hidden md:block"></div>
-      <div className="small-particle float-diagonal md:w-28 md:h-28 w-16 h-16 bg-indigo-400 bottom-1/3 right-1/5 hidden md:block"></div>
-      <div className="small-particle float-diagonal2 md:w-24 md:h-24 w-14 h-14 bg-violet-400 top-1/2 right-1/4"></div>
-      <div className="small-particle float-zigzag md:w-20 md:h-20 w-12 h-12 bg-purple-400 bottom-1/2 left-1/4"></div>
+      {/* Partículas medianas - Mostrar en todos los dispositivos */}
+      <div className="small-particle float-zigzag md:w-32 md:h-32 w-20 h-20 bg-blue-400 top-1/3 left-1/5"></div>
+      <div className="small-particle float-diagonal md:w-28 md:h-28 w-16 h-16 bg-indigo-400 bottom-1/3 right-1/5"></div>
 
-      {/* Partículas pequeñas - Reducidas en móvil */}
-      <div className="tiny-particle float-circle md:w-16 md:h-16 w-8 h-8 bg-blue-300 top-1/6 left-1/6 hidden md:block"></div>
-      <div className="tiny-particle float-diagonal md:w-12 md:h-12 w-6 h-6 bg-indigo-300 bottom-1/6 right-1/6 hidden md:block"></div>
-      <div className="tiny-particle float-diagonal2 md:w-14 md:h-14 w-8 h-8 bg-purple-300 top-2/3 right-1/5 hidden md:block"></div>
-      <div className="tiny-particle float-circle md:w-10 md:h-10 w-6 h-6 bg-cyan-300 bottom-2/3 left-1/5 hidden md:block"></div>
+      {/* Partículas pequeñas - Mostrar en todos los dispositivos */}
+      <div className="tiny-particle float-circle md:w-16 md:h-16 w-8 h-8 bg-blue-300 top-1/6 left-1/6"></div>
+      <div className="tiny-particle float-diagonal md:w-12 md:h-12 w-6 h-6 bg-indigo-300 bottom-1/6 right-1/6"></div>
+      <div className="tiny-particle float-diagonal2 md:w-14 md:h-14 w-8 h-8 bg-purple-300 top-2/3 right-1/5"></div>
+      <div className="tiny-particle float-circle md:w-10 md:h-10 w-6 h-6 bg-cyan-300 bottom-2/3 left-1/5"></div>
 
       <div ref={formRef} className="relative z-10" style={tiltStyle}>
         <form
