@@ -13,7 +13,6 @@ function Layout({ children }) {
   const isHomePage = location.pathname === "/home";
 
   useEffect(() => {
-    // Detectar si es dispositivo móvil
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -21,7 +20,6 @@ function Layout({ children }) {
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    // Animaciones para el layout
     const style = document.createElement("style");
     style.innerHTML = `
       @keyframes pulseGlow {
@@ -461,7 +459,6 @@ function Layout({ children }) {
     `;
     document.head.appendChild(style);
 
-    // Efecto para cerrar menú al redimensionar a desktop
     if (!isMobile && menuOpen) {
       setMenuOpen(false);
     }
