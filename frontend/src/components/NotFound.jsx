@@ -27,7 +27,7 @@ function NotFound() {
         throttleTimeout = setTimeout(() => {
           throttleTimeout = null;
           handleMouseMove(e);
-        }, 16); // ~60fps
+        }, 16); 
       }
     };
     
@@ -175,20 +175,17 @@ function NotFound() {
     `;
     document.head.appendChild(style);
 
-    // Limpiar al desmontar
     return () => {
       document.head.removeChild(style);
     };
   }, []);
 
-  // Efecto 3D en el contenedor principal (suavizado)
   const tiltStyle = {
     transform: `perspective(1000px) 
                 rotateX(${(mousePosition.y - 0.5) * 8}deg) 
                 rotateY(${(mousePosition.x - 0.5) * -8}deg)`
   };
 
-  // Efecto 3D en el texto 404 (suavizado)
   const textTiltStyle = {
     transform: `perspective(1000px) 
                 rotateX(${(mousePosition.y - 0.5) * 16}deg) 

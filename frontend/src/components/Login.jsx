@@ -18,7 +18,6 @@ function Login() {
       navigate("/home");
     }
 
-    // Agrega los estilos de animación dinámicamente
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes pulseGlow {
@@ -222,11 +221,10 @@ function Login() {
     `;
     document.head.appendChild(style);
 
-    // Optimización: throttle para el movimiento del mouse
     let lastTime = 0;
     const handleMouseMove = (e) => {
       const now = Date.now();
-      if (now - lastTime < 16) return; // Limitar a ~60fps
+      if (now - lastTime < 16) return;
       lastTime = now;
       
       if (formRef.current) {
@@ -301,7 +299,6 @@ function Login() {
     }
   };
 
-  // Calcular el estilo 3D basado en la posición del ratón
   const tiltStyle = {
     transform: `perspective(1000px) 
                 rotateX(${(mousePosition.y - 0.5) * 5}deg) 
