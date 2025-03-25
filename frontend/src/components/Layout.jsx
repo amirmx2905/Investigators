@@ -7,12 +7,11 @@ function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Determinar en qué página estamos actualmente
   const isAdminPanel = location.pathname === "/admin";
   const isHomePage = location.pathname === "/home";
 
   useEffect(() => {
-    // Estilos dinámicos para mantener coherencia con Login y NotFound
+    // Animaciones pal layout
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes pulseGlow {
@@ -56,6 +55,48 @@ function Layout({ children }) {
         }
       }
       
+      @keyframes energyPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(147, 197, 253, 0);
+          transform: scale(1);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(147, 197, 253, 0);
+          transform: scale(1.05);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(147, 197, 253, 0);
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes glitchEffect {
+        0% {
+          clip-path: inset(30% 0 40% 0);
+          transform: translate(-5px, 0);
+        }
+        20% {
+          clip-path: inset(15% 0 60% 0);
+          transform: translate(5px, 0);
+        }
+        40% {
+          clip-path: inset(50% 0 20% 0);
+          transform: translate(-5px, 0);
+        }
+        60% {
+          clip-path: inset(30% 0 60% 0);
+          transform: translate(5px, 0);
+        }
+        80% {
+          clip-path: inset(10% 0 50% 0);
+          transform: translate(-5px, 0);
+        }
+        100% {
+          clip-path: inset(50% 0 30% 0);
+          transform: translate(0, 0);
+        }
+      }
+      
       .logo-animation {
         background: linear-gradient(90deg, #60a5fa, #a78bfa, #93c5fd, #60a5fa);
         background-size: 300% 100%;
@@ -65,6 +106,49 @@ function Layout({ children }) {
         background-clip: text;
         color: transparent;
         letter-spacing: 0.5px;
+        position: relative;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+        transition: all 0.3s;
+      }
+      
+      .logo-animation:hover {
+        transform: scale(1.05);
+        letter-spacing: 1px;
+      }
+      
+      .logo-animation:hover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(96, 165, 250, 0.1);
+        border-radius: 4px;
+        animation: energyPulse 1s infinite;
+        z-index: -1;
+      }
+      
+      .logo-animation:hover::after {
+        content: 'Investigators';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #60a5fa, #a78bfa, #93c5fd, #60a5fa);
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: glitchEffect 0.5s infinite steps(2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        z-index: -1;
       }
       
       .cyber-grid {
@@ -144,6 +228,12 @@ function Layout({ children }) {
     logout();
     navigate("/");
   };
+  
+  const navigateToHome = () => {
+    if (location.pathname !== "/home") {
+      navigate("/home");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden">
@@ -159,7 +249,13 @@ function Layout({ children }) {
       {/* Barra superior transparente */}
       <header className="relative z-20 bg-transparent py-4 shadow-lg header-animation">
         <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="text-2xl font-bold logo-animation">Investigators</h1>
+          <h1 
+            className="text-2xl font-bold logo-animation" 
+            onClick={navigateToHome}
+            title="Ir a Home"
+          >
+            Investigators
+          </h1>
           <div className="flex items-center space-x-4">
             {isAdmin() && (
               isAdminPanel ? (
