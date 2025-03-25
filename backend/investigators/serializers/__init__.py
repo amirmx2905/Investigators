@@ -1,0 +1,3 @@
+from .investigador_serializer import InvestigadorSerializer
+from .proyecto_serializer import ProyectoSerializer
+from .usuario_serializer import UsuarioSerializer
