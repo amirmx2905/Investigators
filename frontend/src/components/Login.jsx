@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login, currentUser } = useAuth();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken) {
+    if (currentUser) {
       navigate("/home");
     }
-  }, [navigate]);
+  }, [currentUser, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,22 +33,14 @@ function Login() {
 
     if (!isValid) return;
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/token/`,
-        {
-          username,
-          password,
-        }
-      );
-      localStorage.setItem("access_token", response.data.access);
-      localStorage.setItem("refresh_token", response.data.refresh);
+    const result = await login(username, password);
+    
+    if (result.success) {
       localStorage.removeItem("toastShown");
       setUsername("");
-      setPassword(""); 
+      setPassword("");
       navigate("/home", { state: { loginSuccess: true } });
-    } catch (err) {
-      console.error(err.response?.data || err.message);
+    } else {
       toast.error("Credenciales inválidas", {
         position: "top-right",
         autoClose: 3000,
@@ -60,7 +52,7 @@ function Login() {
         closeButton: false,
       });
       setPassword("");
-      setUsername(""); 
+      setUsername("");
     }
   };
 

@@ -1,18 +1,12 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("toastShown");
-    navigate("/");
-  };
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const toastShown = localStorage.getItem("toastShown");
@@ -32,19 +26,20 @@ function Home() {
   }, [location.state]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
-      <h1 className="text-4xl font-bold mb-6 text-center animate-fade-in">
+    <div className="flex flex-col items-center justify-center h-full min-h-[calc(100vh-160px)] animate-fade-in">
+      <h1 className="text-4xl font-bold mb-6 text-center">
         Bienvenido a la Página Principal
       </h1>
       <p className="text-lg mb-8 text-gray-400 text-center">
         Explora las funcionalidades de la aplicación.
       </p>
-      <button
-        onClick={handleLogout}
-        className="cursor-pointer bg-red-600 text-white py-2 px-6 rounded hover:bg-red-700 transition duration-300 transform hover:scale-105"
-      >
-        Cerrar Sesión
-      </button>
+      
+      {currentUser?.role === 'admin' && (
+        <p className="mt-4 p-3 bg-blue-600 rounded-lg text-center">
+          Tienes acceso a funciones administrativas a través del Panel de Control.
+        </p>
+      )}
+      
       <ToastContainer />
     </div>
   );
