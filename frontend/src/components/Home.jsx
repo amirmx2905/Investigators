@@ -35,7 +35,7 @@ function Home() {
       </p>
       
       {currentUser?.role === 'admin' && (
-        <p className="mt-4 p-3 bg-blue-600 rounded-lg text-center">
+        <p className="mt-4 p-3 bg-blue-700 rounded-lg text-center">
           Tienes acceso a funciones administrativas a través del Panel de Control.
         </p>
       )}

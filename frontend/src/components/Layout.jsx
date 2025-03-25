@@ -18,7 +18,7 @@ function Layout({ children }) {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white">
       {/* Barra superior */}
-      <header className="bg-gray-800 py-6 shadow-lg top-0 left-0 w-full z-10">
+      <header className="bg-gray-800 py-4 shadow-lg top-0 left-0 w-full z-10">
         <div className="container mx-auto flex justify-between items-center px-6">
           <h1 className="text-2xl font-bold">Investigators</h1>
           <div className="flex items-center space-x-4">
@@ -26,14 +26,14 @@ function Layout({ children }) {
               isAdminPanel ? (
                 <Link
                   to="/home"
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                  className="bg-blue-700 hover:bg-blue-600 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
                 >
                   Regresar
                 </Link>
               ) : (
                 <Link
                   to="/admin"
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                  className="bg-blue-700 hover:bg-blue-600 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
                 >
                   Panel de Control
                 </Link>

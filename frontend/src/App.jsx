@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import AdminPanel from "./components/AdminPanel";
+import NotFound from "./components/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>
