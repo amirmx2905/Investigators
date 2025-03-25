@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 function Layout({ children }) {
   const { isAdmin, logout } = useAuth();
@@ -10,30 +11,168 @@ function Layout({ children }) {
   const isAdminPanel = location.pathname === "/admin";
   const isHomePage = location.pathname === "/home";
 
+  useEffect(() => {
+    // Estilos dinámicos para mantener coherencia con Login y NotFound
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes pulseGlow {
+        0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+        50% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+      }
+      
+      @keyframes appearUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes gradientFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      
+      @keyframes subtleTextShadowPulse {
+        0% {
+          text-shadow: 0 0 2px rgba(59, 130, 246, 0.2), 0 0 5px rgba(147, 197, 253, 0.2);
+        }
+        50% {
+          text-shadow: 0 0 4px rgba(59, 130, 246, 0.3), 0 0 10px rgba(147, 197, 253, 0.3);
+        }
+        100% {
+          text-shadow: 0 0 2px rgba(59, 130, 246, 0.2), 0 0 5px rgba(147, 197, 253, 0.2);
+        }
+      }
+      
+      .logo-animation {
+        background: linear-gradient(90deg, #60a5fa, #a78bfa, #93c5fd, #60a5fa);
+        background-size: 300% 100%;
+        animation: gradientFlow 8s ease infinite, subtleTextShadowPulse 3s ease-in-out infinite;
+        will-change: background-position, text-shadow;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: 0.5px;
+      }
+      
+      .cyber-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: 50px 50px;
+        background-image: 
+          linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+        z-index: 0;
+        transform: perspective(1000px) rotateX(60deg) scale(2.5) translateY(-10%);
+        opacity: 0.3;
+        will-change: opacity;
+      }
+      
+      .glowing-border {
+        animation: pulseGlow 4s infinite;
+        will-change: box-shadow;
+      }
+      
+      .appear-up {
+        animation: appearUp 0.6s ease-out forwards;
+      }
+      
+      .button-hover-effect {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      
+      .button-hover-effect:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: all 0.6s ease;
+      }
+      
+      .button-hover-effect:hover:after {
+        left: 100%;
+      }
+      
+      .header-animation {
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .header-animation:hover {
+        border-bottom-color: rgba(59, 130, 246, 0.4);
+      }
+      
+      .footer-animation {
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(59, 130, 246, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .footer-animation:hover {
+        border-top-color: rgba(59, 130, 246, 0.4);
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      {/* Barra superior */}
-      <header className="bg-gray-800 py-4 shadow-lg top-0 left-0 w-full z-10">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden">
+      {/* Rejilla de fondo cyber */}
+      <div className="cyber-grid fixed inset-0"></div>
+      
+      {/* Partículas de luz estáticas */}
+      <div className="fixed top-0 left-0 w-96 h-96 bg-blue-600 rounded-full filter blur-[150px] opacity-10"></div>
+      <div className="fixed bottom-0 right-0 w-96 h-96 bg-purple-600 rounded-full filter blur-[150px] opacity-10"></div>
+      <div className="fixed top-1/2 right-1/4 w-64 h-64 bg-indigo-600 rounded-full filter blur-[120px] opacity-10"></div>
+      <div className="fixed bottom-1/3 left-1/4 w-72 h-72 bg-cyan-600 rounded-full filter blur-[130px] opacity-10"></div>
+      
+      {/* Barra superior transparente */}
+      <header className="relative z-20 bg-transparent py-4 shadow-lg header-animation">
         <div className="container mx-auto flex justify-between items-center px-6">
-          <h1 className="text-2xl font-bold">Investigators</h1>
+          <h1 className="text-2xl font-bold logo-animation">Investigators</h1>
           <div className="flex items-center space-x-4">
             {isAdmin() && (
               isAdminPanel ? (
                 <Link
                   to="/home"
-                  className="bg-blue-700 hover:bg-blue-600 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                  className="bg-blue-600/80 hover:bg-blue-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm"
                 >
                   Regresar
                 </Link>
               ) : (
                 <Link
                   to="/admin"
-                  className="bg-blue-700 hover:bg-blue-600 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                  className="bg-blue-600/80 hover:bg-blue-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm"
                 >
                   Panel de Control
                 </Link>
@@ -44,7 +183,7 @@ function Layout({ children }) {
             {isHomePage && (
               <button
                 onClick={handleLogout}
-                className="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition duration-300 transform hover:scale-105"
+                className="cursor-pointer bg-gray-600/80 hover:bg-gray-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect backdrop-blur-sm"
               >
                 Cerrar Sesión
               </button>
@@ -54,13 +193,13 @@ function Layout({ children }) {
       </header>
 
       {/* Contenido principal */}
-      <main className="flex-grow container mx-auto px-6 pt-8 pb-20">
+      <main className="flex-grow container mx-auto px-6 pt-8 pb-20 relative z-10">
         {children}
       </main>
 
-      {/* Barra inferior */}
-      <footer className="bg-gray-800 py-6 text-center bottom-0 left-0 w-full">
-        <p className="text-base text-gray-400">
+      {/* Barra inferior transparente */}
+      <footer className="relative z-20 bg-transparent py-6 text-center footer-animation">
+        <p className="text-base text-blue-300/80">
           &copy; 2025 Investigators. Todos los derechos reservados.
         </p>
       </footer>
