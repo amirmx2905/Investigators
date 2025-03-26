@@ -1,26 +1,10 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-function Layout({ children }) {
-  const { isAdmin, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isMobile, setIsMobile] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const isAdminPanel = location.pathname === "/admin";
-  const isHomePage = location.pathname === "/home";
-
+function useLayoutStyles() {
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
     const style = document.createElement("style");
+    style.id = "layout-styles";
+
     style.innerHTML = `
       @keyframes pulseGlow {
         0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
@@ -456,179 +440,15 @@ function Layout({ children }) {
         z-index: 5;
       }
     `;
+
     document.head.appendChild(style);
 
-    if (!isMobile && menuOpen) {
-      setMenuOpen(false);
-    }
-
     return () => {
-      document.head.removeChild(style);
-      window.removeEventListener("resize", checkMobile);
+      if (document.getElementById("layout-styles")) {
+        document.head.removeChild(style);
+      }
     };
-  }, [isMobile, menuOpen]);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-    if (menuOpen) {
-      setMenuOpen(false);
-    }
-  };
-
-  const navigateToHome = () => {
-    if (location.pathname !== "/home") {
-      navigate("/home");
-    }
-    if (menuOpen) {
-      setMenuOpen(false);
-    }
-  };
-
-  const navigateToAdmin = () => {
-    navigate("/admin");
-    if (menuOpen) {
-      setMenuOpen(false);
-    }
-  };
-
-  const navigateBack = () => {
-    navigate("/home");
-    if (menuOpen) {
-      setMenuOpen(false);
-    }
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden">
-      {/* Rejilla de fondo cyber */}
-      <div className="cyber-grid fixed inset-0"></div>
-
-      {/* Partículas de luz estáticas - ajustadas para responsividad */}
-      <div className="fixed top-0 left-0 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-blue-600 rounded-full filter blur-[100px] sm:blur-[120px] md:blur-[150px] opacity-10"></div>
-      <div className="fixed bottom-0 right-0 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-purple-600 rounded-full filter blur-[100px] sm:blur-[120px] md:blur-[150px] opacity-10"></div>
-      <div className="fixed top-1/2 right-1/4 w-40 sm:w-56 md:w-64 h-40 sm:h-56 md:h-64 bg-indigo-600 rounded-full filter blur-[80px] sm:blur-[100px] md:blur-[120px] opacity-10"></div>
-      <div className="fixed bottom-1/3 left-1/4 w-48 sm:w-64 md:w-72 h-48 sm:h-64 md:h-72 bg-cyan-600 rounded-full filter blur-[90px] sm:blur-[110px] md:blur-[130px] opacity-10"></div>
-
-      {/* Overlay del menú móvil */}
-      <div
-        className={`menu-overlay ${menuOpen ? "open" : ""}`}
-        onClick={toggleMenu}
-      ></div>
-
-      {/* Menú móvil estilizado */}
-      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-        {menuOpen && <div className="scanline"></div>}
-        <div className="flex flex-col items-center space-y-8 px-6 mt-4">
-          <h2
-            className={`text-xl font-bold mb-6 relative ${
-              menuOpen ? "menu-glitch-effect" : ""
-            }`}
-            data-text="MENU"
-          >
-            MENU
-          </h2>
-
-          {isAdmin() &&
-            (isAdminPanel ? (
-              <button
-                onClick={navigateBack}
-                className="w-full bg-blue-600/80 hover:bg-blue-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm text-center"
-              >
-                Regresar
-              </button>
-            ) : (
-              <button
-                onClick={navigateToAdmin}
-                className="w-full bg-blue-600/80 hover:bg-blue-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm text-center"
-              >
-                Panel de Control
-              </button>
-            ))}
-
-          {isHomePage && (
-            <button
-              onClick={handleLogout}
-              className="w-full bg-gray-600/80 hover:bg-gray-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect backdrop-blur-sm text-center"
-            >
-              Cerrar Sesión
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Barra superior transparente */}
-      <header className="relative z-20 bg-transparent py-3 sm:py-4 shadow-lg header-animation">
-        <div className="container mx-auto flex justify-between items-center px-4 sm:px-6">
-          <h1
-            className="text-xl sm:text-2xl font-bold logo-animation"
-            onClick={navigateToHome}
-            title="Ir a Home"
-          >
-            Investigators
-          </h1>
-
-          {isMobile ? (
-            <div
-              className={`hamburger-container ${menuOpen ? "open" : ""}`}
-              onClick={toggleMenu}
-            >
-              <div className={`hamburger ${menuOpen ? "open" : ""}`}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-4">
-              {isAdmin() &&
-                (isAdminPanel ? (
-                  <Link
-                    to="/home"
-                    className="bg-blue-600/80 hover:bg-blue-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm"
-                  >
-                    Regresar
-                  </Link>
-                ) : (
-                  <Link
-                    to="/admin"
-                    className="bg-blue-600/80 hover:bg-blue-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm"
-                  >
-                    Panel de Control
-                  </Link>
-                ))}
-
-              {/* Mostrar el botón de cerrar sesión solo en la página home */}
-              {isHomePage && (
-                <button
-                  onClick={handleLogout}
-                  className="cursor-pointer bg-gray-600/80 hover:bg-gray-500/90 text-white py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect backdrop-blur-sm"
-                >
-                  Cerrar Sesión
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* Contenido principal */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-16 sm:pb-20 relative z-10">
-        {children}
-      </main>
-
-      {/* Barra inferior transparente */}
-      <footer className="relative z-20 bg-transparent py-4 sm:py-6 text-center footer-animation">
-        <p className="text-sm sm:text-base text-blue-300/80">
-          &copy; 2025 Investigators. Todos los derechos reservados.
-        </p>
-      </footer>
-    </div>
-  );
+  }, []);
 }
 
-export default Layout;
+export default useLayoutStyles;
