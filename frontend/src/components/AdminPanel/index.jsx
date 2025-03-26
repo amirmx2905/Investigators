@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,8 +22,11 @@ import { useAdminPanel } from "./hooks/useAdminPanel";
 import { useTableControls } from "./hooks/useTableControls";
 
 function AdminPanel() {
-  // Estado local para manejar las notificaciones de copia (en lugar de toast)
+  // Estado local para manejar las notificaciones de copia
   const [notification, setNotification] = useState({ show: false, message: "" });
+  
+  // Nuevo estado para controlar la animación de contenido
+  const [contentReady, setContentReady] = useState(false);
   
   const {
     loading,
@@ -70,6 +73,21 @@ function AdminPanel() {
       });
   };
 
+  // Efecto para manejar la transición de carga a contenido
+  useEffect(() => {
+    let timer;
+    if (!loading) {
+      // Retrasamos un poco para asegurar que el spinner de carga se elimine completamente
+      timer = setTimeout(() => {
+        setContentReady(true);
+      }, 50);
+    } else {
+      setContentReady(false);
+    }
+    
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   // Estilo global para animaciones
   useEffect(() => {
     const styleEl = document.createElement("style");
@@ -89,6 +107,11 @@ function AdminPanel() {
       
       .admin-fadeIn {
         animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0; /* Comenzar con opacidad 0 */
+      }
+
+      .no-scrollbar {
+        overflow: hidden;
       }
       
       .admin-pulse {
@@ -124,6 +147,17 @@ function AdminPanel() {
         transform: translateY(0);
         opacity: 1;
       }
+      
+      /* Contenedor invisible hasta que esté listo */
+      .content-container {
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      .content-container.ready {
+        visibility: visible;
+        opacity: 1;
+      }
     `;
     
     document.head.appendChild(styleEl);
@@ -143,7 +177,7 @@ function AdminPanel() {
   };
 
   return (
-    <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden">
+    <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
       <h2 
         className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 admin-fadeIn"
         style={{ animationDelay: "0.1s" }}
@@ -169,177 +203,180 @@ function AdminPanel() {
           </div>
         </div>
       ) : (
-        <div
-          className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
-          style={{ animationDelay: "0.3s" }}
-        >
-          {/* Título de sección */}
-          <h3
-            className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300"
-          >
-            {activeTab === "usuarios" && "Lista de Usuarios"}
-            {activeTab === "investigadores" && "Lista de Investigadores"}
-            {activeTab === "proyectos" && "Lista de Proyectos"}
-          </h3>
-
-          {/* Controles de visualización */}
+        // Aplicamos clase especial para controlar la visibilidad
+        <div className={`content-container ${contentReady ? 'ready' : ''}`}>
           <div
-            className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300"
+            className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
+            style={{ animationDelay: "0.3s" }}
           >
-            <div className="flex items-center space-x-2 z-20">
-              <button
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
-                  viewMode === "table"
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                    : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
-                } ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => toggleViewMode("table")}
-                disabled={isMobile}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
-                </svg>
-                Tabla
-              </button>
-              <button
-                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
-                  viewMode === "cards"
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                    : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
-                }`}
-                onClick={() => toggleViewMode("cards")}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z" />
-                  <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2z" />
-                </svg>
-                Tarjetas
-              </button>
+            {/* Título de sección */}
+            <h3
+              className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300"
+            >
+              {activeTab === "usuarios" && "Lista de Usuarios"}
+              {activeTab === "investigadores" && "Lista de Investigadores"}
+              {activeTab === "proyectos" && "Lista de Proyectos"}
+            </h3>
 
-              {viewMode === "table" && !isMobile && (
-                <div className="relative z-30" ref={columnToggleRef}>
-                  <ColumnSelector
-                    activeTab={activeTab}
-                    columnsDropdownOpen={columnsDropdownOpen}
-                    setColumnsDropdownOpen={setColumnsDropdownOpen}
-                    visibleColumns={visibleColumns}
-                    toggleColumn={toggleColumn}
-                    columnToggleRef={columnToggleRef}
+            {/* Controles de visualización */}
+            <div
+              className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300"
+            >
+              <div className="flex items-center space-x-2 z-20">
+                <button
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                    viewMode === "table"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                      : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
+                  } ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => toggleViewMode("table")}
+                  disabled={isMobile}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
+                  </svg>
+                  Tabla
+                </button>
+                <button
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                    viewMode === "cards"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                      : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
+                  }`}
+                  onClick={() => toggleViewMode("cards")}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z" />
+                    <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2z" />
+                  </svg>
+                  Tarjetas
+                </button>
+
+                {viewMode === "table" && !isMobile && (
+                  <div className="relative z-30" ref={columnToggleRef}>
+                    <ColumnSelector
+                      activeTab={activeTab}
+                      columnsDropdownOpen={columnsDropdownOpen}
+                      setColumnsDropdownOpen={setColumnsDropdownOpen}
+                      visibleColumns={visibleColumns}
+                      toggleColumn={toggleColumn}
+                      columnToggleRef={columnToggleRef}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <select
+                className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+              >
+                {[5, 10, 15, 20].map((value) => (
+                  <option key={value} value={value}>
+                    {value} por página
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Contenido dinámico según la pestaña activa */}
+            <div
+              ref={contentRef}
+              className="relative min-h-[200px]"
+            >
+              {activeTab === "usuarios" && (
+                <div className="view-transition">
+                  {viewMode === "table" && !isMobile ? (
+                    <UsuarioTable
+                      usuarios={getCurrentItems(usuarios)}
+                      visibleColumns={visibleColumns.usuarios}
+                      onCopy={copyToClipboard}
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <UsuarioCards 
+                        items={getCurrentItems(usuarios)}
+                        onCopy={copyToClipboard}
+                      />
+                    </div>
+                  )}
+                  
+                  <Pagination
+                    totalItems={usuarios.length}
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    paginate={setCurrentPage}
+                  />
+                </div>
+              )}
+              
+              {activeTab === "investigadores" && (
+                <div className="view-transition">
+                  {viewMode === "table" && !isMobile ? (
+                    <InvestigadorTable
+                      investigadores={getCurrentItems(investigadores)}
+                      visibleColumns={visibleColumns.investigadores}
+                      onCopy={copyToClipboard}
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <InvestigadorCards 
+                        items={getCurrentItems(investigadores)}
+                        onCopy={copyToClipboard}
+                      />
+                    </div>
+                  )}
+                  
+                  <Pagination
+                    totalItems={investigadores.length}
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    paginate={setCurrentPage}
+                  />
+                </div>
+              )}
+              
+              {activeTab === "proyectos" && (
+                <div className="view-transition">
+                  {viewMode === "table" && !isMobile ? (
+                    <ProyectoTable
+                      proyectos={getCurrentItems(proyectos)}
+                      visibleColumns={visibleColumns.proyectos}
+                      onCopy={copyToClipboard}
+                    />
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <ProyectoCards 
+                        items={getCurrentItems(proyectos)}
+                        onCopy={copyToClipboard}
+                      />
+                    </div>
+                  )}
+                  
+                  <Pagination
+                    totalItems={proyectos.length}
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    paginate={setCurrentPage}
                   />
                 </div>
               )}
             </div>
-
-            <select
-              className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
-              value={itemsPerPage}
-              onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-            >
-              {[5, 10, 15, 20].map((value) => (
-                <option key={value} value={value}>
-                  {value} por página
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Contenido dinámico según la pestaña activa */}
-          <div
-            ref={contentRef}
-            className="relative min-h-[200px]"
-          >
-            {activeTab === "usuarios" && (
-              <div className="view-transition">
-                {viewMode === "table" && !isMobile ? (
-                  <UsuarioTable
-                    usuarios={getCurrentItems(usuarios)}
-                    visibleColumns={visibleColumns.usuarios}
-                    onCopy={copyToClipboard}
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <UsuarioCards 
-                      items={getCurrentItems(usuarios)}
-                      onCopy={copyToClipboard}
-                    />
-                  </div>
-                )}
-                
-                <Pagination
-                  totalItems={usuarios.length}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  paginate={setCurrentPage}
-                />
-              </div>
-            )}
-            
-            {activeTab === "investigadores" && (
-              <div className="view-transition">
-                {viewMode === "table" && !isMobile ? (
-                  <InvestigadorTable
-                    investigadores={getCurrentItems(investigadores)}
-                    visibleColumns={visibleColumns.investigadores}
-                    onCopy={copyToClipboard}
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <InvestigadorCards 
-                      items={getCurrentItems(investigadores)}
-                      onCopy={copyToClipboard}
-                    />
-                  </div>
-                )}
-                
-                <Pagination
-                  totalItems={investigadores.length}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  paginate={setCurrentPage}
-                />
-              </div>
-            )}
-            
-            {activeTab === "proyectos" && (
-              <div className="view-transition">
-                {viewMode === "table" && !isMobile ? (
-                  <ProyectoTable
-                    proyectos={getCurrentItems(proyectos)}
-                    visibleColumns={visibleColumns.proyectos}
-                    onCopy={copyToClipboard}
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <ProyectoCards 
-                      items={getCurrentItems(proyectos)}
-                      onCopy={copyToClipboard}
-                    />
-                  </div>
-                )}
-                
-                <Pagination
-                  totalItems={proyectos.length}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  paginate={setCurrentPage}
-                />
-              </div>
-            )}
           </div>
         </div>
       )}

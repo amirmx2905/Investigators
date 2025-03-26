@@ -68,7 +68,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
           <button
             key={index}
             onClick={() => typeof number === 'number' && paginate(number)}
-            className={`px-3 py-1 rounded-md transition-all duration-200 ${
+            className={`cursor-pointer px-3 py-1 rounded-md transition-all duration-200 ${
               currentPage === number
                 ? 'bg-blue-600 text-white hover:bg-blue-700 transform scale-105'
                 : typeof number === 'number'
@@ -85,7 +85,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
         <button
           onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 rounded-md ${
+          className={`cursor-pointer px-3 py-1 rounded-md ${
             currentPage === totalPages
               ? 'text-gray-500 cursor-not-allowed'
               : 'text-gray-300 hover:bg-gray-700 hover:text-blue-300'

@@ -113,7 +113,7 @@ function Layout({ children }) {
       />
 
       {/* Contenido principal */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-16 sm:pb-20 relative z-10">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-6 h-screen sm:pt-8 pb-16 sm:pb-20 relative z-10">
         {children}
       </main>
 
