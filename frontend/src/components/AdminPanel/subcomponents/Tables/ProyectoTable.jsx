@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
+function ProyectoTable({ proyectos, visibleColumns }) {
   const [showTable, setShowTable] = useState(false);
   
   // Efecto de entrada
@@ -16,46 +16,68 @@ function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
-    correo: "Correo",
-    especialidad: "Especialidad",
-    activo: "Estado"
+    estado: "Estado",
+    fecha_inicio: "Fecha Inicio",
+    fecha_fin: "Fecha Fin"
   };
   
   // Formatear el valor según el tipo de columna
   const formatColumnValue = (column, value) => {
-    if (column === "activo") {
+    if (column === "estado") {
+      const statusStyles = {
+        'activo': "bg-green-900/60 text-green-300",
+        'completado': "bg-blue-900/60 text-blue-300",
+        'suspendido': "bg-yellow-900/60 text-yellow-300",
+        'cancelado': "bg-red-900/60 text-red-300"
+      };
+      
+      const style = statusStyles[value?.toLowerCase()] || "bg-gray-900/60 text-gray-300";
+      
       return (
-        <span
-          className={`px-2 py-1 text-xs rounded-full ${
-            value ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
-          }`}
-        >
-          {value ? "Activo" : "Inactivo"}
+        <span className={`px-2 py-1 text-xs rounded-full ${style}`}>
+          {value || "Desconocido"}
         </span>
       );
+    }
+    
+    if (column === "fecha_inicio" || column === "fecha_fin") {
+      if (!value) return "No definida";
+      
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return "Fecha inválida";
+      
+      return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
     }
     
     return value;
   };
 
   // Si no hay datos, mostrar mensaje
-  if (investigadores.length === 0) {
+  if (proyectos.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
-        No hay investigadores para mostrar
+        No hay proyectos para mostrar
       </div>
     );
   }
 
   return (
+    // Tabla de proyectos
     <div 
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
+      {/* Tabla */}
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
+        {/* Encabezado */}
         <table className="w-full table-auto">
           <thead>
+            {/* Fila de encabezado */}
             <tr className="bg-gray-800/80">
               {visibleColumns.map((column) => (
                 <th
@@ -70,10 +92,11 @@ function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
               </th>
             </tr>
           </thead>
+          {/* Cuerpo */}
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
-            {investigadores.map((investigador, index) => (
+            {proyectos.map((proyecto, index) => (
               <tr
-                key={investigador.id}
+                key={proyecto.id}
                 className="hover:bg-gray-700/50 transition-colors duration-200"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
@@ -82,13 +105,14 @@ function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, investigador[column])}
+                    {formatColumnValue(column, proyecto[column])}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
+                    {/* Botones de acción */}
                     <button
-                      className="p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
                     >
                       <svg
@@ -106,28 +130,9 @@ function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
                         />
                       </svg>
                     </button>
+                    {/* Botón de eliminar */}
                     <button
-                      className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
-                      title="Copiar ID"
-                      onClick={() => onCopy && onCopy(investigador.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      className="p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
                     >
                       <svg
@@ -156,4 +161,4 @@ function InvestigadorTable({ investigadores, visibleColumns, onCopy }) {
   );
 }
 
-export default InvestigadorTable;
+export default ProyectoTable;

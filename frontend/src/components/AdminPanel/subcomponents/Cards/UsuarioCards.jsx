@@ -29,7 +29,9 @@ function UsuarioCards({ items }) {
 
   return (
     <>
+      { /* Mapear los usuarios */ }
       {items.map((usuario, index) => (
+        // Tarjeta de usuario
         <div
           key={usuario.id}
           className={`bg-gray-800/60 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:border-blue-500/40 ${
@@ -39,6 +41,7 @@ function UsuarioCards({ items }) {
           }`}
           style={{ transitionDelay: `${index * 50}ms` }}
         >
+          {/* Contenido de la tarjeta */}
           <div className="p-4">
             <div className="flex items-center mb-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg mr-3">
@@ -50,6 +53,7 @@ function UsuarioCards({ items }) {
               </div>
             </div>
             
+            {/* Información del usuario */}
             <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
               <div className="bg-gray-700/50 p-2 rounded">
                 <span className="text-gray-400">ID:</span>
@@ -71,9 +75,10 @@ function UsuarioCards({ items }) {
               </div>
             </div>
             
+            {/* Botones de acción */}
             <div className="mt-4 flex justify-end space-x-2">
               <button
-                className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
+                className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                 title="Editar"
               >
                 <svg
@@ -91,8 +96,10 @@ function UsuarioCards({ items }) {
                   />
                 </svg>
               </button>
+
+              {/* Botón de eliminar */}
               <button
-                className="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
+                className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                 title="Eliminar"
               >
                 <svg

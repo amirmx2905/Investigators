@@ -19,14 +19,12 @@ function ColumnSelector({
       id: 'ID',
       nombre_usuario: 'Usuario',
       rol: 'Rol',
-      correo: 'Correo',
       activo: 'Estado'
     },
     investigadores: {
       id: 'ID',
       nombre: 'Nombre',
       correo: 'Correo',
-      especialidad: 'Especialidad',
       activo: 'Estado'
     },
     proyectos: {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function ProyectoCards({ items }) {
+function InvestigadorCards({ items }) {
   const [visibleItems, setVisibleItems] = useState([]);
   
   // Animación de entrada escalonada
@@ -19,90 +19,67 @@ function ProyectoCards({ items }) {
     return () => clearTimeout(timer);
   }, [items]);
   
-  // Función para formatear fechas
-  const formatDate = (dateString) => {
-    if (!dateString) return "No definida";
-    
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Fecha inválida";
-    
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-  
-  // Función para obtener estilo según estado
-  const getStatusStyle = (estado) => {
-    switch (estado?.toLowerCase()) {
-      case 'activo':
-        return "bg-green-900/60 text-green-300";
-      case 'completado':
-        return "bg-blue-900/60 text-blue-300";
-      case 'suspendido':
-        return "bg-yellow-900/60 text-yellow-300";
-      case 'cancelado':
-        return "bg-red-900/60 text-red-300";
-      default:
-        return "bg-gray-900/60 text-gray-300";
-    }
-  };
-  
   if (items.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
-        No hay proyectos para mostrar
+        No hay investigadores para mostrar
       </div>
     );
   }
 
   return (
     <>
-      {items.map((proyecto, index) => (
+      {/* Mapear los investigadores */}
+      {items.map((investigador, index) => (
+        // Tarjeta de investigador
         <div
-          key={proyecto.id}
+          key={investigador.id}
           className={`bg-gray-800/60 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:border-blue-500/40 ${
-            visibleItems.includes(proyecto)
+            visibleItems.includes(investigador)
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"
           }`}
           style={{ transitionDelay: `${index * 50}ms` }}
         >
-          <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 px-4 py-3 border-b border-gray-700">
-            <h3 className="font-semibold text-gray-200">{proyecto.nombre}</h3>
-            <span 
-              className={`px-2 py-1 text-xs rounded-full inline-block mt-2 ${getStatusStyle(proyecto.estado)}`}
-            >
-              {proyecto.estado}
-            </span>
-          </div>
-          
+          {/* Contenido de la tarjeta */}
           <div className="p-4">
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="bg-gray-700/50 p-2 rounded">
-                <span className="text-gray-400">ID:</span>
-                <span className="ml-2 text-gray-200">{proyecto.id}</span>
+            <div className="flex items-center mb-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-3">
+                {investigador.nombre?.charAt(0).toUpperCase() || "I"}
               </div>
-              <div className="bg-gray-700/50 p-2 rounded">
-                <span className="text-gray-400">Fecha Inicio:</span>
-                <span className="ml-2 text-gray-200">{formatDate(proyecto.fecha_inicio)}</span>
-              </div>
-              <div className="col-span-2 bg-gray-700/50 p-2 rounded">
-                <span className="text-gray-400">Fecha Fin:</span>
-                <span className="ml-2 text-gray-200">{formatDate(proyecto.fecha_fin)}</span>
+              <div>
+                <h3 className="font-semibold text-gray-200">{investigador.nombre}</h3>
+                <p className="text-sm text-gray-400">{investigador.correo}</p>
               </div>
             </div>
             
-            {proyecto.descripcion && (
-              <div className="mt-3 bg-gray-700/30 p-2 rounded text-sm text-gray-300">
-                <p className="line-clamp-2">{proyecto.descripcion}</p>
+            {/* Información del investigador */}
+            <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
+              <div className="bg-gray-700/50 p-2 rounded">
+                <span className="text-gray-400">ID:</span>
+                <span className="ml-2 text-gray-200">{investigador.id}</span>
               </div>
-            )}
+              <div className="bg-gray-700/50 p-2 rounded">
+                <span className="text-gray-400">Especialidad:</span>
+                <span className="ml-2 text-gray-200">{investigador.especialidad}</span>
+              </div>
+              <div className="col-span-2 bg-gray-700/50 p-2 rounded">
+                <span className="text-gray-400">Estado:</span>
+                <span
+                  className={`ml-2 px-2 py-1 text-xs rounded-full ${
+                    investigador.activo ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
+                  }`}
+                >
+                  {investigador.activo ? "Activo" : "Inactivo"}
+                </span>
+              </div>
+            </div>
             
             <div className="mt-4 flex justify-end space-x-2">
+
+              {/* Botones de acción */}
               <button
-                className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
+                className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                 title="Editar"
               >
                 <svg
@@ -120,8 +97,10 @@ function ProyectoCards({ items }) {
                   />
                 </svg>
               </button>
+
+              {/* Botón de eliminar */}
               <button
-                className="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
+                className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                 title="Eliminar"
               >
                 <svg
@@ -147,4 +126,4 @@ function ProyectoCards({ items }) {
   );
 }
 
-export default ProyectoCards;
+export default InvestigadorCards;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function UsuarioTable({ usuarios, visibleColumns }) {
+function InvestigadorTable({ investigadores, visibleColumns }) {
   const [showTable, setShowTable] = useState(false);
   
   // Efecto de entrada
@@ -15,9 +15,9 @@ function UsuarioTable({ usuarios, visibleColumns }) {
   // Definir etiquetas de columnas
   const columnLabels = {
     id: "ID",
-    nombre_usuario: "Nombre",
+    nombre: "Nombre",
     correo: "Correo",
-    rol: "Rol",
+    especialidad: "Especialidad",
     activo: "Estado"
   };
   
@@ -39,10 +39,10 @@ function UsuarioTable({ usuarios, visibleColumns }) {
   };
 
   // Si no hay datos, mostrar mensaje
-  if (usuarios.length === 0) {
+  if (investigadores.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
-        No hay usuarios para mostrar
+        No hay investigadores para mostrar
       </div>
     );
   }
@@ -71,9 +71,9 @@ function UsuarioTable({ usuarios, visibleColumns }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
-            {usuarios.map((usuario, index) => (
+            {investigadores.map((investigador, index) => (
               <tr
-                key={usuario.id}
+                key={investigador.id}
                 className="hover:bg-gray-700/50 transition-colors duration-200"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
@@ -82,13 +82,13 @@ function UsuarioTable({ usuarios, visibleColumns }) {
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, usuario[column])}
+                    {formatColumnValue(column, investigador[column])}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
                     <button
-                      className="p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
                     >
                       <svg
@@ -106,8 +106,9 @@ function UsuarioTable({ usuarios, visibleColumns }) {
                         />
                       </svg>
                     </button>
+                    
                     <button
-                      className="p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
                     >
                       <svg
@@ -136,4 +137,4 @@ function UsuarioTable({ usuarios, visibleColumns }) {
   );
 }
 
-export default UsuarioTable;
+export default InvestigadorTable;

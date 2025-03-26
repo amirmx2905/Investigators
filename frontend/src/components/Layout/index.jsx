@@ -3,11 +3,11 @@ import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from "react";
 
 // Importar componentes
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import MobileMenu from "./components/MobileMenu";
-import Backdrop from "./components/Backdrop";
-import MenuOverlay from "./components/MenuOverlay";
+import Header from "./subcomponents/Header";
+import Footer from "./subcomponents/Footer";
+import MobileMenu from "./subcomponents/MobileMenu";
+import Backdrop from "./subcomponents/Backdrop";
+import MenuOverlay from "./subcomponents/MenuOverlay";
 
 // Importar hooks
 import useLayoutStyles from "./hooks/useLayoutStyles";
@@ -113,7 +113,7 @@ function Layout({ children }) {
       />
 
       {/* Contenido principal */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-6 h-screen sm:pt-8 pb-16 sm:pb-20 relative z-10">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-16 sm:pb-20 relative z-10">
         {children}
       </main>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function ProyectoTable({ proyectos, visibleColumns }) {
+function UsuarioTable({ usuarios, visibleColumns }) {
   const [showTable, setShowTable] = useState(false);
   
   // Efecto de entrada
@@ -15,65 +15,51 @@ function ProyectoTable({ proyectos, visibleColumns }) {
   // Definir etiquetas de columnas
   const columnLabels = {
     id: "ID",
-    nombre: "Nombre",
-    estado: "Estado",
-    fecha_inicio: "Fecha Inicio",
-    fecha_fin: "Fecha Fin"
+    nombre_usuario: "Nombre",
+    correo: "Correo",
+    rol: "Rol",
+    activo: "Estado"
   };
   
   // Formatear el valor según el tipo de columna
   const formatColumnValue = (column, value) => {
-    if (column === "estado") {
-      const statusStyles = {
-        'activo': "bg-green-900/60 text-green-300",
-        'completado': "bg-blue-900/60 text-blue-300",
-        'suspendido': "bg-yellow-900/60 text-yellow-300",
-        'cancelado': "bg-red-900/60 text-red-300"
-      };
-      
-      const style = statusStyles[value?.toLowerCase()] || "bg-gray-900/60 text-gray-300";
-      
+    if (column === "activo") {
       return (
-        <span className={`px-2 py-1 text-xs rounded-full ${style}`}>
-          {value || "Desconocido"}
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${
+            value ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
+          }`}
+        >
+          {value ? "Activo" : "Inactivo"}
         </span>
       );
-    }
-    
-    if (column === "fecha_inicio" || column === "fecha_fin") {
-      if (!value) return "No definida";
-      
-      const date = new Date(value);
-      if (isNaN(date.getTime())) return "Fecha inválida";
-      
-      return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
     }
     
     return value;
   };
 
   // Si no hay datos, mostrar mensaje
-  if (proyectos.length === 0) {
+  if (usuarios.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
-        No hay proyectos para mostrar
+        No hay usuarios para mostrar
       </div>
     );
   }
 
   return (
+    // Tabla de usuarios
     <div 
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
+      {/* Tabla */}
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
+        {/* Encabezado */}
         <table className="w-full table-auto">
           <thead>
+            {/* Fila de encabezado */}
             <tr className="bg-gray-800/80">
               {visibleColumns.map((column) => (
                 <th
@@ -88,10 +74,11 @@ function ProyectoTable({ proyectos, visibleColumns }) {
               </th>
             </tr>
           </thead>
+          {/* Cuerpo */}
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
-            {proyectos.map((proyecto, index) => (
+            {usuarios.map((usuario, index) => (
               <tr
-                key={proyecto.id}
+                key={usuario.id}
                 className="hover:bg-gray-700/50 transition-colors duration-200"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
@@ -100,13 +87,15 @@ function ProyectoTable({ proyectos, visibleColumns }) {
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, proyecto[column])}
+                    {formatColumnValue(column, usuario[column])}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
+                  {/* Botones de acción */}
                   <div className="flex space-x-2">
+                    {/* Botón de editar */}
                     <button
-                      className="p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
                     >
                       <svg
@@ -124,8 +113,9 @@ function ProyectoTable({ proyectos, visibleColumns }) {
                         />
                       </svg>
                     </button>
+                    {/* Botón de eliminar */}
                     <button
-                      className="p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
                     >
                       <svg
@@ -154,4 +144,4 @@ function ProyectoTable({ proyectos, visibleColumns }) {
   );
 }
 
-export default ProyectoTable;
+export default UsuarioTable;

@@ -1,31 +1,27 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Importar componentes
-import TabNavigation from "./components/TabNavigation";
-import ColumnSelector from "./components/ColumnSelector";
-import Pagination from "./components/Pagination";
+import TabNavigation from "./subcomponents/TabNavigation";
+import ColumnSelector from "./subcomponents/ColumnSelector";
+import Pagination from "./subcomponents/Pagination";
 import {
   UsuarioTable,
   InvestigadorTable,
   ProyectoTable,
-} from "./components/Tables/tables";
+} from "./subcomponents/Tables/tables";
 import {
   UsuarioCards,
   InvestigadorCards,
   ProyectoCards,
-} from "./components/Cards/cards";
+} from "./subcomponents/Cards/cards";
 
-// Importar hooks
 import { useAdminPanel } from "./hooks/useAdminPanel";
 import { useTableControls } from "./hooks/useTableControls";
 
+// Componente principal
 function AdminPanel() {
-  // Estado local para manejar las notificaciones de copia
   const [notification, setNotification] = useState({ show: false, message: "" });
-  
-  // Nuevo estado para controlar la animación de contenido
   const [contentReady, setContentReady] = useState(false);
   
   const {
@@ -52,43 +48,33 @@ function AdminPanel() {
     contentRef,
   } = useTableControls();
 
-  const columnToggleRef = React.useRef(null);
+  const columnToggleRef = useRef(null);
 
-  // Función para mostrar notificación 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, setCurrentPage]);
+
   const showNotification = (message) => {
     setNotification({ show: true, message });
-    setTimeout(() => {
-      setNotification({ show: false, message: "" });
-    }, 3000);
+    setTimeout(() => setNotification({ show: false, message: "" }), 3000);
   };
 
-  // Función para copiar al portapapeles
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-      .then(() => {
-        showNotification("Copiado al portapapeles");
-      })
-      .catch(() => {
-        showNotification("Error al copiar");
-      });
+      .then(() => showNotification("Copiado al portapapeles"))
+      .catch(() => showNotification("Error al copiar"));
   };
 
-  // Efecto para manejar la transición de carga a contenido
   useEffect(() => {
     let timer;
     if (!loading) {
-      // Retrasamos un poco para asegurar que el spinner de carga se elimine completamente
-      timer = setTimeout(() => {
-        setContentReady(true);
-      }, 50);
+      timer = setTimeout(() => setContentReady(true), 50);
     } else {
       setContentReady(false);
     }
-    
     return () => clearTimeout(timer);
   }, [loading]);
 
-  // Estilo global para animaciones
   useEffect(() => {
     const styleEl = document.createElement("style");
     styleEl.id = "admin-panel-styles";
@@ -105,30 +91,13 @@ function AdminPanel() {
         100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
       }
       
-      .admin-fadeIn {
-        animation: fadeIn 0.5s ease-out forwards;
-        opacity: 0; /* Comenzar con opacidad 0 */
-      }
-
-      .no-scrollbar {
-        overflow: hidden;
-      }
+      .admin-fadeIn { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+      .no-scrollbar { overflow: hidden; }
+      .admin-pulse { animation: pulse 2s infinite; }
+      .view-transition { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
       
-      .admin-pulse {
-        animation: pulse 2s infinite;
-      }
+      #column-dropdown { position: absolute; z-index: 50; }
       
-      .view-transition {
-        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-      }
-      
-      /* Asegura que el dropdown esté por encima */
-      #column-dropdown {
-        position: absolute;
-        z-index: 50;
-      }
-      
-      /* Notificación */
       .notification {
         position: fixed;
         bottom: 20px;
@@ -143,25 +112,19 @@ function AdminPanel() {
         z-index: 9999;
       }
       
-      .notification.show {
-        transform: translateY(0);
-        opacity: 1;
-      }
+      .notification.show { transform: translateY(0); opacity: 1; }
       
-      /* Contenedor invisible hasta que esté listo */
       .content-container {
         visibility: hidden;
         opacity: 0;
+        transition: visibility 0.3s, opacity 0.3s;
       }
       
-      .content-container.ready {
-        visibility: visible;
-        opacity: 1;
-      }
+      .content-container.ready { visibility: visible; opacity: 1; }
+      .pagination-container { min-height: 40px; }
     `;
     
     document.head.appendChild(styleEl);
-    
     return () => {
       if (document.getElementById("admin-panel-styles")) {
         document.head.removeChild(styleEl);
@@ -169,12 +132,42 @@ function AdminPanel() {
     };
   }, []);
 
-  // Función para obtener elementos actuales paginados
   const getCurrentItems = (items) => {
+    if (!items?.length) return [];
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     return items.slice(indexOfFirstItem, indexOfLastItem);
   };
+
+  const getTabData = () => {
+    const tabConfig = {
+      usuarios: {
+        title: "Lista de Usuarios",
+        items: usuarios,
+        TableComponent: UsuarioTable,
+        CardComponent: UsuarioCards,
+        columns: visibleColumns.usuarios
+      },
+      investigadores: {
+        title: "Lista de Investigadores",
+        items: investigadores,
+        TableComponent: InvestigadorTable,
+        CardComponent: InvestigadorCards,
+        columns: visibleColumns.investigadores
+      },
+      proyectos: {
+        title: "Lista de Proyectos",
+        items: proyectos,
+        TableComponent: ProyectoTable,
+        CardComponent: ProyectoCards,
+        columns: visibleColumns.proyectos
+      }
+    };
+    
+    return tabConfig[activeTab] || tabConfig.usuarios;
+  };
+
+  const { title, items, TableComponent, CardComponent, columns } = getTabData();
 
   return (
     <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
@@ -185,12 +178,9 @@ function AdminPanel() {
         Panel de Control Administrativo
       </h2>
 
-      <TabNavigation 
-        activeTab={activeTab} 
-        changeTab={changeTab} 
-      />
+      <TabNavigation activeTab={activeTab} changeTab={changeTab} />
 
-      {/* Notificación */}
+      {/* Notigicacón */}
       <div className={`notification ${notification.show ? 'show' : ''}`}>
         {notification.message}
       </div>
@@ -203,25 +193,18 @@ function AdminPanel() {
           </div>
         </div>
       ) : (
-        // Aplicamos clase especial para controlar la visibilidad
         <div className={`content-container ${contentReady ? 'ready' : ''}`}>
           <div
             className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
             style={{ animationDelay: "0.3s" }}
           >
-            {/* Título de sección */}
-            <h3
-              className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300"
-            >
-              {activeTab === "usuarios" && "Lista de Usuarios"}
-              {activeTab === "investigadores" && "Lista de Investigadores"}
-              {activeTab === "proyectos" && "Lista de Proyectos"}
+            {/* Titulo */}
+            <h3 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
+              {title}
             </h3>
 
-            {/* Controles de visualización */}
-            <div
-              className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300"
-            >
+            {/* Controles de Tabla */}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300">
               <div className="flex items-center space-x-2 z-20">
                 <button
                   className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
@@ -294,88 +277,33 @@ function AdminPanel() {
               </select>
             </div>
 
-            {/* Contenido dinámico según la pestaña activa */}
-            <div
-              ref={contentRef}
-              className="relative min-h-[200px]"
-            >
-              {activeTab === "usuarios" && (
-                <div className="view-transition">
-                  {viewMode === "table" && !isMobile ? (
-                    <UsuarioTable
-                      usuarios={getCurrentItems(usuarios)}
-                      visibleColumns={visibleColumns.usuarios}
+            {/* Contenido Dinámico */}
+            <div ref={contentRef} className="relative min-h-[200px]">
+              <div className="view-transition">
+                {viewMode === "table" && !isMobile ? (
+                  <TableComponent
+                    {...{[activeTab]: getCurrentItems(items)}}
+                    visibleColumns={columns}
+                    onCopy={copyToClipboard}
+                  />
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <CardComponent 
+                      items={getCurrentItems(items)}
                       onCopy={copyToClipboard}
                     />
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <UsuarioCards 
-                        items={getCurrentItems(usuarios)}
-                        onCopy={copyToClipboard}
-                      />
-                    </div>
-                  )}
-                  
+                  </div>
+                )}
+                
+                <div className="pagination-container">
                   <Pagination
-                    totalItems={usuarios.length}
+                    totalItems={items?.length || 0}
                     currentPage={currentPage}
                     itemsPerPage={itemsPerPage}
                     paginate={setCurrentPage}
                   />
                 </div>
-              )}
-              
-              {activeTab === "investigadores" && (
-                <div className="view-transition">
-                  {viewMode === "table" && !isMobile ? (
-                    <InvestigadorTable
-                      investigadores={getCurrentItems(investigadores)}
-                      visibleColumns={visibleColumns.investigadores}
-                      onCopy={copyToClipboard}
-                    />
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <InvestigadorCards 
-                        items={getCurrentItems(investigadores)}
-                        onCopy={copyToClipboard}
-                      />
-                    </div>
-                  )}
-                  
-                  <Pagination
-                    totalItems={investigadores.length}
-                    currentPage={currentPage}
-                    itemsPerPage={itemsPerPage}
-                    paginate={setCurrentPage}
-                  />
-                </div>
-              )}
-              
-              {activeTab === "proyectos" && (
-                <div className="view-transition">
-                  {viewMode === "table" && !isMobile ? (
-                    <ProyectoTable
-                      proyectos={getCurrentItems(proyectos)}
-                      visibleColumns={visibleColumns.proyectos}
-                      onCopy={copyToClipboard}
-                    />
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <ProyectoCards 
-                        items={getCurrentItems(proyectos)}
-                        onCopy={copyToClipboard}
-                      />
-                    </div>
-                  )}
-                  
-                  <Pagination
-                    totalItems={proyectos.length}
-                    currentPage={currentPage}
-                    itemsPerPage={itemsPerPage}
-                    paginate={setCurrentPage}
-                  />
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
