@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 from datetime import timedelta
 import os
 
+# Autores:
+# Alan Omar Hernández Bella,
+# Amir Sebastián Flores Cardona
 
 load_dotenv()
 
