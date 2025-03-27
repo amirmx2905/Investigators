@@ -1,56 +1,73 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function useTableControls() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [viewMode, setViewMode] = useState("table");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [columnsDropdownOpen, setColumnsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const contentRef = useRef(null);
 
+  // Configuración inicial de columnas visibles
   const [visibleColumns, setVisibleColumns] = useState({
     usuarios: ["id", "nombre_usuario", "rol", "activo"],
     investigadores: ["id", "nombre", "correo", "activo"],
-    proyectos: ["id", "nombre", "estado", "fecha_inicio"],
+    proyectos: ["id", "nombre", "estado", "fecha_inicio", "fecha_fin"],
   });
 
-  const contentRef = useRef(null);
+  // Checa si se está en vista mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
 
-  // Cambiar entre vista de tabla y tarjetas sin animación
-  const toggleViewMode = useCallback(
-    (mode) => {
-      if (mode === viewMode) return;
-      setViewMode(mode);
-    },
-    [viewMode]
-  );
+      // Automaticamente cambia a vista de tarjetas si se está en vista de tabla y se hace resize a mobile
+      if (isMobileView && viewMode === "table") {
+        setViewMode("cards");
+      }
+    };
 
-  // Función para mostrar/ocultar columnas
-  const toggleColumn = useCallback((tab, column) => {
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, [viewMode]);
+
+  // Cambio entre vista de tabla y tarjetas
+  const toggleViewMode = (mode) => {
+    if (mode === "table" && isMobile) return; 
+    setViewMode(mode);
+  };
+
+  // Activa la visibilidad de cada columna
+  const toggleColumn = (tab, column) => {
     setVisibleColumns((prev) => {
       const current = [...prev[tab]];
 
-      // No permitir quitar la última columna
       if (current.includes(column)) {
-        if (current.length > 1) {
-          return { ...prev, [tab]: current.filter((col) => col !== column) };
-        }
-        return prev;
+        // No se remueve si solo queda una columna
+        if (current.length === 1) return prev;
+        return { ...prev, [tab]: current.filter((col) => col !== column) };
       } else {
         return { ...prev, [tab]: [...current, column] };
       }
     });
-  }, []);
+  };
 
   return {
+    viewMode,
+    toggleViewMode,
     currentPage,
     setCurrentPage,
     itemsPerPage,
     setItemsPerPage,
-    viewMode,
-    toggleViewMode,
     visibleColumns,
     toggleColumn,
     columnsDropdownOpen,
     setColumnsDropdownOpen,
     contentRef,
+    isMobile,
   };
 }

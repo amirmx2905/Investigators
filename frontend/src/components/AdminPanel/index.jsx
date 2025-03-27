@@ -21,9 +21,12 @@ import { useTableControls } from "./hooks/useTableControls";
 
 // Componente principal
 function AdminPanel() {
-  const [notification, setNotification] = useState({ show: false, message: "" });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
   const [contentReady, setContentReady] = useState(false);
-  
+
   const {
     loading,
     usuarios,
@@ -60,7 +63,8 @@ function AdminPanel() {
   };
 
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard
+      .writeText(text)
       .then(() => showNotification("Copiado al portapapeles"))
       .catch(() => showNotification("Error al copiar"));
   };
@@ -78,7 +82,7 @@ function AdminPanel() {
   useEffect(() => {
     const styleEl = document.createElement("style");
     styleEl.id = "admin-panel-styles";
-    
+
     styleEl.innerHTML = `
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
@@ -123,7 +127,7 @@ function AdminPanel() {
       .content-container.ready { visibility: visible; opacity: 1; }
       .pagination-container { min-height: 40px; }
     `;
-    
+
     document.head.appendChild(styleEl);
     return () => {
       if (document.getElementById("admin-panel-styles")) {
@@ -146,24 +150,24 @@ function AdminPanel() {
         items: usuarios,
         TableComponent: UsuarioTable,
         CardComponent: UsuarioCards,
-        columns: visibleColumns.usuarios
+        columns: visibleColumns.usuarios,
       },
       investigadores: {
         title: "Lista de Investigadores",
         items: investigadores,
         TableComponent: InvestigadorTable,
         CardComponent: InvestigadorCards,
-        columns: visibleColumns.investigadores
+        columns: visibleColumns.investigadores,
       },
       proyectos: {
         title: "Lista de Proyectos",
         items: proyectos,
         TableComponent: ProyectoTable,
         CardComponent: ProyectoCards,
-        columns: visibleColumns.proyectos
-      }
+        columns: visibleColumns.proyectos,
+      },
     };
-    
+
     return tabConfig[activeTab] || tabConfig.usuarios;
   };
 
@@ -171,7 +175,7 @@ function AdminPanel() {
 
   return (
     <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
-      <h2 
+      <h2
         className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 admin-fadeIn"
         style={{ animationDelay: "0.1s" }}
       >
@@ -181,7 +185,7 @@ function AdminPanel() {
       <TabNavigation activeTab={activeTab} changeTab={changeTab} />
 
       {/* Notigicacón */}
-      <div className={`notification ${notification.show ? 'show' : ''}`}>
+      <div className={`notification ${notification.show ? "show" : ""}`}>
         {notification.message}
       </div>
 
@@ -189,11 +193,14 @@ function AdminPanel() {
         <div className="flex justify-center items-center h-64">
           <div className="w-16 h-16 relative">
             <div className="w-16 h-16 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin"></div>
-            <div className="w-16 h-16 rounded-full absolute top-0 left-0 border-4 border-transparent border-b-indigo-500 animate-spin" style={{animationDuration: "1.5s"}}></div>
+            <div
+              className="w-16 h-16 rounded-full absolute top-0 left-0 border-4 border-transparent border-b-indigo-500 animate-spin"
+              style={{ animationDuration: "1.5s" }}
+            ></div>
           </div>
         </div>
       ) : (
-        <div className={`content-container ${contentReady ? 'ready' : ''}`}>
+        <div className={`content-container ${contentReady ? "ready" : ""}`}>
           <div
             className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
             style={{ animationDelay: "0.3s" }}
@@ -282,19 +289,19 @@ function AdminPanel() {
               <div className="view-transition">
                 {viewMode === "table" && !isMobile ? (
                   <TableComponent
-                    {...{[activeTab]: getCurrentItems(items)}}
+                    {...{ [activeTab]: getCurrentItems(items) }}
                     visibleColumns={columns}
                     onCopy={copyToClipboard}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <CardComponent 
+                    <CardComponent
                       items={getCurrentItems(items)}
                       onCopy={copyToClipboard}
                     />
                   </div>
                 )}
-                
+
                 <div className="pagination-container">
                   <Pagination
                     totalItems={items?.length || 0}
