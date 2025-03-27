@@ -1,113 +1,93 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-function ProyectoCards({ items }) {
-  const [visibleItems, setVisibleItems] = useState([]);
-  
-  // Animación de entrada escalonada
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const showItems = [];
-      
-      items.forEach((item, index) => {
-        setTimeout(() => {
-          showItems.push(item);
-          setVisibleItems([...showItems]);
-        }, 50 * index);
-      });
-    }, 50);
-    
-    return () => clearTimeout(timer);
-  }, [items]);
-  
-  // Función para formatear fechas
-  const formatDate = (dateString) => {
-    if (!dateString) return "No definida";
-    
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Fecha inválida";
-    
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-  
-  // Función para obtener estilo según estado
-  const getStatusStyle = (estado) => {
-    switch (estado?.toLowerCase()) {
-      case 'activo':
-        return "bg-green-900/60 text-green-300";
-      case 'completado':
-        return "bg-blue-900/60 text-blue-300";
-      case 'suspendido':
-        return "bg-yellow-900/60 text-yellow-300";
-      case 'cancelado':
-        return "bg-red-900/60 text-red-300";
-      default:
-        return "bg-gray-900/60 text-gray-300";
-    }
-  };
-  
-  if (items.length === 0) {
+function ProyectoCards({ items, onEdit, onDelete }) {
+  if (!items || items.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400">
+      <div className="col-span-full text-center py-8 text-gray-400">
         No hay proyectos para mostrar
       </div>
     );
   }
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString();
+  };
+
+  const getStatusStyles = (status) => {
+    const styles = {
+      'activo': "bg-green-900/60 text-green-300",
+      'completado': "bg-blue-900/60 text-blue-300",
+      'suspendido': "bg-yellow-900/60 text-yellow-300",
+      'cancelado': "bg-red-900/60 text-red-300"
+    };
+    
+    return styles[status] || "bg-gray-900/60 text-gray-300";
+  };
+
   return (
     <>
-      {/* Mapear los proyectos */}
       {items.map((proyecto, index) => (
-        // Tarjeta del proyecto
         <div
           key={proyecto.id}
-          className={`bg-gray-800/60 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:border-blue-500/40 ${
-            visibleItems.includes(proyecto)
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: `${index * 50}ms` }}
+          className="bg-gray-800/80 border border-gray-700 rounded-lg overflow-hidden shadow-lg hover:shadow-blue-900/20 transition-all duration-300 hover:border-blue-500/30"
+          style={{
+            animation: "fadeIn 0.5s ease-out forwards",
+            animationDelay: `${index * 100}ms`,
+            opacity: 0,
+          }}
         >
-          {/* Cabecera del proyecto */}
-          <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 px-4 py-3 border-b border-gray-700">
-            <h3 className="font-semibold text-gray-200">{proyecto.nombre}</h3>
-            <span 
-              className={`px-2 py-1 text-xs rounded-full inline-block mt-2 ${getStatusStyle(proyecto.estado)}`}
-            >
-              {proyecto.estado}
-            </span>
-          </div>
-          {/* Información del proyecto */}
           <div className="p-4">
-            <div className="grid grid-cols-2 gap-2 text-sm">
+            {/* Cabecera */}
+            <div className="flex items-center">
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-indigo-600 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                {proyecto.nombre ? proyecto.nombre.charAt(0).toUpperCase() : "P"}
+              </div>
+              <div className="ml-3">
+                <h3 className="font-semibold text-white">
+                  {proyecto.nombre}
+                </h3>
+                <span
+                  className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
+                    getStatusStyles(proyecto.estado)
+                  }`}
+                >
+                  {proyecto.estado || "Sin estado"}
+                </span>
+              </div>
+            </div>
+            
+            {/* Información del proyecto */}
+            <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
               <div className="bg-gray-700/50 p-2 rounded">
                 <span className="text-gray-400">ID:</span>
                 <span className="ml-2 text-gray-200">{proyecto.id}</span>
               </div>
               <div className="bg-gray-700/50 p-2 rounded">
-                <span className="text-gray-400">Fecha Inicio:</span>
+                <span className="text-gray-400">Inicio:</span>
                 <span className="ml-2 text-gray-200">{formatDate(proyecto.fecha_inicio)}</span>
               </div>
               <div className="col-span-2 bg-gray-700/50 p-2 rounded">
-                <span className="text-gray-400">Fecha Fin:</span>
+                <span className="text-gray-400">Fin:</span>
                 <span className="ml-2 text-gray-200">{formatDate(proyecto.fecha_fin)}</span>
               </div>
             </div>
             
+            {/* Descripción (si existe) */}
             {proyecto.descripcion && (
               <div className="mt-3 bg-gray-700/30 p-2 rounded text-sm text-gray-300">
                 <p className="line-clamp-2">{proyecto.descripcion}</p>
               </div>
             )}
             
+            {/* Botones de acción */}
             <div className="mt-4 flex justify-end space-x-2">
-              {/* Botón de editar */}
               <button
                 className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                 title="Editar"
+                onClick={() => onEdit(proyecto)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -124,11 +104,10 @@ function ProyectoCards({ items }) {
                   />
                 </svg>
               </button>
-
-              {/* Botón de eliminar */}
-              <button 
+              <button
                 className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                 title="Eliminar"
+                onClick={() => onDelete(proyecto)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

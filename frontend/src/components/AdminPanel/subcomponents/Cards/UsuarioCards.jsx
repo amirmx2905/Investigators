@@ -1,27 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-function UsuarioCards({ items }) {
-  const [visibleItems, setVisibleItems] = useState([]);
-  
-  // Animación de entrada escalonada
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const showItems = [];
-      
-      items.forEach((item, index) => {
-        setTimeout(() => {
-          showItems.push(item);
-          setVisibleItems([...showItems]);
-        }, 50 * index);
-      });
-    }, 50);
-    
-    return () => clearTimeout(timer);
-  }, [items]);
-  
-  if (items.length === 0) {
+function UsuarioCards({ items, onEdit, onDelete }) {
+  if (!items || items.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400">
+      <div className="col-span-full text-center py-8 text-gray-400">
         No hay usuarios para mostrar
       </div>
     );
@@ -29,26 +11,26 @@ function UsuarioCards({ items }) {
 
   return (
     <>
-      { /* Mapear los usuarios */ }
       {items.map((usuario, index) => (
-        // Tarjeta de usuario
         <div
           key={usuario.id}
-          className={`bg-gray-800/60 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:border-blue-500/40 ${
-            visibleItems.includes(usuario)
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-          style={{ transitionDelay: `${index * 50}ms` }}
+          className="bg-gray-800/80 border border-gray-700 rounded-lg overflow-hidden shadow-lg hover:shadow-blue-900/20 transition-all duration-300 hover:border-blue-500/30"
+          style={{
+            animation: "fadeIn 0.5s ease-out forwards",
+            animationDelay: `${index * 100}ms`,
+            opacity: 0,
+          }}
         >
-          {/* Contenido de la tarjeta */}
           <div className="p-4">
-            <div className="flex items-center mb-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg mr-3">
-                {usuario.nombre_usuario?.charAt(0).toUpperCase() || "U"}
+            {/* Cabecera */}
+            <div className="flex items-center">
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                {usuario.nombre_usuario ? usuario.nombre_usuario.charAt(0).toUpperCase() : "U"}
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-200">{usuario.nombre_usuario}</h3>
+              <div className="ml-3">
+                <h3 className="font-semibold text-white">
+                  {usuario.nombre_usuario}
+                </h3>
                 <p className="text-sm text-gray-400">{usuario.correo}</p>
               </div>
             </div>
@@ -80,6 +62,7 @@ function UsuarioCards({ items }) {
               <button
                 className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                 title="Editar"
+                onClick={() => onEdit(usuario)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,11 +79,10 @@ function UsuarioCards({ items }) {
                   />
                 </svg>
               </button>
-
-              {/* Botón de eliminar */}
               <button
                 className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                 title="Eliminar"
+                onClick={() => onDelete(usuario)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import TabNavigation from "./subcomponents/TabNavigation";
@@ -16,16 +16,34 @@ import {
   ProyectoCards,
 } from "./subcomponents/Cards/cards";
 
+import {
+  UsuarioForm,
+  InvestigadorForm,
+  ProyectoForm,
+  DeleteConfirmation
+} from "./subcomponents/Forms/forms";
+
 import { useAdminPanel } from "./hooks/useAdminPanel";
 import { useTableControls } from "./hooks/useTableControls";
 
 // Componente principal
 function AdminPanel() {
-  const [notification, setNotification] = useState({
-    show: false,
-    message: "",
-  });
   const [contentReady, setContentReady] = useState(false);
+
+  // Estados para modales CRUD
+  const [formModal, setFormModal] = useState({
+    isOpen: false,
+    type: null,
+    item: null
+  });
+
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    type: null,
+    item: null
+  });
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     loading,
@@ -34,8 +52,7 @@ function AdminPanel() {
     proyectos,
     activeTab,
     changeTab,
-    // eslint-disable-next-line no-unused-vars
-    isMobile: adminPanelIsMobile,
+    refreshData,
     currentPage,
     itemsPerPage,
     totalItems,
@@ -51,17 +68,21 @@ function AdminPanel() {
     columnsDropdownOpen,
     setColumnsDropdownOpen,
     contentRef,
-    isMobile: tableControlsIsMobile,
+    isMobile,
   } = useTableControls();
-
-  // Usar una sola versión de isMobile
-  const isMobile = tableControlsIsMobile;
 
   const columnToggleRef = useRef(null);
 
   const showNotification = (message) => {
-    setNotification({ show: true, message });
-    setTimeout(() => setNotification({ show: false, message: "" }), 3000);
+    toast(message, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   const copyToClipboard = (text) => {
@@ -138,35 +159,235 @@ function AdminPanel() {
     };
   }, []);
 
+  // Funciones CRUD
+
+  // Abrir modal para crear
+  const handleCreate = (type) => {
+    setFormModal({
+      isOpen: true,
+      type,
+      item: null
+    });
+  };
+
+  // Abrir modal para editar
+  const handleEdit = (type, item) => {
+    setFormModal({
+      isOpen: true,
+      type,
+      item
+    });
+  };
+
+  // Abrir modal para confirmar eliminación
+  const handleDeleteClick = (type, item) => {
+    setDeleteModal({
+      isOpen: true,
+      type,
+      item
+    });
+  };
+
+  // Procesar eliminación
+  const handleConfirmDelete = async () => {
+    const { type, item } = deleteModal;
+    
+    if (!item || !type) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      const response = await fetch(`/api/${type}s/${item.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error al eliminar ${type}`);
+      }
+      
+      // Recargar datos
+      refreshData();
+      
+      // Mostrar notificación
+      showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} eliminado con éxito`);
+      
+      // Cerrar modal
+      setDeleteModal({
+        isOpen: false,
+        type: null,
+        item: null
+      });
+    } catch (error) {
+      console.error(`Error al eliminar ${type}:`, error);
+      showNotification(`Error al eliminar: ${error.message}`);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Manejar éxito en formulario
+  const handleFormSuccess = () => {
+    // Recargar datos
+    refreshData();
+    
+    // Mostrar notificación
+    const actionText = formModal.item ? 'actualizado' : 'creado';
+    showNotification(`${formModal.type.charAt(0).toUpperCase() + formModal.type.slice(1)} ${actionText} con éxito`);
+    
+    // Cerrar modal
+    handleCloseForm();
+  };
+
+  // Cerrar modal de formulario
+  const handleCloseForm = () => {
+    setFormModal({
+      isOpen: false,
+      type: null,
+      item: null
+    });
+  };
+
+  // Función para renderizar botón de creación según pestaña activa
+  const renderCreateButton = () => {
+    // Determinar el tipo basado en la pestaña activa
+    let type = "";
+    let label = "";
+    
+    switch (activeTab) {
+      case 'usuarios':
+        type = "usuario";
+        label = "Usuario";
+        break;
+      case 'investigadores':
+        type = "investigador";
+        label = "Investigador";
+        break;
+      case 'proyectos':
+        type = "proyecto";
+        label = "Proyecto";
+        break;
+      default:
+        type = "usuario";
+        label = "Usuario";
+    }
+    
+    return (
+      <button
+        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+        onClick={() => handleCreate(type)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        Crear {label}
+      </button>
+    );
+  };
+
+  // Renderizar el formulario correcto según el tipo
+  const renderForm = () => {
+    const { type, item, isOpen } = formModal;
+    
+    if (!isOpen) return null;
+    
+    switch (type) {
+      case 'usuario':
+        return (
+          <UsuarioForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            usuario={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case 'investigador':
+        return (
+          <InvestigadorForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            investigador={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case 'proyecto':
+        return (
+          <ProyectoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            proyecto={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   const getTabData = () => {
+    let type = "";
+    
+    switch (activeTab) {
+      case 'usuarios':
+        type = "usuario";
+        break;
+      case 'investigadores':
+        type = "investigador";
+        break;
+      case 'proyectos':
+        type = "proyecto";
+        break;
+      default:
+        type = "usuario";
+    }
+    
     const tabConfig = {
       usuarios: {
         title: "Lista de Usuarios",
-        items: usuarios,
+        items: usuarios || [], 
         TableComponent: UsuarioTable,
         CardComponent: UsuarioCards,
-        columns: visibleColumns.usuarios,
+        columns: visibleColumns.usuarios || [],
+        onEdit: (item) => handleEdit(type, item),
+        onDelete: (item) => handleDeleteClick(type, item)
       },
       investigadores: {
         title: "Lista de Investigadores",
-        items: investigadores,
+        items: investigadores || [], 
         TableComponent: InvestigadorTable,
         CardComponent: InvestigadorCards,
-        columns: visibleColumns.investigadores,
+        columns: visibleColumns.investigadores || [],
+        onEdit: (item) => handleEdit(type, item),
+        onDelete: (item) => handleDeleteClick(type, item)
       },
       proyectos: {
         title: "Lista de Proyectos",
-        items: proyectos,
+        items: proyectos || [], 
         TableComponent: ProyectoTable,
         CardComponent: ProyectoCards,
-        columns: visibleColumns.proyectos,
+        columns: visibleColumns.proyectos || [],
+        onEdit: (item) => handleEdit(type, item),
+        onDelete: (item) => handleDeleteClick(type, item)
       },
     };
-
+  
     return tabConfig[activeTab] || tabConfig.usuarios;
   };
 
-  const { title, items, TableComponent, CardComponent, columns } = getTabData();
+  const { title, items, TableComponent, CardComponent, columns, onEdit, onDelete } = getTabData();
 
   return (
     <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
@@ -178,11 +399,6 @@ function AdminPanel() {
       </h2>
 
       <TabNavigation activeTab={activeTab} changeTab={changeTab} />
-
-      {/* Notigicacón */}
-      <div className={`notification ${notification.show ? "show" : ""}`}>
-        {notification.message}
-      </div>
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
@@ -200,10 +416,15 @@ function AdminPanel() {
             className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
             style={{ animationDelay: "0.3s" }}
           >
-            {/* Titulo */}
-            <h3 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
-              {title}
-            </h3>
+            {/* Título y botón de crear */}
+            <div className="flex flex-wrap justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
+                {title}
+              </h3>
+              
+              {/* Botón de crear */}
+              {renderCreateButton()}
+            </div>
 
             {/* Controles de Tabla */}
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300">
@@ -267,7 +488,6 @@ function AdminPanel() {
                 className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
                 value={itemsPerPage}
                 onChange={(e) => {
-                  console.log(`Cambiando a ${Number(e.target.value)} elementos por página`);
                   handleItemsPerPageChange(Number(e.target.value));
                 }}
               >
@@ -284,15 +504,21 @@ function AdminPanel() {
               <div className="view-transition">
                 {viewMode === "table" && !isMobile ? (
                   <TableComponent
-                    {...{ [activeTab]: items }}
-                    visibleColumns={columns}
+                    usuarios={activeTab === 'usuarios' ? items || [] : []}
+                    investigadores={activeTab === 'investigadores' ? items || [] : []}
+                    proyectos={activeTab === 'proyectos' ? items || [] : []}
+                    visibleColumns={columns || []}
                     onCopy={copyToClipboard}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <CardComponent
-                      items={items}
+                      items={items || []}
                       onCopy={copyToClipboard}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
                     />
                   </div>
                 )}
@@ -310,6 +536,19 @@ function AdminPanel() {
           </div>
         </div>
       )}
+      
+      {/* Renderizar modales */}
+      {renderForm()}
+      
+      <DeleteConfirmation
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ isOpen: false, type: null, item: null })}
+        onConfirm={handleConfirmDelete}
+        itemName={deleteModal.item?.nombre || deleteModal.item?.nombre_usuario || ''}
+        itemType={deleteModal.type ? deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1) : ''}
+        isDeleting={isDeleting}
+      />
+      
       <ToastContainer limit={3} />
     </div>
   );

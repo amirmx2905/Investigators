@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-function ProyectoTable({ proyectos, visibleColumns }) {
+function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
+  
   const [showTable, setShowTable] = useState(false);
   
-  // Efecto de entrada
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
@@ -12,7 +12,6 @@ function ProyectoTable({ proyectos, visibleColumns }) {
     return () => clearTimeout(timer);
   }, []);
   
-  // Definir etiquetas de columnas
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
@@ -21,7 +20,6 @@ function ProyectoTable({ proyectos, visibleColumns }) {
     fecha_fin: "Fecha Fin"
   };
   
-  // Formatear el valor según el tipo de columna
   const formatColumnValue = (column, value) => {
     if (column === "estado") {
       const statusStyles = {
@@ -31,32 +29,29 @@ function ProyectoTable({ proyectos, visibleColumns }) {
         'cancelado': "bg-red-900/60 text-red-300"
       };
       
-      const style = statusStyles[value?.toLowerCase()] || "bg-gray-900/60 text-gray-300";
-      
       return (
-        <span className={`px-2 py-1 text-xs rounded-full ${style}`}>
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${
+            statusStyles[value] || "bg-gray-900/60 text-gray-300"
+          }`}
+        >
           {value || "Desconocido"}
         </span>
       );
     }
     
     if (column === "fecha_inicio" || column === "fecha_fin") {
-      if (!value) return "No definida";
+      if (!value) return "N/A";
       
       const date = new Date(value);
-      if (isNaN(date.getTime())) return "Fecha inválida";
+      if (isNaN(date.getTime())) return value;
       
-      return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
+      return date.toLocaleDateString();
     }
     
     return value;
   };
 
-  // Si no hay datos, mostrar mensaje
   if (proyectos.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
@@ -66,7 +61,6 @@ function ProyectoTable({ proyectos, visibleColumns }) {
   }
 
   return (
-    // Tabla de proyectos
     <div 
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -114,6 +108,7 @@ function ProyectoTable({ proyectos, visibleColumns }) {
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
+                      onClick={() => onEdit(proyecto)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -134,6 +129,7 @@ function ProyectoTable({ proyectos, visibleColumns }) {
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
+                      onClick={() => onDelete(proyecto)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

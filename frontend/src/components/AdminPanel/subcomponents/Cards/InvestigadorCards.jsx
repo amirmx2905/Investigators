@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-function InvestigadorCards({ items }) {
+function InvestigadorCards({ items, onEdit, onDelete }) {
   const [visibleItems, setVisibleItems] = useState([]);
   
-  // Animación de entrada escalonada
   useEffect(() => {
     const timer = setTimeout(() => {
       const showItems = [];
@@ -31,7 +30,6 @@ function InvestigadorCards({ items }) {
     <>
       {/* Mapear los investigadores */}
       {items.map((investigador, index) => (
-        // Tarjeta de investigador
         <div
           key={investigador.id}
           className={`bg-gray-800/60 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:border-blue-500/40 ${
@@ -66,8 +64,10 @@ function InvestigadorCards({ items }) {
               <div className="col-span-2 bg-gray-700/50 p-2 rounded">
                 <span className="text-gray-400">Estado:</span>
                 <span
-                  className={`ml-2 px-2 py-1 text-xs rounded-full ${
-                    investigador.activo ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
+                  className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+                    investigador.activo
+                      ? "bg-green-900/60 text-green-300"
+                      : "bg-red-900/60 text-red-300"
                   }`}
                 >
                   {investigador.activo ? "Activo" : "Inactivo"}
@@ -75,11 +75,11 @@ function InvestigadorCards({ items }) {
               </div>
             </div>
             
-            <div className="mt-4 flex justify-end space-x-2">
-
-              {/* Botones de acción */}
+            {/* Acciones */}
+            <div className="mt-4 flex justify-end space-x-2 border-t border-gray-700 pt-3">
               <button
-                className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
+                onClick={() => onEdit(investigador)}
+                className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
                 title="Editar"
               >
                 <svg
@@ -97,10 +97,9 @@ function InvestigadorCards({ items }) {
                   />
                 </svg>
               </button>
-
-              {/* Botón de eliminar */}
               <button
-                className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
+                onClick={() => onDelete(investigador)}
+                className="p-2 text-red-400 hover:text-red-300 transition-colors"
                 title="Eliminar"
               >
                 <svg

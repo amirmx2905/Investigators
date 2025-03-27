@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-function InvestigadorTable({ investigadores, visibleColumns }) {
+function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete }) {
   const [showTable, setShowTable] = useState(false);
   
-  // Efecto de entrada
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
@@ -12,7 +11,6 @@ function InvestigadorTable({ investigadores, visibleColumns }) {
     return () => clearTimeout(timer);
   }, []);
   
-  // Definir etiquetas de columnas
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
@@ -21,7 +19,6 @@ function InvestigadorTable({ investigadores, visibleColumns }) {
     activo: "Estado"
   };
   
-  // Formatear el valor según el tipo de columna
   const formatColumnValue = (column, value) => {
     if (column === "activo") {
       return (
@@ -38,7 +35,6 @@ function InvestigadorTable({ investigadores, visibleColumns }) {
     return value;
   };
 
-  // Si no hay datos, mostrar mensaje
   if (investigadores.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
@@ -90,6 +86,7 @@ function InvestigadorTable({ investigadores, visibleColumns }) {
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
+                      onClick={() => onEdit(investigador)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -106,10 +103,10 @@ function InvestigadorTable({ investigadores, visibleColumns }) {
                         />
                       </svg>
                     </button>
-                    
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
+                      onClick={() => onDelete(investigador)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

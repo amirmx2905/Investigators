@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-function UsuarioTable({ usuarios, visibleColumns }) {
+function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
+
   const [showTable, setShowTable] = useState(false);
   
-  // Efecto de entrada
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
@@ -12,7 +12,6 @@ function UsuarioTable({ usuarios, visibleColumns }) {
     return () => clearTimeout(timer);
   }, []);
   
-  // Definir etiquetas de columnas
   const columnLabels = {
     id: "ID",
     nombre_usuario: "Nombre",
@@ -21,7 +20,6 @@ function UsuarioTable({ usuarios, visibleColumns }) {
     activo: "Estado"
   };
   
-  // Formatear el valor según el tipo de columna
   const formatColumnValue = (column, value) => {
     if (column === "activo") {
       return (
@@ -38,8 +36,7 @@ function UsuarioTable({ usuarios, visibleColumns }) {
     return value;
   };
 
-  // Si no hay datos, mostrar mensaje
-  if (usuarios.length === 0) {
+  if (!usuarios || usuarios.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
         No hay usuarios para mostrar
@@ -48,7 +45,6 @@ function UsuarioTable({ usuarios, visibleColumns }) {
   }
 
   return (
-    // Tabla de usuarios
     <div 
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -97,6 +93,7 @@ function UsuarioTable({ usuarios, visibleColumns }) {
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
+                      onClick={() => onEdit(usuario)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +114,7 @@ function UsuarioTable({ usuarios, visibleColumns }) {
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"
+                      onClick={() => onDelete(usuario)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
