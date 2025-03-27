@@ -43,7 +43,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
         <button
           onClick={() => currentPage > 1 && paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-3 py-1 rounded-md ${
+          className={`cursor-pointer px-3 py-1 rounded-md ${
             currentPage === 1
               ? 'text-gray-500 cursor-not-allowed'
               : 'text-gray-300 hover:bg-gray-700 hover:text-blue-300'
