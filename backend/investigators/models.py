@@ -254,12 +254,11 @@ class Usuario(models.Model):
         ('admin', 'Administrador'),
         ('investigador', 'Investigador'),
         ('estudiante', 'Estudiante'),
-        ('invitado', 'Invitado'),
     )
     
     nombre_usuario = models.CharField(max_length=50, unique=True, default="usuario_temporal")
     contrasena = models.CharField(max_length=255, null=True, blank=True)
-    rol = models.CharField(max_length=15, choices=ROLES, default='invitado')
+    rol = models.CharField(max_length=15, choices=ROLES)
     investigador = models.ForeignKey('Investigador', on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios')
     estudiante = models.ForeignKey('Estudiante', on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios')
     fecha_creacion = models.DateTimeField(auto_now_add=True)

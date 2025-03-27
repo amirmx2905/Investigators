@@ -15,6 +15,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'fecha_creacion', 'ultimo_acceso', 'intentos_login', 'activo'
         ]
         extra_kwargs = {
+            'rol': {'required': True},
             'contrasena': {'write_only': True}
         }
     
