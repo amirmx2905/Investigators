@@ -4,4 +4,15 @@ from investigators.models import Investigador
 class InvestigadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Investigador
-        fields = '__all__'
+        fields = [
+            'id', 
+            'nombre',    
+            'correo', 
+            'celular',
+            'area', 
+            'especialidad',
+            'nivel_edu',
+            'nivel_snii',
+            'fecha_asignacion_snii',
+            'activo'
+        ]

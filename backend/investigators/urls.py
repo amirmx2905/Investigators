@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views.api_crud import (
     InvestigadorViewSet, UsuarioViewSet, ProyectoViewSet,
     AreaViewSet, EspecialidadViewSet, NivelEducacionViewSet,
-    NivelSNIIViewSet, SNIIViewSet, CarreraViewSet,
+    NivelSNIIViewSet, CarreraViewSet,
     TipoEstudianteViewSet, EstudianteViewSet, LineaViewSet,
     TipoHerramientaViewSet, HerramientaViewSet, ArticuloViewSet,
     TipoEventoViewSet, RolEventoViewSet, EventoViewSet, UnidadViewSet,
@@ -20,7 +20,6 @@ router.register(r'areas', AreaViewSet)
 router.register(r'especialidades', EspecialidadViewSet)
 router.register(r'niveleducacion', NivelEducacionViewSet)
 router.register(r'nivelsnii', NivelSNIIViewSet)
-router.register(r'snii', SNIIViewSet)
 router.register(r'carreras', CarreraViewSet)
 router.register(r'tiposestudiante', TipoEstudianteViewSet)
 router.register(r'estudiantes', EstudianteViewSet)

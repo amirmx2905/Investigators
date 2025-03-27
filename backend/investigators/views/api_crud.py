@@ -7,7 +7,6 @@ from investigators.models import (
     Especialidad, 
     NivelEducacion,
     NivelSNII,
-    SNII,
     Carrera,
     TipoEstudiante, 
     Estudiante,
@@ -29,7 +28,6 @@ from investigators.serializers import (
     EspecialidadSerializer,
     NivelEducacionSerializer,
     NivelSNIISerializer,
-    SNIISerializer,
     CarreraSerializer,
     TipoEstudianteSerializer,
     EstudianteSerializer,
@@ -53,6 +51,10 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     
+    def get_queryset(self):
+        queryset = Usuario.objects.all()
+        return queryset.prefetch_related('investigador', 'estudiante')
+    
 class ProyectoViewSet(viewsets.ModelViewSet):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
@@ -72,10 +74,6 @@ class NivelEducacionViewSet(viewsets.ModelViewSet):
 class NivelSNIIViewSet(viewsets.ModelViewSet):
     queryset = NivelSNII.objects.all()
     serializer_class = NivelSNIISerializer
-
-class SNIIViewSet(viewsets.ModelViewSet):
-    queryset = SNII.objects.all()
-    serializer_class = SNIISerializer
 
 class CarreraViewSet(viewsets.ModelViewSet):
     queryset = Carrera.objects.all()

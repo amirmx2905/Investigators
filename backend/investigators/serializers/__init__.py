@@ -6,7 +6,6 @@ from .area_serializer import AreaSerializer
 from .especialidad_serializer import EspecialidadSerializer
 from .nivel_educacion_serializer import NivelEducacionSerializer
 from .nivel_snii_serializer import NivelSNIISerializer
-from .snii_serializer import SNIISerializer
 from .carrera_serializer import CarreraSerializer
 from .tipo_estudiante_serializer import TipoEstudianteSerializer
 from .estudiante_serializer import EstudianteSerializer
