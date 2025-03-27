@@ -34,28 +34,30 @@ function AdminPanel() {
     proyectos,
     activeTab,
     changeTab,
-    isMobile,
+    // eslint-disable-next-line no-unused-vars
+    isMobile: adminPanelIsMobile,
+    currentPage,
+    itemsPerPage,
+    totalItems,
+    handlePageChange,
+    handleItemsPerPageChange
   } = useAdminPanel();
 
   const {
     viewMode,
     toggleViewMode,
-    currentPage,
-    itemsPerPage,
-    setItemsPerPage,
-    setCurrentPage,
     visibleColumns,
     toggleColumn,
     columnsDropdownOpen,
     setColumnsDropdownOpen,
     contentRef,
+    isMobile: tableControlsIsMobile,
   } = useTableControls();
 
-  const columnToggleRef = useRef(null);
+  // Usar una sola versión de isMobile
+  const isMobile = tableControlsIsMobile;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab, setCurrentPage]);
+  const columnToggleRef = useRef(null);
 
   const showNotification = (message) => {
     setNotification({ show: true, message });
@@ -135,13 +137,6 @@ function AdminPanel() {
       }
     };
   }, []);
-
-  const getCurrentItems = (items) => {
-    if (!items?.length) return [];
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    return items.slice(indexOfFirstItem, indexOfLastItem);
-  };
 
   const getTabData = () => {
     const tabConfig = {
@@ -272,11 +267,11 @@ function AdminPanel() {
                 className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
                 value={itemsPerPage}
                 onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(1);
+                  console.log(`Cambiando a ${Number(e.target.value)} elementos por página`);
+                  handleItemsPerPageChange(Number(e.target.value));
                 }}
               >
-                {[5, 10, 15, 20].map((value) => (
+                {[10, 15, 25, 50].map((value) => (
                   <option key={value} value={value}>
                     {value} por página
                   </option>
@@ -289,14 +284,14 @@ function AdminPanel() {
               <div className="view-transition">
                 {viewMode === "table" && !isMobile ? (
                   <TableComponent
-                    {...{ [activeTab]: getCurrentItems(items) }}
+                    {...{ [activeTab]: items }}
                     visibleColumns={columns}
                     onCopy={copyToClipboard}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <CardComponent
-                      items={getCurrentItems(items)}
+                      items={items}
                       onCopy={copyToClipboard}
                     />
                   </div>
@@ -304,10 +299,10 @@ function AdminPanel() {
 
                 <div className="pagination-container">
                   <Pagination
-                    totalItems={items?.length || 0}
+                    totalItems={totalItems}
                     currentPage={currentPage}
                     itemsPerPage={itemsPerPage}
-                    paginate={setCurrentPage}
+                    paginate={handlePageChange}
                   />
                 </div>
               </div>

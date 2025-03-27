@@ -50,8 +50,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',  # ALAN NO SE TE OLVIDE CAMBIAR A 'rest_framework.permissions.IsAuthenticated', PARA PRODUCCIÓN.
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 
-    'PAGE_SIZE': 10
+    'DEFAULT_PAGINATION_CLASS': 'investigators.pagination.CustomPageNumberPagination',
+    'PAGE_SIZE': 10,  # Tamaño predeterminado de la pagination
 }
 
 SIMPLE_JWT = {

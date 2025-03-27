@@ -4,7 +4,16 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
   const pageNumbers = [];
   
   // Calcular total de páginas
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  
+  // Asegurar que currentPage esté dentro de los límites válidos
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+  
+  // Si la página actual es diferente a la página segura, actualizarla
+  if (currentPage !== safePage) {
+    setTimeout(() => paginate(safePage), 0);
+    return null; // No renderizar nada mientras se actualiza la página
+  }
   
   // Construir el array de números de página
   for (let i = 1; i <= totalPages; i++) {
@@ -19,15 +28,15 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
     displayedPageNumbers = pageNumbers;
   } else {
     // Mostrar siempre la primera y última página
-    if (currentPage <= 3) {
+    if (safePage <= 3) {
       // Cerca del inicio
       displayedPageNumbers = [1, 2, 3, 4, '...', totalPages];
-    } else if (currentPage >= totalPages - 2) {
+    } else if (safePage >= totalPages - 2) {
       // Cerca del final
       displayedPageNumbers = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
     } else {
       // En medio
-      displayedPageNumbers = [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+      displayedPageNumbers = [1, '...', safePage - 1, safePage, safePage + 1, '...', totalPages];
     }
   }
   
@@ -41,10 +50,10 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
       <nav className="flex items-center space-x-1">
         {/* Botón Anterior */}
         <button
-          onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-          disabled={currentPage === 1}
+          onClick={() => safePage > 1 && paginate(safePage - 1)}
+          disabled={safePage === 1}
           className={`cursor-pointer px-3 py-1 rounded-md ${
-            currentPage === 1
+            safePage === 1
               ? 'text-gray-500 cursor-not-allowed'
               : 'text-gray-300 hover:bg-gray-700 hover:text-blue-300'
           } transition-colors duration-200`}
@@ -69,7 +78,7 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
             key={index}
             onClick={() => typeof number === 'number' && paginate(number)}
             className={`cursor-pointer px-3 py-1 rounded-md transition-all duration-200 ${
-              currentPage === number
+              safePage === number
                 ? 'bg-blue-600 text-white hover:bg-blue-700 transform scale-105'
                 : typeof number === 'number'
                 ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-300'
@@ -83,10 +92,10 @@ function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
         
         {/* Botón Siguiente */}
         <button
-          onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          onClick={() => safePage < totalPages && paginate(safePage + 1)}
+          disabled={safePage === totalPages}
           className={`cursor-pointer px-3 py-1 rounded-md ${
-            currentPage === totalPages
+            safePage === totalPages
               ? 'text-gray-500 cursor-not-allowed'
               : 'text-gray-300 hover:bg-gray-700 hover:text-blue-300'
           } transition-colors duration-200`}

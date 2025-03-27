@@ -1,106 +1,186 @@
-import { useState, useEffect } from "react";
-import { getUsuarios, getInvestigadores, getProyectos } from "../../../api";
-import { toast } from "react-toastify";
+import { useState, useEffect, useCallback } from "react";
+import { investigadorService } from "../../../api/services/investigadorService";
+import { usuarioService } from "../../../api/services/usuarioService";
+import { proyectoService } from "../../../api/services/proyectoService";
 
-export function useAdminPanel() {
+export const useAdminPanel = (initialResource = "usuarios") => {
+  const [resource, setResource] = useState(initialResource);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Estados para la navegación por pestañas
+  const [activeTab, setActiveTab] = useState(initialResource);
+
+  // Estados para los datos específicos de cada recurso
   const [usuarios, setUsuarios] = useState([]);
   const [investigadores, setInvestigadores] = useState([]);
   const [proyectos, setProyectos] = useState([]);
-  const [activeTab, setActiveTab] = useState("usuarios");
-  const [tabTransitioning, setTabTransitioning] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+
+  // Estados para detección de dispositivo móvil
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detectar si el dispositivo es móvil
+  // Estados de paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Estados de filtrado y ordenación
+  const [filters, setFilters] = useState({});
+  const [sortField, setSortField] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+
+  // Detectar dispositivo móvil
   useEffect(() => {
-    const checkMobile = () => {
+    const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", checkIfMobile);
     };
   }, []);
 
-  // Mostrar el panel con animación
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-    return () => clearTimeout(timer);
-  }, []);
+    try {
+      let data;
 
-  // Cargar datos iniciales
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        // Simular retraso de carga para mostrar el spinner
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        const [usuariosData, investigadoresData, proyectosData] =
-          await Promise.all([
-            getUsuarios(),
-            getInvestigadores(),
-            getProyectos(),
-          ]);
-
-        setUsuarios(usuariosData);
-        setInvestigadores(investigadoresData);
-        setProyectos(proyectosData);
-      } catch (error) {
-        console.error("Error al cargar datos:", error);
-        toast.error("Error al cargar los datos", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-        });
-      } finally {
-        setLoading(false);
+      switch (resource) {
+        case "investigadores":
+          data = await investigadorService.getInvestigadores(
+            currentPage,
+            itemsPerPage,
+            filters
+          );
+          setInvestigadores(data.results);
+          break;
+        case "usuarios":
+          data = await usuarioService.getUsuarios(
+            currentPage,
+            itemsPerPage,
+            filters
+          );
+          setUsuarios(data.results);
+          break;
+        case "proyectos":
+          data = await proyectoService.getProyectos(
+            currentPage,
+            itemsPerPage,
+            filters
+          );
+          setProyectos(data.results);
+          break;
+        default:
+          throw new Error("Recurso no soportado");
       }
-    };
 
+      setItems(data.results);
+      setTotalItems(data.count);
+      setTotalPages(data.total_pages);
+      setCurrentPage(data.current_page);
+    } catch (err) {
+      setError(err.message || "Ocurrió un error al cargar los datos");
+      console.error("Error en useAdminPanel:", err);
+    } finally {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resource, currentPage, itemsPerPage, filters, sortField, sortDirection]);
+
+  useEffect(() => {
     fetchData();
+  }, [fetchData]);
+
+  const paginate = useCallback((pageNumber) => {
+    setCurrentPage(pageNumber);
   }, []);
 
-  // Cambiar pestaña con transición suave
-  const changeTab = (tab) => {
-    if (tab === activeTab) return;
+  const changeItemsPerPage = useCallback((newItemsPerPage) => {
+    setItemsPerPage(Number(newItemsPerPage));
+    setCurrentPage(1);
+  }, []);
 
-    setTabTransitioning(true);
+  const applyFilters = useCallback((newFilters) => {
+    setFilters(newFilters);
+    setCurrentPage(1);
+  }, []);
 
-    // Tiempo para la animación de salida
-    setTimeout(() => {
-      setActiveTab(tab);
+  const changeSort = useCallback(
+    (field) => {
+      if (sortField === field) {
+        setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      } else {
+        setSortField(field);
+        setSortDirection("asc");
+      }
+      setCurrentPage(1);
+    },
+    [sortField, sortDirection]
+  );
 
-      // Tiempo para la animación de entrada
-      setTimeout(() => {
-        setTabTransitioning(false);
-      }, 300);
-    }, 300);
-  };
+  const changeResource = useCallback((newResource) => {
+    setResource(newResource);
+    setActiveTab(newResource);
+    setCurrentPage(1);
+    setFilters({});
+    setSortField(null);
+    setSortDirection("asc");
+  }, []);
+
+  const changeTab = useCallback((tab) => {
+    setActiveTab(tab);
+    setResource(tab);
+    setCurrentPage(1);
+  }, []);
+
+  const handlePageChange = useCallback(
+    (pageNumber) => {
+      paginate(pageNumber);
+    },
+    [paginate]
+  );
+
+  const handleItemsPerPageChange = useCallback(
+    (newValue) => {
+      changeItemsPerPage(newValue);
+    },
+    [changeItemsPerPage]
+  );
 
   return {
+    resource,
+    items,
     loading,
-    setLoading,
-    usuarios,
-    setUsuarios,
-    investigadores,
-    setInvestigadores,
-    proyectos,
-    setProyectos,
+    error,
     activeTab,
     changeTab,
-    tabTransitioning,
-    isVisible,
-    setIsVisible,
+    usuarios,
+    investigadores,
+    proyectos,
     isMobile,
-    setIsMobile,
+    currentPage,
+    itemsPerPage,
+    totalItems,
+    totalPages,
+    filters,
+    sortField,
+    sortDirection,
+    paginate,
+    handlePageChange,
+    changeItemsPerPage,
+    handleItemsPerPageChange,
+    applyFilters,
+    changeSort,
+    changeResource,
+    refreshData: fetchData,
   };
-}
+};
+
+export default useAdminPanel;

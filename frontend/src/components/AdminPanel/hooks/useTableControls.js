@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 
 export function useTableControls() {
   const [viewMode, setViewMode] = useState("table");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [columnsDropdownOpen, setColumnsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const contentRef = useRef(null);
@@ -37,7 +35,7 @@ export function useTableControls() {
 
   // Cambio entre vista de tabla y tarjetas
   const toggleViewMode = (mode) => {
-    if (mode === "table" && isMobile) return; 
+    if (mode === "table" && isMobile) return;
     setViewMode(mode);
   };
 
@@ -59,10 +57,6 @@ export function useTableControls() {
   return {
     viewMode,
     toggleViewMode,
-    currentPage,
-    setCurrentPage,
-    itemsPerPage,
-    setItemsPerPage,
     visibleColumns,
     toggleColumn,
     columnsDropdownOpen,
