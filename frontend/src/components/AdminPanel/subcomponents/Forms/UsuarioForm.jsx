@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FormModal from './FormModal';
+import api from '../../../../api/apiConfig';
+import { usuarioService } from '../../../../api/services/usuarioService';
 
 function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -42,15 +44,12 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     async function fetchData() {
       try {
         const [invResponse, estResponse] = await Promise.all([
-          fetch('/api/investigadores/'),
-          fetch('/api/estudiantes/')
+          api.get('/investigadores/'),
+          api.get('/estudiantes/')
         ]);
         
-        const invData = await invResponse.json();
-        const estData = await estResponse.json();
-        
-        setInvestigadores(invData.results || invData);
-        setEstudiantes(estData.results || estData);
+        setInvestigadores(invResponse.data.results || invResponse.data);
+        setEstudiantes(estResponse.data.results || estResponse.data);
       } catch (err) {
         console.error('Error al cargar datos:', err);
         setError('Error al cargar investigadores y estudiantes');
@@ -102,37 +101,12 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       }
       
       if (usuario) {
-        const response = await fetch(`/api/usuarios/${usuario.id}/`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToSend)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al actualizar usuario');
-        }
-        
-        result = await response.json();
+        result = await usuarioService.updateUsuario(usuario.id, dataToSend);
       } else {
-        const response = await fetch('/api/usuarios/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToSend)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al crear usuario');
-        }
-        
-        result = await response.json();
+        result = await usuarioService.createUsuario(dataToSend);
       }
       
       onSuccess(result);
-      onClose();
     } catch (err) {
       console.error('Error al guardar usuario:', err);
       setError(err.message || 'Error al guardar. Revisa los datos.');

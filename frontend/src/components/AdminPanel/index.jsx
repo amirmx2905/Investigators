@@ -25,12 +25,13 @@ import {
 
 import { useAdminPanel } from "./hooks/useAdminPanel";
 import { useTableControls } from "./hooks/useTableControls";
+import { usuarioService } from "../../api/services/usuarioService";
+import { investigadorService } from "../../api/services/investigadorService";
+import { proyectoService } from "../../api/services/proyectoService";
 
-// Componente principal
 function AdminPanel() {
   const [contentReady, setContentReady] = useState(false);
 
-  // Estados para modales CRUD
   const [formModal, setFormModal] = useState({
     isOpen: false,
     type: null,
@@ -159,9 +160,6 @@ function AdminPanel() {
     };
   }, []);
 
-  // Funciones CRUD
-
-  // Abrir modal para crear
   const handleCreate = (type) => {
     setFormModal({
       isOpen: true,
@@ -170,7 +168,6 @@ function AdminPanel() {
     });
   };
 
-  // Abrir modal para editar
   const handleEdit = (type, item) => {
     setFormModal({
       isOpen: true,
@@ -179,7 +176,6 @@ function AdminPanel() {
     });
   };
 
-  // Abrir modal para confirmar eliminación
   const handleDeleteClick = (type, item) => {
     setDeleteModal({
       isOpen: true,
@@ -188,7 +184,6 @@ function AdminPanel() {
     });
   };
 
-  // Procesar eliminación
   const handleConfirmDelete = async () => {
     const { type, item } = deleteModal;
     
@@ -197,24 +192,18 @@ function AdminPanel() {
     setIsDeleting(true);
     
     try {
-      const response = await fetch(`/api/${type}s/${item.id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Error al eliminar ${type}`);
+      if (type === 'usuario') {
+        await usuarioService.deleteUsuario(item.id);
+      } else if (type === 'investigador') {
+        await investigadorService.deleteInvestigador(item.id);
+      } else if (type === 'proyecto') {
+        await proyectoService.deleteProyecto(item.id);
       }
       
-      // Recargar datos
       refreshData();
       
-      // Mostrar notificación
       showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} eliminado con éxito`);
       
-      // Cerrar modal
       setDeleteModal({
         isOpen: false,
         type: null,
@@ -228,20 +217,15 @@ function AdminPanel() {
     }
   };
 
-  // Manejar éxito en formulario
   const handleFormSuccess = () => {
-    // Recargar datos
     refreshData();
     
-    // Mostrar notificación
     const actionText = formModal.item ? 'actualizado' : 'creado';
     showNotification(`${formModal.type.charAt(0).toUpperCase() + formModal.type.slice(1)} ${actionText} con éxito`);
     
-    // Cerrar modal
     handleCloseForm();
   };
 
-  // Cerrar modal de formulario
   const handleCloseForm = () => {
     setFormModal({
       isOpen: false,
@@ -250,9 +234,7 @@ function AdminPanel() {
     });
   };
 
-  // Función para renderizar botón de creación según pestaña activa
   const renderCreateButton = () => {
-    // Determinar el tipo basado en la pestaña activa
     let type = "";
     let label = "";
     
@@ -298,7 +280,6 @@ function AdminPanel() {
     );
   };
 
-  // Renderizar el formulario correcto según el tipo
   const renderForm = () => {
     const { type, item, isOpen } = formModal;
     
@@ -416,17 +397,14 @@ function AdminPanel() {
             className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
             style={{ animationDelay: "0.3s" }}
           >
-            {/* Título y botón de crear */}
             <div className="flex flex-wrap justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
                 {title}
               </h3>
               
-              {/* Botón de crear */}
               {renderCreateButton()}
             </div>
 
-            {/* Controles de Tabla */}
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300">
               <div className="flex items-center space-x-2 z-20">
                 <button
@@ -499,7 +477,6 @@ function AdminPanel() {
               </select>
             </div>
 
-            {/* Contenido Dinámico */}
             <div ref={contentRef} className="relative min-h-[200px]">
               <div className="view-transition">
                 {viewMode === "table" && !isMobile ? (
@@ -537,7 +514,6 @@ function AdminPanel() {
         </div>
       )}
       
-      {/* Renderizar modales */}
       {renderForm()}
       
       <DeleteConfirmation

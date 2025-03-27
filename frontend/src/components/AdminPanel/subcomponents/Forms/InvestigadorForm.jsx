@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FormModal from './FormModal';
+import api from '../../../../api/apiConfig';
+import { investigadorService } from '../../../../api/services/investigadorService';
 
 function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -63,10 +65,10 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       setFetchingData(true);
       try {
         const [areasRes, nivelesEduRes, especialidadesRes, nivelesSNIIRes] = await Promise.all([
-          fetch('/api/areas/').then(res => res.json()),
-          fetch('/api/nivel-educacion/').then(res => res.json()),
-          fetch('/api/especialidades/').then(res => res.json()),
-          fetch('/api/nivel-snii/').then(res => res.json())
+          api.get('/areas/').then(res => res.data),
+          api.get('/nivel-educacion/').then(res => res.data),
+          api.get('/especialidades/').then(res => res.data),
+          api.get('/nivel-snii/').then(res => res.data)
         ]);
         
         setAreas(areasRes.results || areasRes);
@@ -111,37 +113,12 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       let result;
       
       if (investigador) {
-        const response = await fetch(`/api/investigadores/${investigador.id}/`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al actualizar investigador');
-        }
-        
-        result = await response.json();
+        result = await investigadorService.updateInvestigador(investigador.id, formData);
       } else {
-        const response = await fetch('/api/investigadores/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al crear investigador');
-        }
-        
-        result = await response.json();
+        result = await investigadorService.createInvestigador(formData);
       }
       
       onSuccess(result);
-      onClose();
     } catch (err) {
       console.error('Error al guardar investigador:', err);
       setError(err.message || 'Error al guardar. Revisa los datos.');

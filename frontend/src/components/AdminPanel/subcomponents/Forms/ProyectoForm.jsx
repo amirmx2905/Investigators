@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FormModal from './FormModal';
+import api from '../../../../api/apiConfig';
+import { proyectoService } from '../../../../api/services/proyectoService';
 
 function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -50,9 +52,8 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
     async function fetchInvestigadores() {
       setFetchingData(true);
       try {
-        const response = await fetch('/api/investigadores/');
-        const data = await response.json();
-        setInvestigadores(data.results || data);
+        const response = await api.get('/investigadores/');
+        setInvestigadores(response.data.results || response.data);
       } catch (err) {
         console.error('Error al cargar investigadores:', err);
         setError('Error al cargar lista de investigadores');
@@ -91,37 +92,12 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
       let result;
       
       if (proyecto) {
-        const response = await fetch(`/api/proyectos/${proyecto.id}/`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al actualizar proyecto');
-        }
-        
-        result = await response.json();
+        result = await proyectoService.updateProyecto(proyecto.id, formData);
       } else {
-        const response = await fetch('/api/proyectos/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al crear proyecto');
-        }
-        
-        result = await response.json();
+        result = await proyectoService.createProyecto(formData);
       }
       
       onSuccess(result);
-      onClose();
     } catch (err) {
       console.error('Error al guardar proyecto:', err);
       setError(err.message || 'Error al guardar. Revisa los datos.');
