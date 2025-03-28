@@ -7,6 +7,7 @@ class CustomTokenObtainSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
+    role = serializers.CharField(read_only=True)
 
     def validate(self, attrs):
         username = attrs.get('username')
@@ -21,7 +22,11 @@ class CustomTokenObtainSerializer(serializers.Serializer):
             raise serializers.ValidationError("Credenciales inválidas.")
 
         refresh = RefreshToken.for_user(user)
+        
+        refresh['role'] = user.rol
+        
         return {
             'access': str(refresh.access_token),
             'refresh': str(refresh),
+            'role': user.rol,
         }

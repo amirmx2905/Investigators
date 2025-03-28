@@ -12,7 +12,7 @@ def create_user_profile(sender, instance, created, **kwargs):
                 nombre_usuario=instance.username,
                 user=instance,
                 rol='investigador',
-                id_investigador=investigador.id
+                investigador=investigador  # Actualizado para usar relación directa
             )
         except Investigador.DoesNotExist:
             pass

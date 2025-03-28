@@ -30,10 +30,10 @@ class Especialidad(models.Model):
         verbose_name_plural = "Especialidades"
 
 class NivelEducacion(models.Model):
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    nivel = models.CharField(max_length=50, blank=True, null=True)
     
     def __str__(self):
-        return f"Nivel de {self.especialidad}"
+        return f"{self.nivel}"
     
     class Meta:
         verbose_name_plural = "Niveles de Educación"
@@ -47,22 +47,11 @@ class NivelSNII(models.Model):
     class Meta:
         verbose_name_plural = "Niveles SNII"
 
-class SNII(models.Model):
-    nivel_snii = models.ForeignKey(NivelSNII, on_delete=models.CASCADE)
-    fecha_asignacion = models.DateField()
-    
-    def __str__(self):
-        return f"{self.nivel_snii} ({self.fecha_asignacion})"
-    
-    class Meta:
-        verbose_name_plural = "SNII"
-
 class Carrera(models.Model):
     nombre = models.CharField(max_length=100)
-    escuela = models.CharField(max_length=100)
     
     def __str__(self):
-        return f"{self.nombre} - {self.escuela}"
+        return self.nombre
     
     class Meta:
         verbose_name_plural = "Carreras"
@@ -79,7 +68,9 @@ class TipoEstudiante(models.Model):
 class Investigador(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     nivel_edu = models.ForeignKey(NivelEducacion, on_delete=models.CASCADE)
-    snii = models.ForeignKey(SNII, on_delete=models.SET_NULL, null=True, blank=True)
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE, null=True, blank=True)
+    nivel_snii = models.ForeignKey(NivelSNII, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_asignacion_snii = models.DateField(null=True, blank=True)
     nombre = models.CharField(max_length=100)
     correo = models.EmailField(max_length=100)
     celular = models.CharField(max_length=20, blank=True, null=True)
@@ -112,6 +103,7 @@ class Estudiante(models.Model):
     correo = models.EmailField(max_length=100, null=True, blank=True)
     celular = models.CharField(max_length=20, blank=True, null=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
+    escuela = models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
     
@@ -262,14 +254,13 @@ class Usuario(models.Model):
         ('admin', 'Administrador'),
         ('investigador', 'Investigador'),
         ('estudiante', 'Estudiante'),
-        ('invitado', 'Invitado'),
     )
     
     nombre_usuario = models.CharField(max_length=50, unique=True, default="usuario_temporal")
     contrasena = models.CharField(max_length=255, null=True, blank=True)
-    rol = models.CharField(max_length=15, choices=ROLES, default='invitado')
-    id_investigador = models.IntegerField(null=True, blank=True)
-    id_estudiante = models.IntegerField(null=True, blank=True)
+    rol = models.CharField(max_length=15, choices=ROLES)
+    investigador = models.ForeignKey('Investigador', on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios')
+    estudiante = models.ForeignKey('Estudiante', on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     ultimo_acceso = models.DateTimeField(null=True, blank=True)
     intentos_login = models.IntegerField(default=0)
@@ -283,16 +274,10 @@ class Usuario(models.Model):
     
     def get_perfil(self):
         """Obtiene el perfil asociado según el rol del usuario"""
-        if self.rol == 'investigador' and self.id_investigador:
-            try:
-                return Investigador.objects.get(id=self.id_investigador)
-            except Investigador.DoesNotExist:
-                return None
-        elif self.rol == 'estudiante' and self.id_estudiante:
-            try:
-                return Estudiante.objects.get(id=self.id_estudiante)
-            except Estudiante.DoesNotExist:
-                return None
+        if self.rol == 'investigador' and self.investigador:
+            return self.investigador
+        elif self.rol == 'estudiante' and self.estudiante:
+            return self.estudiante
         return None
     
     def get_nombre(self):
@@ -300,7 +285,7 @@ class Usuario(models.Model):
         perfil = self.get_perfil()
         if perfil:
             return perfil.nombre
-        return self.nombre_usuario  # Si no hay perfil, usa el nombre de usuario
+        return self.nombre_usuario
     
     def get_correo(self):
         """Obtiene el correo del usuario desde su perfil vinculado"""
@@ -308,7 +293,7 @@ class Usuario(models.Model):
         if perfil:
             return perfil.correo
         return None
-    
+        
     def check_password(self, raw_password):
         """
         Verifica si la contraseña ingresada coincide con la almacenada

@@ -3,24 +3,40 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import AdminPanel from "./components/AdminPanel";
+import NotFound from "./components/NotFound";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Layout>
+    <AuthProvider>
+      <Router>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route
             path="/home"
             element={
               <ProtectedRoute>
-                <Home />
+                <Layout>
+                  <Home />
+                </Layout>
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <Layout>
+                  <AdminPanel />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </Layout>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 

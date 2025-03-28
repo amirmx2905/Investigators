@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 from datetime import timedelta
 import os
 
+# Autores:
+# Alan Omar Hernández Bella,
+# Amir Sebastián Flores Cardona
 
 load_dotenv()
 
@@ -44,6 +47,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # ALAN NO SE TE OLVIDE CAMBIAR A 'rest_framework.permissions.IsAuthenticated', PARA PRODUCCIÓN.
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'investigators.pagination.CustomPageNumberPagination',
+    'PAGE_SIZE': 10,  # Tamaño predeterminado de la pagination
 }
 
 SIMPLE_JWT = {
