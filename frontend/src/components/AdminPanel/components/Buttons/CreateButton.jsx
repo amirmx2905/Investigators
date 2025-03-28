@@ -24,22 +24,22 @@ const CreateButton = ({ activeTab, onClick }) => {
 
   return (
     <button
-      className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors w-full sm:w-auto justify-center sm:justify-start"
+      className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-md shadow-md hover:shadow-lg hover:shadow-blue-900/30 transition-all duration-300 w-full sm:w-auto justify-center sm:justify-start border border-blue-500/30 hover:border-blue-400/50 hover:scale-105"
       onClick={() => onClick(type)}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
         className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M12 4v16m8-8H4"
-        />
+        <circle cx="12" cy="12" r="10" opacity="0.5"></circle>
+        <line x1="12" y1="8" x2="12" y2="16"></line>
+        <line x1="8" y1="12" x2="16" y2="12"></line>
       </svg>
       Crear {label}
     </button>

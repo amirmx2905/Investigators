@@ -84,6 +84,7 @@ function ColumnSelector({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
+        columnsDropdownOpen &&
         menuRef.current && 
         !menuRef.current.contains(event.target) && 
         columnToggleRef.current && 
@@ -97,19 +98,18 @@ function ColumnSelector({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [setColumnsDropdownOpen, columnToggleRef]);
+  }, [columnsDropdownOpen, setColumnsDropdownOpen, columnToggleRef]);
 
-  // Manejar cambio de checkbox sin cerrar el menú
-  // eslint-disable-next-line no-unused-vars
-  const handleCheckboxChange = (tab, column, event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleColumn(tab, column);
+  // Handler para cambiar el estado de una columna
+  const handleColumnToggle = (column) => {
+    toggleColumn(activeTab, column);
+    // No cerramos el menú desplegable
   };
 
   return (
     <>
       <button
+        ref={columnToggleRef}
         className="flex items-center gap-2 px-3 py-2 rounded-md text-sm bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50 cursor-pointer transition-all duration-200"
         onClick={(e) => {
           e.stopPropagation();
@@ -140,33 +140,48 @@ function ColumnSelector({
             animation: 'fadeIn 0.2s ease-out forwards',
             boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
           }}
-          onClick={(e) => e.stopPropagation()}
         >
           <div className="px-4 py-2 text-sm font-medium text-gray-300 border-b border-gray-700">
             Seleccionar columnas
           </div>
           
-          {/* Usar el orden definido para mostrar las opciones en orden fijo */}
-          {columnOrders[activeTab].map(column => (
-            <div 
-              key={column} 
-              className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                toggleColumn(activeTab, column);
-              }}
-            >
-              <input
-                type="checkbox"
-                className="mr-2 h-4 w-4 text-blue-500 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 cursor-pointer"
-                checked={visibleColumns[activeTab].includes(column)}
-                onChange={(e) => e.stopPropagation()}
-                onClick={(e) => e.stopPropagation()}
-              />
-              <span className="text-sm text-gray-300">{columnLabels[activeTab][column]}</span>
-            </div>
-          ))}
+          {/* Lista de columnas disponibles */}
+          <div>
+            {columnOrders[activeTab].map(column => (
+              <div 
+                key={column} 
+                className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
+                onMouseDown={(e) => {
+                  // Usamos mouseDown en lugar de click para evitar problemas de orden de eventos
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleColumnToggle(column);
+                }}
+              >
+                <div 
+                  className="flex items-center w-full"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div 
+                    className="w-4 h-4 mr-2 flex items-center justify-center rounded-sm transition-all duration-200"
+                    style={{
+                      backgroundColor: visibleColumns[activeTab].includes(column) ? '#3b82f6' : 'transparent',
+                      border: visibleColumns[activeTab].includes(column) 
+                        ? '1px solid rgba(96, 165, 250, 0.7)' 
+                        : '1px solid rgba(59, 130, 246, 0.3)'
+                    }}
+                  >
+                    {visibleColumns[activeTab].includes(column) && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="white" viewBox="0 0 16 16">
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-300">{columnLabels[activeTab][column]}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>,
         portalContainer
       )}
