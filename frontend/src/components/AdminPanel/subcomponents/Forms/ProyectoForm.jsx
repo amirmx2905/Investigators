@@ -276,7 +276,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               value={formData.estado}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="En Progreso">En progreso</option>
               <option value="Completado">Completado</option>
@@ -296,7 +296,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
                 value={formData.fecha_inicio}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             
@@ -309,7 +309,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
                 name="fecha_fin"
                 value={formData.fecha_fin}
                 onChange={handleChange}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               value={formData.lider || ''}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">-- Seleccionar Responsable --</option>
               {investigadores.map(inv => (

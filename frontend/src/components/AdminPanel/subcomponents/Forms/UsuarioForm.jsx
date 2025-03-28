@@ -230,7 +230,7 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
               value={formData.rol}
               onChange={handleRolChange}
               required
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="admin">Administrador</option>
               <option value="investigador">Investigador</option>
@@ -247,7 +247,7 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
                 name="investigador"
                 value={formData.investigador || ""}
                 onChange={handleChange}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">-- Seleccionar Investigador --</option>
                 {investigadores.map((inv) => (
@@ -268,7 +268,7 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
                 name="estudiante"
                 value={formData.estudiante || ""}
                 onChange={handleChange}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">-- Seleccionar Estudiante --</option>
                 {estudiantes.map((est) => (
