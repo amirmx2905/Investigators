@@ -21,21 +21,24 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     explicacion: "Descripción"
   };
   
+  const getStatusStyles = (status) => {
+    const statusMap = {
+      'activo': "bg-green-900/60 text-green-300",
+      'en progreso': "bg-blue-900/60 text-blue-300",
+      'completado': "bg-emerald-900/60 text-emerald-300",
+      'suspendido': "bg-yellow-900/60 text-yellow-300",
+      'cancelado': "bg-red-900/60 text-red-300"
+    };
+    
+    if (!status) return "bg-gray-900/60 text-gray-300";
+    return statusMap[status.toLowerCase()] || "bg-gray-900/60 text-gray-300";
+  };
+  
   const formatColumnValue = (column, value, proyecto) => {
     if (column === "estado") {
-      // Aplicar estilos basados en el estado del proyecto
-      const statusColors = {
-        'En Progreso': "bg-blue-900/60 text-blue-300",
-        'Completado': "bg-green-900/60 text-green-300",
-        'Suspendido': "bg-yellow-900/60 text-yellow-300",
-        'Cancelado': "bg-red-900/60 text-red-300"
-      };
-      
       return (
         <span
-          className={`px-2 py-1 text-xs rounded-full ${
-            statusColors[value] || "bg-gray-900/60 text-gray-300"
-          }`}
+          className={`px-2 py-1 text-xs rounded-full ${getStatusStyles(value)}`}
         >
           {value || "Desconocido"}
         </span>
@@ -43,7 +46,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     }
     
     if (column === "fecha_inicio" || column === "fecha_fin") {
-      if (!value) return "N/A";
+      if (!value) return "Sin fecha";
       
       const date = new Date(value);
       if (isNaN(date.getTime())) return value;
@@ -72,7 +75,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     }
     
     // Manejo para explicación (posible texto largo)
-    if (column === "explicacion") {
+    if (column === "explicacion" || column === "descripcion") {
       if (!value) return "Sin descripción";
       if (value.length > 50) {
         return value.substring(0, 50) + "...";
@@ -98,7 +101,8 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
-    >
+    >  
+
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
         <table className="w-full table-auto">
           <thead>
@@ -120,7 +124,10 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
             {proyectos.map((proyecto, index) => (
               <tr
                 key={proyecto.id}
-                className="hover:bg-gray-700/50 transition-colors duration-200"
+                className={`hover:bg-gray-700/50 transition-colors duration-200 ${
+                  proyecto.estado?.toLowerCase() === 'activo' ? 'bg-green-900/10' : 
+                  proyecto.estado?.toLowerCase() === 'completado' ? 'bg-blue-900/10' : ''
+                }`}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 {visibleColumns.map((column) => (
@@ -134,7 +141,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
                     <button
-                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                       title="Editar"
                       onClick={() => onEdit(proyecto)}
                     >
@@ -154,7 +161,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                       </svg>
                     </button>
                     <button
-                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                       title="Eliminar"
                       onClick={() => onDelete(proyecto)}
                     >
