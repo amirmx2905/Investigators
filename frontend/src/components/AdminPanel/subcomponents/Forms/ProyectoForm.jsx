@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormModal from './FormModal';
 import api from '../../../../api/apiConfig';
 import { proyectoService } from '../../../../api/services/proyectoService';
@@ -17,6 +17,12 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Estados para el buscador de líderes
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedLeaderName, setSelectedLeaderName] = useState('');
+  const searchRef = useRef(null);
   
   // Para depurar los datos recibidos del proyecto
   useEffect(() => {
@@ -39,6 +45,13 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
       
       // Verificar si se normalizó correctamente
       console.log('Líder normalizado:', normalizeId(proyecto.lider));
+      
+      // Si hay un líder, establecer su nombre para mostrar
+      if (proyecto.lider_nombre) {
+        setSelectedLeaderName(proyecto.lider_nombre);
+      } else if (proyecto.lider && typeof proyecto.lider === 'object' && proyecto.lider.nombre) {
+        setSelectedLeaderName(proyecto.lider.nombre);
+      }
     } else {
       // Reinicia el formulario para un nuevo proyecto
       setFormData({
@@ -49,8 +62,23 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
         fecha_fin: '',
         lider: ''
       });
+      setSelectedLeaderName('');
+      setSearchTerm('');
     }
   }, [proyecto, isOpen]);
+  
+  // Efecto para cerrar el dropdown cuando se hace clic fuera
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   
   // Normaliza los IDs para asegurar que sean enteros o cadenas vacías
   const normalizeId = (value) => {
@@ -119,9 +147,18 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               if (liderData && liderData.id) {
                 console.log('Líder cargado individualmente:', liderData);
                 setInvestigadores([liderData, ...sortedData]);
+                
+                // Establecer el nombre del líder para mostrar
+                setSelectedLeaderName(liderData.nombre);
               }
             } catch (liderErr) {
               console.error(`Error al cargar líder con ID ${liderId}:`, liderErr);
+            }
+          } else {
+            // El líder existe en la lista, buscarlo y establecer su nombre
+            const lider = sortedData.find(inv => inv.id === liderId);
+            if (lider && lider.nombre) {
+              setSelectedLeaderName(lider.nombre);
             }
           }
         }
@@ -158,6 +195,37 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
         [name]: value
       }));
     }
+  };
+  
+  // Manejar selección de líder desde el dropdown
+  const handleSelectLeader = (investigador) => {
+    const { id, nombre } = investigador;
+    setSelectedLeaderName(nombre);
+    setSearchTerm('');
+    setShowDropdown(false);
+    
+    setFormData(prev => ({
+      ...prev,
+      lider: id
+    }));
+  };
+  
+  // Manejar clic en limpiar selección de líder
+  const handleClearLeaderSelection = () => {
+    setSelectedLeaderName('');
+    setSearchTerm('');
+    
+    setFormData(prev => ({
+      ...prev,
+      lider: ''
+    }));
+  };
+  
+  // Filtrar resultados de búsqueda de líderes
+  const getFilteredLeaders = () => {
+    return investigadores.filter(inv => 
+      inv.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   };
   
   const handleSubmit = async (e) => {
@@ -222,6 +290,8 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
     }
   };
   
+  const filteredLeaders = getFilteredLeaders();
+  
   return (
     <FormModal
       isOpen={isOpen}
@@ -254,6 +324,65 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
             />
           </div>
           
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Líder de Proyecto
+            </label>
+            <div ref={searchRef} className="relative">
+              {/* Si hay un valor seleccionado, mostrar el nombre */}
+              {selectedLeaderName ? (
+                <div className="flex items-center justify-between px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+                  <span>{selectedLeaderName}</span>
+                  <button 
+                    type="button"
+                    onClick={handleClearLeaderSelection}
+                    className="text-gray-400 hover:text-gray-200 ml-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                /* Si no hay selección, mostrar campo de búsqueda */
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Buscar investigador..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setShowDropdown(true);
+                    }}
+                    onFocus={() => setShowDropdown(true)}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  
+                  {/* Dropdown de resultados */}
+                  {showDropdown && (
+                    <div className="absolute z-50 mt-1 w-full bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      {filteredLeaders.length > 0 ? (
+                        filteredLeaders.map(investigador => (
+                          <div
+                            key={investigador.id}
+                            className="px-4 py-2 cursor-pointer hover:bg-gray-700 text-gray-200"
+                            onClick={() => handleSelectLeader(investigador)}
+                          >
+                            {investigador.nombre}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-2 text-gray-400">
+                          {searchTerm ? "No se encontraron resultados" : "Escribe para buscar investigadores"}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Explicación
@@ -312,26 +441,6 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
                 className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Lider de Proyecto
-            </label>
-            <select
-              name="lider"
-              value={formData.lider || ''}
-              onChange={handleChange}
-              required
-              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">-- Seleccionar Responsable --</option>
-              {investigadores.map(inv => (
-                <option key={inv.id} value={inv.id}>
-                  {inv.nombre}
-                </option>
-              ))}
-            </select>
           </div>
           
           <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">

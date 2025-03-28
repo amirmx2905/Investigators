@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import api from '../../../../api/apiConfig';
 
 function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete }) {
   const [showTable, setShowTable] = useState(false);
+  const [investigadoresConUsuario, setInvestigadoresConUsuario] = useState([]);
+  const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -11,18 +14,70 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
     return () => clearTimeout(timer);
   }, []);
   
+  // Obtener la lista de investigadores con usuario asignado
+  useEffect(() => {
+    const fetchUsuariosAsignados = async () => {
+      setCargandoUsuarios(true);
+      try {
+        // Solicitar una lista grande de usuarios para evitar problemas de paginación
+        const response = await api.get('/usuarios/?page_size=1000&rol=investigador');
+        const usuarios = response.data.results || response.data || [];
+        
+        // Extraer IDs de investigadores que tienen usuario
+        const idsConUsuario = usuarios
+          .filter(usuario => usuario.investigador !== null)
+          .map(usuario => usuario.investigador);
+        
+        console.log('Investigadores con usuario asignado:', idsConUsuario);
+        setInvestigadoresConUsuario(idsConUsuario);
+      } catch (error) {
+        console.error('Error al cargar usuarios asignados:', error);
+      } finally {
+        setCargandoUsuarios(false);
+      }
+    };
+    
+    fetchUsuariosAsignados();
+  }, []);
+  
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
     correo: "Correo",
-    celular: "Celular",              // Nuevo campo
-    area: "Área",                    // Nuevo campo
+    celular: "Celular",
+    area: "Área",
     especialidad: "Especialidad",
-    nivel_snii: "Nivel SNII",        // Nuevo campo
+    nivel_snii: "Nivel SNII",
     activo: "Estado"
   };
   
   const formatColumnValue = (column, value, investigador) => {
+    // Manejo especial para el ID - Marcar si tiene usuario asignado
+    if (column === "id") {
+      const tieneUsuario = investigadoresConUsuario.includes(value);
+      return (
+        <div className="flex items-center">
+          <span
+            className={`flex items-center justify-center ${
+              tieneUsuario 
+                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white" 
+                : "bg-gray-700 text-gray-300"
+            } rounded-full h-6 w-6 text-xs font-medium`}
+            title={tieneUsuario ? "Tiene usuario asignado" : "Sin usuario asignado"}
+          >
+            {value}
+          </span>
+          {tieneUsuario && (
+            <span className="ml-2 text-xs text-blue-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
+            </span>
+          )}
+        </div>
+      );
+    }
+    
     // Manejo de estado activo/inactivo
     if (column === "activo") {
       return (
@@ -100,6 +155,27 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
+      {cargandoUsuarios && (
+        <div className="text-xs text-blue-400 mb-2 flex items-center">
+          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Cargando información de usuarios...
+        </div>
+      )}
+      
+      <div className="mb-2 flex items-center text-xs text-gray-400">
+        <span className="ml-2 py-4 flex items-center mr-4">
+          <span className="bg-gradient-to-r from-blue-600 to-blue-400 rounded-full h-4 w-4 mr-1"></span>
+          Tiene usuario asignado
+        </span>
+        <span className="py-4 flex items-center">
+          <span className="bg-gray-700 rounded-full h-4 w-4 mr-1"></span>
+          Sin usuario asignado
+        </span>
+      </div>
+      
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
         <table className="w-full table-auto">
           <thead>
@@ -121,7 +197,9 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
             {investigadores.map((investigador, index) => (
               <tr
                 key={investigador.id}
-                className="hover:bg-gray-700/50 transition-colors duration-200"
+                className={`hover:bg-gray-700/50 transition-colors duration-200 ${
+                  investigadoresConUsuario.includes(investigador.id) ? 'bg-blue-900/10' : ''
+                }`}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 {visibleColumns.map((column) => (
