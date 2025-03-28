@@ -17,10 +17,11 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
     nombre_usuario: "Nombre",
     correo: "Correo",
     rol: "Rol",
+    vinculado_a: "Vinculado a",  // Nueva columna
     activo: "Estado"
   };
   
-  const formatColumnValue = (column, value) => {
+  const formatColumnValue = (column, value, usuario) => {
     if (column === "activo") {
       return (
         <span
@@ -31,6 +32,18 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
           {value ? "Activo" : "Inactivo"}
         </span>
       );
+    }
+    
+    // Formatear la columna "vinculado_a"
+    if (column === "vinculado_a") {
+      if (usuario.rol === "investigador" && usuario.investigador_nombre) {
+        return usuario.investigador_nombre;
+      } else if (usuario.rol === "estudiante" && usuario.estudiante_nombre) {
+        return usuario.estudiante_nombre;
+      } else if (usuario.rol === "admin") {
+        return "No Aplicable";
+      }
+      return "Sin vincular";
     }
     
     return value;
@@ -50,12 +63,9 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
-      {/* Tabla */}
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
-        {/* Encabezado */}
         <table className="w-full table-auto">
           <thead>
-            {/* Fila de encabezado */}
             <tr className="bg-gray-800/80">
               {visibleColumns.map((column) => (
                 <th
@@ -70,7 +80,6 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
               </th>
             </tr>
           </thead>
-          {/* Cuerpo */}
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
             {usuarios.map((usuario, index) => (
               <tr
@@ -83,13 +92,11 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, usuario[column])}
+                    {formatColumnValue(column, usuario[column], usuario)}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
-                  {/* Botones de acción */}
                   <div className="flex space-x-2">
-                    {/* Botón de editar */}
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
@@ -110,7 +117,6 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
                         />
                       </svg>
                     </button>
-                    {/* Botón de eliminar */}
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"

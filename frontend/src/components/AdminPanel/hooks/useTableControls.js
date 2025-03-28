@@ -1,56 +1,126 @@
 import { useState, useEffect, useRef } from "react";
 
-export function useTableControls() {
-  const [viewMode, setViewMode] = useState("table");
-  const [columnsDropdownOpen, setColumnsDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+// Orden fijo de columnas
+export const columnOrders = {
+  usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
+  investigadores: [
+    "id",
+    "nombre",
+    "correo",
+    "celular",
+    "area",
+    "especialidad",
+    "nivel_snii",
+    "activo",
+  ],
+  proyectos: [
+    "id",
+    "nombre",
+    "estado",
+    "lider",
+    "fecha_inicio",
+    "fecha_fin",
+    "explicacion",
+  ],
+};
+
+// Columnas visibles por defecto
+const defaultVisibleColumns = {
+  usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
+  investigadores: ["id", "nombre", "correo", "area", "nivel_snii", "activo"],
+  proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio"],
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useTableControls = (initialTab = "usuarios") => {
+  const storageKey = "adminPanel_tableControls";
   const contentRef = useRef(null);
 
-  // Configuración inicial de columnas visibles
-  const [visibleColumns, setVisibleColumns] = useState({
-    usuarios: ["id", "nombre_usuario", "rol", "activo"],
-    investigadores: ["id", "nombre", "correo", "celular", "nivel_snii","especialidad", "activo"],
-    proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio", "fecha_fin"],
-  });
+  // Estado para las configuraciones de tabla
+  const [viewMode, setViewMode] = useState("table");
+  const [visibleColumns, setVisibleColumns] = useState(defaultVisibleColumns);
+  const [columnsDropdownOpen, setColumnsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Checa si se está en vista mobile
+  // Cargar configuraciones guardadas
   useEffect(() => {
-    const checkMobile = () => {
-      const isMobileView = window.innerWidth < 768;
-      setIsMobile(isMobileView);
+    try {
+      const savedSettings = localStorage.getItem(storageKey);
+      if (savedSettings) {
+        const { viewMode: savedViewMode, visibleColumns: savedVisibleColumns } =
+          JSON.parse(savedSettings);
 
-      // Automaticamente cambia a vista de tarjetas si se está en vista de tabla y se hace resize a mobile
-      if (isMobileView && viewMode === "table") {
+        if (savedViewMode) setViewMode(savedViewMode);
+        if (savedVisibleColumns) setVisibleColumns(savedVisibleColumns);
+      }
+    } catch (e) {
+      console.error("Error loading table settings:", e);
+    }
+
+    // Detectar si es dispositivo móvil
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth < 768 && viewMode === "table") {
         setViewMode("cards");
       }
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", checkIfMobile);
     };
-  }, [viewMode]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Cambio entre vista de tabla y tarjetas
+  // Guardar configuraciones
+  useEffect(() => {
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        viewMode,
+        visibleColumns,
+      })
+    );
+  }, [viewMode, visibleColumns]);
+
+  // Cambiar modo de visualización
   const toggleViewMode = (mode) => {
     if (mode === "table" && isMobile) return;
     setViewMode(mode);
   };
 
-  // Activa la visibilidad de cada columna
+  // Activar/desactivar columnas
   const toggleColumn = (tab, column) => {
     setVisibleColumns((prev) => {
-      const current = [...prev[tab]];
-
-      if (current.includes(column)) {
-        // No se remueve si solo queda una columna
-        if (current.length === 1) return prev;
-        return { ...prev, [tab]: current.filter((col) => col !== column) };
-      } else {
-        return { ...prev, [tab]: [...current, column] };
+      // Si la columna ya está visible, quitarla
+      if (prev[tab].includes(column)) {
+        return {
+          ...prev,
+          [tab]: prev[tab].filter((col) => col !== column),
+        };
       }
+
+      // Si no, añadirla y ordenar las columnas según el orden definido
+      const updatedColumns = [...prev[tab], column];
+
+      // Ordenar según el orden definido
+      const sortedColumns = updatedColumns.sort((a, b) => {
+        return columnOrders[tab].indexOf(a) - columnOrders[tab].indexOf(b);
+      });
+
+      return {
+        ...prev,
+        [tab]: sortedColumns,
+      };
+    });
+  };
+
+  // Obtener columnas visibles ordenadas
+  const getOrderedVisibleColumns = (tab) => {
+    return visibleColumns[tab].sort((a, b) => {
+      return columnOrders[tab].indexOf(a) - columnOrders[tab].indexOf(b);
     });
   };
 
@@ -58,10 +128,11 @@ export function useTableControls() {
     viewMode,
     toggleViewMode,
     visibleColumns,
+    getOrderedVisibleColumns,
     toggleColumn,
     columnsDropdownOpen,
     setColumnsDropdownOpen,
     contentRef,
     isMobile,
   };
-}
+};

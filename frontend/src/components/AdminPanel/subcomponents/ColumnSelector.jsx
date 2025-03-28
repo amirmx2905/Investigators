@@ -13,12 +13,20 @@ function ColumnSelector({
   const [portalContainer, setPortalContainer] = useState(null);
   const menuRef = useRef(null);
   
-  // Datos de columnas por pestaña
+  // Orden fijo de columnas por pestaña
+  const columnOrders = {
+    usuarios: ['id', 'nombre_usuario', 'rol', 'vinculado_a', 'activo'],
+    investigadores: ['id', 'nombre', 'correo', 'celular', 'area', 'especialidad', 'nivel_snii', 'activo'],
+    proyectos: ['id', 'nombre', 'estado', 'lider', 'fecha_inicio', 'fecha_fin', 'explicacion']
+  };
+  
+  // Etiquetas para las columnas
   const columnLabels = {
     usuarios: {
       id: 'ID',
       nombre_usuario: 'Usuario',
       rol: 'Rol',
+      vinculado_a: 'Vinculado a',
       activo: 'Estado'
     },
     investigadores: {
@@ -37,7 +45,8 @@ function ColumnSelector({
       estado: 'Estado',
       lider: 'Líder',
       fecha_inicio: 'Fecha Inicio',
-      fecha_fin: 'Fecha Fin'
+      fecha_fin: 'Fecha Fin',
+      explicacion: 'Descripción'
     }
   };
 
@@ -135,7 +144,8 @@ function ColumnSelector({
             Seleccionar columnas
           </div>
           
-          {Object.keys(columnLabels[activeTab]).map(column => (
+          {/* Usar el orden definido para mostrar las opciones en orden fijo */}
+          {columnOrders[activeTab].map(column => (
             <label 
               key={column} 
               className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"

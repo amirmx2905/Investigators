@@ -24,7 +24,7 @@ import {
 } from "./subcomponents/Forms/forms";
 
 import { useAdminPanel } from "./hooks/useAdminPanel";
-import { useTableControls } from "./hooks/useTableControls";
+import { useTableControls, columnOrders } from "./hooks/useTableControls";
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
@@ -70,6 +70,8 @@ function AdminPanel() {
     setColumnsDropdownOpen,
     contentRef,
     isMobile,
+    // eslint-disable-next-line no-unused-vars
+    getOrderedVisibleColumns,
   } = useTableControls();
 
   const columnToggleRef = useRef(null);
@@ -335,13 +337,20 @@ function AdminPanel() {
         type = "usuario";
     }
     
+    // Obtener columnas visibles ordenadas según el orden definido
+    const orderedColumns = {
+      usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], 'usuarios'),
+      investigadores: sortColumnsByOrder(visibleColumns.investigadores || [], 'investigadores'),
+      proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], 'proyectos')
+    };
+    
     const tabConfig = {
       usuarios: {
         title: "Lista de Usuarios",
         items: usuarios || [], 
         TableComponent: UsuarioTable,
         CardComponent: UsuarioCards,
-        columns: visibleColumns.usuarios || [],
+        columns: orderedColumns.usuarios,
         onEdit: (item) => handleEdit(type, item),
         onDelete: (item) => handleDeleteClick(type, item)
       },
@@ -350,7 +359,7 @@ function AdminPanel() {
         items: investigadores || [], 
         TableComponent: InvestigadorTable,
         CardComponent: InvestigadorCards,
-        columns: visibleColumns.investigadores || [],
+        columns: orderedColumns.investigadores,
         onEdit: (item) => handleEdit(type, item),
         onDelete: (item) => handleDeleteClick(type, item)
       },
@@ -359,13 +368,28 @@ function AdminPanel() {
         items: proyectos || [], 
         TableComponent: ProyectoTable,
         CardComponent: ProyectoCards,
-        columns: visibleColumns.proyectos || [],
+        columns: orderedColumns.proyectos,
         onEdit: (item) => handleEdit(type, item),
         onDelete: (item) => handleDeleteClick(type, item)
       },
     };
   
     return tabConfig[activeTab] || tabConfig.usuarios;
+  };
+  
+  // Función auxiliar para ordenar columnas
+  const sortColumnsByOrder = (columns, tabName) => {
+    if (!columns || !Array.isArray(columns)) return [];
+    
+    return [...columns].sort((a, b) => {
+      const orderA = columnOrders[tabName].indexOf(a);
+      const orderB = columnOrders[tabName].indexOf(b);
+      // Si una columna no está en el orden definido, ponerla al final
+      if (orderA === -1) return 1;
+      if (orderB === -1) return -1;
+      // Ordenar según el índice
+      return orderA - orderB;
+    });
   };
 
   const { title, items, TableComponent, CardComponent, columns, onEdit, onDelete } = getTabData();
