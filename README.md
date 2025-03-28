@@ -5,13 +5,18 @@ A web platform connecting researchers in Mexico to collaborate on projects, arti
 ## Tech Stack
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-    <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
-    <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
-    <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React">
-    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-    <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+    <a href="https://www.python.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>&nbsp;
+    <a href="https://www.djangoproject.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django"></a>&nbsp;
+    <a href="https://www.postgresql.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>&nbsp;
+    <a href="https://www.django-rest-framework.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Django_REST-FF1709?style=for-the-badge&logo=django&logoColor=white" alt="Django REST Framework"></a>&nbsp;
+    <a href="https://jwt.io/" style="text-decoration: none;"><img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT"></a>&nbsp;
+    <a href="https://reactjs.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React"></a>&nbsp;
+    <a href="https://vitejs.dev/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"></a>&nbsp;
+    <a href="https://tailwindcss.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></a>&nbsp;
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></a>&nbsp;
+    <a href="https://reactrouter.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router"></a>&nbsp;
+    <a href="https://axios-http.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios"></a>&nbsp;
+    <a href="https://eslint.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint"></a>
 </p>
 
 ## Setup Guide
@@ -21,6 +26,7 @@ This guide will help you set up the project on either Mac or Windows.
 - Python 3.9 or higher
 - PostgreSQL 13 or higher
 - Node.js 16 or higher
+- npm 8+
 - Git
 
 ---
@@ -57,37 +63,60 @@ Create a PostgreSQL database:
 createdb investigators
 ```   
 
+#### 5. Configure the enviroment variables
 Create a `.env` file in the `Investigators` directory with the following content:
 ```bash
+# Django settings
 DEBUG=True
-yourSECRET_KEY=_secret_key_here
+SECRET_KEY=your_secret_key_here
+ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:5173
 
+# Database settings
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=investigators
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
+DB_USER=postgres
+DB_PASSWORD=your_password_here
 DB_HOST=localhost
 DB_PORT=5432
 
-ALLOWED_HOSTS=localhost,127.0.0.1
+# FrontEnd settings
+VITE_API_URL=http://127.0.0.1:8000/api
+
+# Other settings
 TIME_ZONE=UTC
 ```   
 
-#### 5. Run migrations
+#### - How to get your own django `secret key`?
+```bash
+# Open Django Shell
+python manage.py shell
+
+# Run the following code
+from django.core.management.utils import get_random_secret_key
+print("\n" + "SECRET_KEY = " + get_random_secret_key() + "\n")
+```
+
+#### 6. Make the migrations
+```bash
+python manage.py makemigrations
+```
+
+#### 7. Run the migrations
 ```bash
 python manage.py migrate
 ```
 
-#### 6. Create a superuser (optional)
+#### 8. Create a superuser (optional)
 ```bash
 python manage.py createsuperuser
 ```
 
-#### 7. Run the development server
+#### 9. Run the development server
 ```bash
 python manage.py runserver
 ```
-Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to see the backend (optional).
+Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to see the backend.
 
 ---
 
@@ -105,7 +134,12 @@ cd frontend
 npm install
 ```
 
-#### 3. Start the development server
+#### 3. If the terminal shows that there are vulnerabilities, run the following command. if not, just skip this step
+```bash
+npm audit fix
+```
+
+#### 4. Start the development server
 ```bash
 npm run dev
 ```
@@ -117,11 +151,6 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
 
 1. Open two terminal windows or tabs.
 2. In the first terminal:
-   
-   Navigate to the `backend` directory.
-   ```bash
-    cd backend
-    ```
 
    Activate the virtual environment.
    ```bash
@@ -132,6 +161,11 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
     #For Windows
     python -m venv env
     env\Scripts\activate
+    ```
+   
+   Navigate to the `backend` directory.
+   ```bash
+    cd backend
     ```
 
    Run the Django server:
@@ -151,7 +185,7 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
     ```
 
 Now you can access:
-- The **backend** at [http://127.0.0.1:8000](http://127.0.0.1:8000) (optional)
+- The **backend** at [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - The **frontend** at [http://127.0.0.1:5173](http://127.0.0.1:5173)
 
 ---
