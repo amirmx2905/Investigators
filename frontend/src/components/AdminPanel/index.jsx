@@ -457,84 +457,97 @@ function AdminPanel() {
             className="bg-gray-800/80 rounded-lg p-6 border border-blue-500/30 admin-fadeIn"
             style={{ animationDelay: "0.3s" }}
           >
-            <div className="flex flex-wrap justify-between items-center mb-4">
+            {/* Título y Botón de Crear - Centrados en Móvil */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
               <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
                 {title}
               </h3>
 
-              {renderCreateButton()}
+              <div className="w-full sm:w-auto flex justify-center">
+                {renderCreateButton()}
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-4 transform transition-all duration-300">
-              <div className="flex items-center space-x-2 z-20">
-                <button
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
-                    viewMode === "table"
-                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                      : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
-                  } ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}
-                  onClick={() => toggleViewMode("table")}
-                  disabled={isMobile}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
+            {/* Controles de Visualización - Reorganizados para Móvil */}
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+              {/* Botones de Vista - Centrados en Móvil */}
+              <div className="flex justify-center w-full sm:w-auto">
+                <div className="flex items-center space-x-2 z-20">
+                  <button
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                      viewMode === "table" && !isMobile
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                        : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
+                    } ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}
+                    onClick={() => toggleViewMode("table")}
+                    disabled={isMobile}
                   >
-                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
-                  </svg>
-                  Tabla
-                </button>
-                <button
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
-                    viewMode === "cards"
-                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                      : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
-                  }`}
-                  onClick={() => toggleViewMode("cards")}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
+                    </svg>
+                    Tabla
+                  </button>
+                  <button
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                      viewMode === "cards"
+                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                        : "bg-gray-800/70 border border-blue-500/30 text-blue-300 hover:bg-gray-700/70 hover:border-blue-500/50"
+                    }`}
+                    onClick={() => toggleViewMode("cards")}
                   >
-                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z" />
-                    <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2z" />
-                  </svg>
-                  Tarjetas
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z" />
+                      <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2z" />
+                    </svg>
+                    Tarjetas
+                  </button>
 
-                {viewMode === "table" && !isMobile && (
-                  <div className="relative z-30" ref={columnToggleRef}>
-                    <ColumnSelector
-                      activeTab={activeTab}
-                      columnsDropdownOpen={columnsDropdownOpen}
-                      setColumnsDropdownOpen={setColumnsDropdownOpen}
-                      visibleColumns={visibleColumns}
-                      toggleColumn={toggleColumn}
-                      columnToggleRef={columnToggleRef}
-                    />
-                  </div>
-                )}
+                  {viewMode === "table" && !isMobile && (
+                    <div className="relative z-30" ref={columnToggleRef}>
+                      <ColumnSelector
+                        activeTab={activeTab}
+                        columnsDropdownOpen={columnsDropdownOpen}
+                        setColumnsDropdownOpen={setColumnsDropdownOpen}
+                        visibleColumns={visibleColumns}
+                        toggleColumn={toggleColumn}
+                        columnToggleRef={columnToggleRef}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <select
-                className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
-                value={itemsPerPage}
-                onChange={(e) => {
-                  handleItemsPerPageChange(Number(e.target.value));
-                }}
-              >
-                {[10, 15, 25, 50].map((value) => (
-                  <option key={value} value={value}>
-                    {value} por página
-                  </option>
-                ))}
-              </select>
+              {/* Selector de elementos por página - Centrado en Móvil */}
+              <div className="flex justify-center items-center w-full sm:w-auto">
+                <div className="pt-2 flex items-center">
+                  <label className="text-sm text-gray-400 mr-2">Mostrar:</label>
+                  <select
+                    className="bg-gray-800 border border-gray-700 text-gray-300 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors duration-200 hover:border-blue-500/30"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      handleItemsPerPageChange(Number(e.target.value));
+                    }}
+                  >
+                    {[10, 15, 25, 50].map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div ref={contentRef} className="relative min-h-[200px]">
@@ -562,7 +575,8 @@ function AdminPanel() {
                   </div>
                 )}
 
-                <div className="pagination-container">
+                {/* Paginación - Con mejor espaciado */}
+                <div className="mt-8 pt-4 border-t border-gray-700/50 flex justify-center">
                   <Pagination
                     totalItems={totalItems}
                     currentPage={currentPage}
@@ -607,7 +621,6 @@ function AdminPanel() {
         }
         bodyClassName={() => "text-base font-white font-medium block p-3"}
         icon={() => (
-          // Eliminamos el parámetro { type } que no se usa
           <div className="flex items-center justify-center w-8 h-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
