@@ -51,6 +51,38 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
     activo: "Estado"
   };
   
+  // Determinar color del nivel SNII con matching exacto
+  const getNivelSNIIColor = (nivel) => {
+    if (!nivel) return 'bg-gray-700/50 text-gray-300 border-gray-500/30';
+    
+    const nivelStr = typeof nivel === 'string' ? nivel.toLowerCase() : 
+                    (nivel.nivel ? nivel.nivel.toLowerCase() : '');
+    
+    // Usar match más específico para evitar falsos positivos
+    if (nivelStr.includes('candidato')) {
+      return 'bg-cyan-900/40 text-cyan-300 border-cyan-500/30';
+    } 
+    
+    // Usar un patrón más estricto: 'nivel i' como palabra completa, no como substring
+    if (/\bnivel i\b/.test(nivelStr) || nivelStr === 'nivel i') {
+      return 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30';
+    } 
+    
+    if (/\bnivel ii\b/.test(nivelStr) || nivelStr === 'nivel ii') {
+      return 'bg-amber-900/40 text-amber-300 border-amber-500/30';
+    } 
+    
+    if (/\bnivel iii\b/.test(nivelStr) || nivelStr === 'nivel iii') {
+      return 'bg-violet-900/40 text-violet-300 border-violet-500/30';
+    } 
+    
+    if (nivelStr.includes('emérito')) {
+      return 'bg-rose-900/40 text-rose-300 border-rose-500/30';
+    }
+    
+    return 'bg-indigo-900/40 text-indigo-300 border-indigo-500/30';
+  };
+  
   const formatColumnValue = (column, value, investigador) => {
     // Manejo especial para el ID - Marcar si tiene usuario asignado
     if (column === "id") {
@@ -91,8 +123,23 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
       );
     }
     
-    // Manejo de objetos relacionados (área, especialidad, nivel SNII)
-    if (["area", "especialidad", "nivel_snii"].includes(column)) {
+    // Manejo de nivel SNII
+    if (column === "nivel_snii") {
+      const nivelTexto = investigador.nivel_snii_nombre || 
+                        (value && typeof value === 'object' ? value.nivel : null) || 
+                        "Sin SNII";
+      
+      console.log('Nivel SNII:', nivelTexto, getNivelSNIIColor(nivelTexto));
+      
+      return (
+        <span className={`text-xs px-2 py-0.5 rounded-full border ${getNivelSNIIColor(nivelTexto)}`}>
+          {nivelTexto}
+        </span>
+      );
+    }
+    
+    // Manejo de objetos relacionados (área, especialidad)
+    if (["area", "especialidad"].includes(column)) {
       // Si el campo ya viene con un nombre formateado desde el backend
       if (column === "area" && investigador.area_nombre) {
         return investigador.area_nombre;
@@ -100,10 +147,6 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
       
       if (column === "especialidad" && investigador.especialidad_nombre) {
         return investigador.especialidad_nombre;
-      }
-      
-      if (column === "nivel_snii" && investigador.nivel_snii_nombre) {
-        return investigador.nivel_snii_nombre;
       }
       
       // Si el valor es un objeto, mostrar la propiedad adecuada
@@ -116,10 +159,6 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
           return value.nombre_especialidad;
         }
         
-        if (column === "nivel_snii" && value.nivel) {
-          return value.nivel;
-        }
-        
         // Intentar mostrar alguna propiedad común que pueda existir
         return value.nombre || value.nivel || value.descripcion || JSON.stringify(value);
       }
@@ -127,7 +166,6 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
       // Valores predeterminados para valores nulos
       if (value === null || value === undefined) {
         if (column === "especialidad") return "Sin especialidad";
-        if (column === "nivel_snii") return "Sin SNII";
         return "No asignado";
       }
     }
@@ -165,6 +203,7 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
         </div>
       )}
       
+      {/* Leyenda para los indicadores de usuario */}
       <div className="mb-2 flex items-center text-xs text-gray-400">
         <span className="ml-2 py-4 flex items-center mr-4">
           <span className="bg-gradient-to-r from-blue-600 to-blue-400 rounded-full h-4 w-4 mr-1"></span>
@@ -213,7 +252,7 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
                     <button
-                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                       title="Editar"
                       onClick={() => onEdit(investigador)}
                     >
@@ -233,7 +272,7 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
                       </svg>
                     </button>
                     <button
-                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                       title="Eliminar"
                       onClick={() => onDelete(investigador)}
                     >
