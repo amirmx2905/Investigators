@@ -41,84 +41,93 @@ from investigators.serializers import (
     UnidadSerializer,
     JefeAreaSerializer
 )
+# Esto es pa que sigan un orden explicito en el CRUD
+class OrderedModelViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        # Obtiene el queryset original
+        queryset = super().get_queryset()
+        # Aplica ordenamiento por ID
+        return queryset.order_by('id')
 
-# ViewSets pal buen CRUD
-class InvestigadorViewSet(viewsets.ModelViewSet):
+# ViewSets pal buen CRUD con ordenamiento por ID
+class InvestigadorViewSet(OrderedModelViewSet):
     queryset = Investigador.objects.all()
     serializer_class = InvestigadorSerializer
 
-class UsuarioViewSet(viewsets.ModelViewSet):
+class UsuarioViewSet(OrderedModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     
     def get_queryset(self):
+        # Primero obtenemos todos los usuarios
         queryset = Usuario.objects.all()
-        return queryset.prefetch_related('investigador', 'estudiante')
+        # Aplicamos prefetch_related y luego ordenamos por ID
+        return queryset.prefetch_related('investigador', 'estudiante').order_by('id')
     
-class ProyectoViewSet(viewsets.ModelViewSet):
+class ProyectoViewSet(OrderedModelViewSet):
     queryset = Proyecto.objects.all()
     serializer_class = ProyectoSerializer
 
-class AreaViewSet(viewsets.ModelViewSet):
+class AreaViewSet(OrderedModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
 
-class EspecialidadViewSet(viewsets.ModelViewSet):
+class EspecialidadViewSet(OrderedModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
 
-class NivelEducacionViewSet(viewsets.ModelViewSet):
+class NivelEducacionViewSet(OrderedModelViewSet):
     queryset = NivelEducacion.objects.all()
     serializer_class = NivelEducacionSerializer
 
-class NivelSNIIViewSet(viewsets.ModelViewSet):
+class NivelSNIIViewSet(OrderedModelViewSet):
     queryset = NivelSNII.objects.all()
     serializer_class = NivelSNIISerializer
 
-class CarreraViewSet(viewsets.ModelViewSet):
+class CarreraViewSet(OrderedModelViewSet):
     queryset = Carrera.objects.all()
     serializer_class = CarreraSerializer
 
-class TipoEstudianteViewSet(viewsets.ModelViewSet):
+class TipoEstudianteViewSet(OrderedModelViewSet):
     queryset = TipoEstudiante.objects.all()
     serializer_class = TipoEstudianteSerializer
 
-class EstudianteViewSet(viewsets.ModelViewSet):
+class EstudianteViewSet(OrderedModelViewSet):
     queryset = Estudiante.objects.all()
     serializer_class = EstudianteSerializer
 
-class LineaViewSet(viewsets.ModelViewSet):
+class LineaViewSet(OrderedModelViewSet):
     queryset = Linea.objects.all()
     serializer_class = LineaSerializer
 
-class TipoHerramientaViewSet(viewsets.ModelViewSet):
+class TipoHerramientaViewSet(OrderedModelViewSet):
     queryset = TipoHerramienta.objects.all()
     serializer_class = TipoHerramientaSerializer
 
-class HerramientaViewSet(viewsets.ModelViewSet):
+class HerramientaViewSet(OrderedModelViewSet):
     queryset = Herramienta.objects.all()
     serializer_class = HerramientaSerializer
 
-class ArticuloViewSet(viewsets.ModelViewSet):
+class ArticuloViewSet(OrderedModelViewSet):
     queryset = Articulo.objects.all()
     serializer_class = ArticuloSerializer
 
-class TipoEventoViewSet(viewsets.ModelViewSet):
+class TipoEventoViewSet(OrderedModelViewSet):
     queryset = TipoEvento.objects.all()
     serializer_class = TipoEventoSerializer
 
-class RolEventoViewSet(viewsets.ModelViewSet):
+class RolEventoViewSet(OrderedModelViewSet):
     queryset = RolEvento.objects.all()
     serializer_class = RolEventoSerializer
 
-class EventoViewSet(viewsets.ModelViewSet):
+class EventoViewSet(OrderedModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
 
-class UnidadViewSet(viewsets.ModelViewSet):
+class UnidadViewSet(OrderedModelViewSet):
     queryset = Unidad.objects.all()
     serializer_class = UnidadSerializer
 
-class JefeAreaViewSet(viewsets.ModelViewSet):
+class JefeAreaViewSet(OrderedModelViewSet):
     queryset = JefeArea.objects.all()
     serializer_class = JefeAreaSerializer

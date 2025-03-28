@@ -79,7 +79,7 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
             <div className="mt-4 flex justify-end space-x-2 border-t border-gray-700 pt-3">
               <button
                 onClick={() => onEdit(investigador)}
-                className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
+                className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 transition-colors"
                 title="Editar"
               >
                 <svg
@@ -99,7 +99,7 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
               </button>
               <button
                 onClick={() => onDelete(investigador)}
-                className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                className="cursor-pointer p-2 text-red-400 hover:text-red-300 transition-colors"
                 title="Eliminar"
               >
                 <svg

@@ -31,7 +31,7 @@ function FormModal({ isOpen, onClose, title, children }) {
           <h3 className="text-xl font-semibold text-blue-400">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="cursor-pointer text-gray-400 hover:text-white transition-colors"
           >
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
