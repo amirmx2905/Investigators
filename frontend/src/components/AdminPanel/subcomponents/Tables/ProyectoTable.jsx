@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
-  
   const [showTable, setShowTable] = useState(false);
   
   useEffect(() => {
@@ -17,22 +16,25 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     nombre: "Nombre",
     estado: "Estado",
     fecha_inicio: "Fecha Inicio",
-    fecha_fin: "Fecha Fin"
+    fecha_fin: "Fecha Fin",
+    lider: "Líder",
+    explicacion: "Descripción"
   };
   
-  const formatColumnValue = (column, value) => {
+  const formatColumnValue = (column, value, proyecto) => {
     if (column === "estado") {
-      const statusStyles = {
-        'activo': "bg-green-900/60 text-green-300",
-        'completado': "bg-blue-900/60 text-blue-300",
-        'suspendido': "bg-yellow-900/60 text-yellow-300",
-        'cancelado': "bg-red-900/60 text-red-300"
+      // Aplicar estilos basados en el estado del proyecto
+      const statusColors = {
+        'En Progreso': "bg-blue-900/60 text-blue-300",
+        'Completado': "bg-green-900/60 text-green-300",
+        'Suspendido': "bg-yellow-900/60 text-yellow-300",
+        'Cancelado': "bg-red-900/60 text-red-300"
       };
       
       return (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            statusStyles[value] || "bg-gray-900/60 text-gray-300"
+            statusColors[value] || "bg-gray-900/60 text-gray-300"
           }`}
         >
           {value || "Desconocido"}
@@ -46,13 +48,44 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
       const date = new Date(value);
       if (isNaN(date.getTime())) return value;
       
-      return date.toLocaleDateString();
+      // Formato de fecha localizado
+      return new Intl.DateTimeFormat('es-MX', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(date);
     }
     
-    return value;
+    // Manejo específico para el campo lider
+    if (column === "lider") {
+      // Usar lider_nombre si está disponible desde el backend
+      if (proyecto.lider_nombre) {
+        return proyecto.lider_nombre;
+      }
+      
+      // Como respaldo, mantener la lógica anterior
+      if (value && typeof value === 'object' && value.nombre) {
+        return value.nombre;
+      }
+      
+      return "No asignado";
+    }
+    
+    // Manejo para explicación (posible texto largo)
+    if (column === "explicacion") {
+      if (!value) return "Sin descripción";
+      if (value.length > 50) {
+        return value.substring(0, 50) + "...";
+      }
+      return value;
+    }
+    
+    // Valor por defecto para las demás columnas
+    return value !== null && value !== undefined ? value : "—";
   };
 
-  if (proyectos.length === 0) {
+  // Si no hay proyectos, mostrar mensaje
+  if (!proyectos || proyectos.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
         No hay proyectos para mostrar
@@ -66,12 +99,9 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
-      {/* Tabla */}
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
-        {/* Encabezado */}
         <table className="w-full table-auto">
           <thead>
-            {/* Fila de encabezado */}
             <tr className="bg-gray-800/80">
               {visibleColumns.map((column) => (
                 <th
@@ -86,7 +116,6 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
               </th>
             </tr>
           </thead>
-          {/* Cuerpo */}
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
             {proyectos.map((proyecto, index) => (
               <tr
@@ -99,12 +128,11 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, proyecto[column])}
+                    {formatColumnValue(column, proyecto[column], proyecto)}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
-                    {/* Botones de acción */}
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
                       title="Editar"
@@ -125,7 +153,6 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                         />
                       </svg>
                     </button>
-                    {/* Botón de eliminar */}
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
                       title="Eliminar"

@@ -25,12 +25,17 @@ function ColumnSelector({
       id: 'ID',
       nombre: 'Nombre',
       correo: 'Correo',
+      celular: 'Celular',         
+      area: 'Área',               
+      especialidad: 'Especialidad',
+      nivel_snii: 'Nivel SNII',   
       activo: 'Estado'
     },
     proyectos: {
       id: 'ID',
       nombre: 'Nombre',
       estado: 'Estado',
+      lider: 'Líder',
       fecha_inicio: 'Fecha Inicio',
       fecha_fin: 'Fecha Fin'
     }

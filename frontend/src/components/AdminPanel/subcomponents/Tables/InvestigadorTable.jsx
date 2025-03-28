@@ -15,11 +15,15 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
     id: "ID",
     nombre: "Nombre",
     correo: "Correo",
+    celular: "Celular",              // Nuevo campo
+    area: "Área",                    // Nuevo campo
     especialidad: "Especialidad",
+    nivel_snii: "Nivel SNII",        // Nuevo campo
     activo: "Estado"
   };
   
-  const formatColumnValue = (column, value) => {
+  const formatColumnValue = (column, value, investigador) => {
+    // Manejo de estado activo/inactivo
     if (column === "activo") {
       return (
         <span
@@ -32,6 +36,53 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
       );
     }
     
+    // Manejo de objetos relacionados (área, especialidad, nivel SNII)
+    if (["area", "especialidad", "nivel_snii"].includes(column)) {
+      // Si el campo ya viene con un nombre formateado desde el backend
+      if (column === "area" && investigador.area_nombre) {
+        return investigador.area_nombre;
+      }
+      
+      if (column === "especialidad" && investigador.especialidad_nombre) {
+        return investigador.especialidad_nombre;
+      }
+      
+      if (column === "nivel_snii" && investigador.nivel_snii_nombre) {
+        return investigador.nivel_snii_nombre;
+      }
+      
+      // Si el valor es un objeto, mostrar la propiedad adecuada
+      if (value && typeof value === 'object') {
+        if (column === "area" && value.nombre) {
+          return value.nombre;
+        }
+        
+        if (column === "especialidad" && value.nombre_especialidad) {
+          return value.nombre_especialidad;
+        }
+        
+        if (column === "nivel_snii" && value.nivel) {
+          return value.nivel;
+        }
+        
+        // Intentar mostrar alguna propiedad común que pueda existir
+        return value.nombre || value.nivel || value.descripcion || JSON.stringify(value);
+      }
+      
+      // Valores predeterminados para valores nulos
+      if (value === null || value === undefined) {
+        if (column === "especialidad") return "Sin especialidad";
+        if (column === "nivel_snii") return "Sin SNII";
+        return "No asignado";
+      }
+    }
+    
+    // Manejo de celular (si es nulo)
+    if (column === "celular" && (value === null || value === "")) {
+      return "No registrado";
+    }
+    
+    // Para otros campos, devolver el valor tal cual
     return value;
   };
 
@@ -78,7 +129,7 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, investigador[column])}
+                    {formatColumnValue(column, investigador[column], investigador)}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">

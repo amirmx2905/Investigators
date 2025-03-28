@@ -9,8 +9,8 @@ export function useTableControls() {
   // Configuración inicial de columnas visibles
   const [visibleColumns, setVisibleColumns] = useState({
     usuarios: ["id", "nombre_usuario", "rol", "activo"],
-    investigadores: ["id", "nombre", "correo", "activo"],
-    proyectos: ["id", "nombre", "estado", "fecha_inicio", "fecha_fin"],
+    investigadores: ["id", "nombre", "correo", "celular", "nivel_snii","especialidad", "activo"],
+    proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio", "fecha_fin"],
   });
 
   // Checa si se está en vista mobile
