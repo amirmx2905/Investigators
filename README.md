@@ -105,7 +105,12 @@ cd frontend
 npm install
 ```
 
-#### 3. Start the development server
+#### 3. If the terminal shows that there are vulnerabilities, run the following command. if not, just skip this step
+```bash
+npm audit fix
+```
+
+#### 4. Start the development server
 ```bash
 npm run dev
 ```
