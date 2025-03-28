@@ -17,8 +17,22 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
     nombre_usuario: "Nombre",
     correo: "Correo",
     rol: "Rol",
-    vinculado_a: "Vinculado a",  // Nueva columna
+    vinculado_a: "Vinculado a",
     activo: "Estado"
+  };
+  
+  // Determinar color del rol
+  const getRolColor = (rol) => {
+    switch(rol?.toLowerCase()) {
+      case 'admin':
+        return 'bg-purple-900/40 text-purple-300 border-purple-500/30';
+      case 'investigador':
+        return 'bg-blue-900/40 text-blue-300 border-blue-500/30';
+      case 'estudiante':
+        return 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30';
+      default:
+        return 'bg-gray-700/50 text-gray-300 border-gray-500/30';
+    }
   };
   
   const formatColumnValue = (column, value, usuario) => {
@@ -34,7 +48,16 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
       );
     }
     
-    // Formatear la columna "vinculado_a"
+    // Formatear la columna "rol" con colores consistentes
+    if (column === "rol") {
+      return (
+        <span className={`text-xs px-2 py-0.5 rounded-full border ${getRolColor(value)}`}>
+          {value || "Usuario"}
+        </span>
+      );
+    }
+    
+    // Formatear la columna "vinculado_a" (mantiene el formato original)
     if (column === "vinculado_a") {
       if (usuario.rol === "investigador" && usuario.investigador_nombre) {
         return usuario.investigador_nombre;
