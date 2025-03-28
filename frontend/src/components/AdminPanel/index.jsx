@@ -20,7 +20,7 @@ import {
   UsuarioForm,
   InvestigadorForm,
   ProyectoForm,
-  DeleteConfirmation
+  DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
 import { useAdminPanel } from "./hooks/useAdminPanel";
@@ -35,13 +35,13 @@ function AdminPanel() {
   const [formModal, setFormModal] = useState({
     isOpen: false,
     type: null,
-    item: null
+    item: null,
   });
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     type: null,
-    item: null
+    item: null,
   });
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -58,7 +58,7 @@ function AdminPanel() {
     itemsPerPage,
     totalItems,
     handlePageChange,
-    handleItemsPerPageChange
+    handleItemsPerPageChange,
   } = useAdminPanel();
 
   const {
@@ -79,12 +79,30 @@ function AdminPanel() {
   const showNotification = (message) => {
     toast(message, {
       position: "bottom-right",
-      autoClose: 3000,
+      autoClose: 3000, 
       hideProgressBar: false,
-      closeOnClick: true,
+      closeOnClick: false,
       pauseOnHover: true,
-      draggable: true,
+      draggable: false, 
+      closeButton: false, 
       progress: undefined,
+      theme: "dark",
+      style: {
+        background: "linear-gradient(to right, #1e40af, #3b82f6)",
+        color: "white",
+        borderRadius: "8px",
+        boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+        fontSize: "16px",
+        padding: "12px 16px",
+        minHeight: "40px",
+        display: "flex",
+        alignItems: "center",
+      },
+      bodyStyle: {
+        fontFamily: "inherit",
+        fontSize: "16px",
+        fontWeight: "500",
+      },
     });
   };
 
@@ -166,7 +184,7 @@ function AdminPanel() {
     setFormModal({
       isOpen: true,
       type,
-      item: null
+      item: null,
     });
   };
 
@@ -174,7 +192,7 @@ function AdminPanel() {
     setFormModal({
       isOpen: true,
       type,
-      item
+      item,
     });
   };
 
@@ -182,34 +200,36 @@ function AdminPanel() {
     setDeleteModal({
       isOpen: true,
       type,
-      item
+      item,
     });
   };
 
   const handleConfirmDelete = async () => {
     const { type, item } = deleteModal;
-    
+
     if (!item || !type) return;
-    
+
     setIsDeleting(true);
-    
+
     try {
-      if (type === 'usuario') {
+      if (type === "usuario") {
         await usuarioService.deleteUsuario(item.id);
-      } else if (type === 'investigador') {
+      } else if (type === "investigador") {
         await investigadorService.deleteInvestigador(item.id);
-      } else if (type === 'proyecto') {
+      } else if (type === "proyecto") {
         await proyectoService.deleteProyecto(item.id);
       }
-      
+
       refreshData();
-      
-      showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} eliminado con éxito`);
-      
+
+      showNotification(
+        `${type.charAt(0).toUpperCase() + type.slice(1)} eliminado con éxito`
+      );
+
       setDeleteModal({
         isOpen: false,
         type: null,
-        item: null
+        item: null,
       });
     } catch (error) {
       console.error(`Error al eliminar ${type}:`, error);
@@ -221,10 +241,14 @@ function AdminPanel() {
 
   const handleFormSuccess = () => {
     refreshData();
-    
-    const actionText = formModal.item ? 'actualizado' : 'creado';
-    showNotification(`${formModal.type.charAt(0).toUpperCase() + formModal.type.slice(1)} ${actionText} con éxito`);
-    
+
+    const actionText = formModal.item ? "actualizado" : "creado";
+    showNotification(
+      `${
+        formModal.type.charAt(0).toUpperCase() + formModal.type.slice(1)
+      } ${actionText} con éxito`
+    );
+
     handleCloseForm();
   };
 
@@ -232,24 +256,24 @@ function AdminPanel() {
     setFormModal({
       isOpen: false,
       type: null,
-      item: null
+      item: null,
     });
   };
 
   const renderCreateButton = () => {
     let type = "";
     let label = "";
-    
+
     switch (activeTab) {
-      case 'usuarios':
+      case "usuarios":
         type = "usuario";
         label = "Usuario";
         break;
-      case 'investigadores':
+      case "investigadores":
         type = "investigador";
         label = "Investigador";
         break;
-      case 'proyectos':
+      case "proyectos":
         type = "proyecto";
         label = "Proyecto";
         break;
@@ -257,7 +281,7 @@ function AdminPanel() {
         type = "usuario";
         label = "Usuario";
     }
-    
+
     return (
       <button
         className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
@@ -284,11 +308,11 @@ function AdminPanel() {
 
   const renderForm = () => {
     const { type, item, isOpen } = formModal;
-    
+
     if (!isOpen) return null;
-    
+
     switch (type) {
-      case 'usuario':
+      case "usuario":
         return (
           <UsuarioForm
             isOpen={isOpen}
@@ -297,7 +321,7 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case 'investigador':
+      case "investigador":
         return (
           <InvestigadorForm
             isOpen={isOpen}
@@ -306,7 +330,7 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case 'proyecto':
+      case "proyecto":
         return (
           <ProyectoForm
             isOpen={isOpen}
@@ -322,77 +346,89 @@ function AdminPanel() {
 
   const getTabData = () => {
     let type = "";
-    
+
     switch (activeTab) {
-      case 'usuarios':
+      case "usuarios":
         type = "usuario";
         break;
-      case 'investigadores':
+      case "investigadores":
         type = "investigador";
         break;
-      case 'proyectos':
+      case "proyectos":
         type = "proyecto";
         break;
       default:
         type = "usuario";
     }
-    
+
     // Obtener columnas visibles ordenadas según el orden definido
     const orderedColumns = {
-      usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], 'usuarios'),
-      investigadores: sortColumnsByOrder(visibleColumns.investigadores || [], 'investigadores'),
-      proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], 'proyectos')
+      usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
+      investigadores: sortColumnsByOrder(
+        visibleColumns.investigadores || [],
+        "investigadores"
+      ),
+      proyectos: sortColumnsByOrder(
+        visibleColumns.proyectos || [],
+        "proyectos"
+      ),
     };
-    
+
     const tabConfig = {
       usuarios: {
         title: "Lista de Usuarios",
-        items: usuarios || [], 
+        items: usuarios || [],
         TableComponent: UsuarioTable,
         CardComponent: UsuarioCards,
         columns: orderedColumns.usuarios,
         onEdit: (item) => handleEdit(type, item),
-        onDelete: (item) => handleDeleteClick(type, item)
+        onDelete: (item) => handleDeleteClick(type, item),
       },
       investigadores: {
         title: "Lista de Investigadores",
-        items: investigadores || [], 
+        items: investigadores || [],
         TableComponent: InvestigadorTable,
         CardComponent: InvestigadorCards,
         columns: orderedColumns.investigadores,
         onEdit: (item) => handleEdit(type, item),
-        onDelete: (item) => handleDeleteClick(type, item)
+        onDelete: (item) => handleDeleteClick(type, item),
       },
       proyectos: {
         title: "Lista de Proyectos",
-        items: proyectos || [], 
+        items: proyectos || [],
         TableComponent: ProyectoTable,
         CardComponent: ProyectoCards,
         columns: orderedColumns.proyectos,
         onEdit: (item) => handleEdit(type, item),
-        onDelete: (item) => handleDeleteClick(type, item)
+        onDelete: (item) => handleDeleteClick(type, item),
       },
     };
-  
+
     return tabConfig[activeTab] || tabConfig.usuarios;
   };
-  
+
   // Función auxiliar para ordenar columnas
   const sortColumnsByOrder = (columns, tabName) => {
     if (!columns || !Array.isArray(columns)) return [];
-    
+
     return [...columns].sort((a, b) => {
       const orderA = columnOrders[tabName].indexOf(a);
       const orderB = columnOrders[tabName].indexOf(b);
-      // Si una columna no está en el orden definido, ponerla al final
       if (orderA === -1) return 1;
       if (orderB === -1) return -1;
-      // Ordenar según el índice
       return orderA - orderB;
     });
   };
 
-  const { title, items, TableComponent, CardComponent, columns, onEdit, onDelete } = getTabData();
+  const {
+    title,
+    items,
+    TableComponent,
+    CardComponent,
+    columns,
+    onEdit,
+    onDelete,
+  } = getTabData();
 
   return (
     <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
@@ -425,7 +461,7 @@ function AdminPanel() {
               <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300">
                 {title}
               </h3>
-              
+
               {renderCreateButton()}
             </div>
 
@@ -505,9 +541,11 @@ function AdminPanel() {
               <div className="view-transition">
                 {viewMode === "table" && !isMobile ? (
                   <TableComponent
-                    usuarios={activeTab === 'usuarios' ? items || [] : []}
-                    investigadores={activeTab === 'investigadores' ? items || [] : []}
-                    proyectos={activeTab === 'proyectos' ? items || [] : []}
+                    usuarios={activeTab === "usuarios" ? items || [] : []}
+                    investigadores={
+                      activeTab === "investigadores" ? items || [] : []
+                    }
+                    proyectos={activeTab === "proyectos" ? items || [] : []}
                     visibleColumns={columns || []}
                     onCopy={copyToClipboard}
                     onEdit={onEdit}
@@ -537,19 +575,58 @@ function AdminPanel() {
           </div>
         </div>
       )}
-      
+
       {renderForm()}
-      
+
       <DeleteConfirmation
         isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false, type: null, item: null })}
+        onClose={() =>
+          setDeleteModal({ isOpen: false, type: null, item: null })
+        }
         onConfirm={handleConfirmDelete}
-        itemName={deleteModal.item?.nombre || deleteModal.item?.nombre_usuario || ''}
-        itemType={deleteModal.type ? deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1) : ''}
+        itemName={
+          deleteModal.item?.nombre || deleteModal.item?.nombre_usuario || ""
+        }
+        itemType={
+          deleteModal.type
+            ? deleteModal.type.charAt(0).toUpperCase() +
+              deleteModal.type.slice(1)
+            : ""
+        }
         isDeleting={isDeleting}
       />
-      
-      <ToastContainer limit={3} />
+
+      <ToastContainer
+        limit={3}
+        theme="dark"
+        closeButton={false}
+        closeOnClick={false}
+        draggable={false}
+        toastClassName={() =>
+          "relative flex p-3 min-h-[70px] rounded-lg justify-between overflow-hidden cursor-default bg-gradient-to-r from-blue-800 to-blue-600 mb-3"
+        }
+        bodyClassName={() => "text-base font-white font-medium block p-3"}
+        icon={() => (
+          // Eliminamos el parámetro { type } que no se usa
+          <div className="flex items-center justify-center w-8 h-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+        )}
+      />
     </div>
   );
 }
