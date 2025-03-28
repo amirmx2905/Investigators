@@ -1,11 +1,10 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 
 function Home() {
   const location = useLocation();
+  const navigate = useNavigate(); 
   const { currentUser } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -24,27 +23,16 @@ function Home() {
       setIsVisible(true);
     }, 100);
 
-    // Mostramos un toast si el usuario acaba de iniciar sesión
-    const toastShown = localStorage.getItem("toastShown");
-    if (location.state?.loginSuccess && !toastShown) {
-      toast.success("Inicio de sesión exitoso", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        closeButton: false,
-      });
-      localStorage.setItem("toastShown", "true");
+    // Si llegamos desde login, limpiamos el estado para evitar comportamientos no deseados
+    if (location.state?.loginSuccess) {
+      navigate("/home", { replace: true, state: {} });
     }
 
     return () => {
       clearTimeout(timer);
       window.removeEventListener('resize', checkMobile);
     };
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-160px)] px-4 py-6 md:px-8 md:py-10">
@@ -133,8 +121,6 @@ function Home() {
           </ul>
         </div>
       )}
-      
-      <ToastContainer />
     </div>
   );
 }

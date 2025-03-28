@@ -11,7 +11,7 @@ function Header({
   handleLogout
 }) {
   return (
-    <header className="relative z-20 bg-transparent py-3 sm:py-4 shadow-lg header-animation">
+    <header className="relative bg-transparent py-3 sm:py-4 shadow-lg header-animation">
       <div className="container mx-auto flex justify-between items-center px-4 sm:px-6">
         {/* Logo */}
         <h1

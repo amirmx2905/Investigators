@@ -273,6 +273,65 @@ function Login() {
         30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
         40%, 60% { transform: translate3d(4px, 0, 0); }
       }
+      
+      /* Estilos para los toast containers */
+      .Toastify__toast-container {
+        z-index: 99999 !important;
+        position: fixed !important;
+      }
+      
+      .Toastify__toast {
+        background: linear-gradient(to right, #1e40af, #3b82f6) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3), 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+        padding: 12px 16px !important;
+        min-height: 60px !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        margin-bottom: 12px !important;
+        pointer-events: none !important; /* Asegurar que no se puedan interactuar con los toasts */
+      }
+      
+      /* Estilos para la barra de progreso */
+      .Toastify__progress-bar {
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.7)) !important;
+        height: 3px !important;
+        bottom: 0 !important;
+        opacity: 0.6 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+      }
+      
+      .Toastify__toast--error {
+        background: linear-gradient(to right, #991b1b, #ef4444) !important;
+      }
+      
+      /* Ocultar botón de cierre */
+      .Toastify__close-button {
+        display: none !important;
+      }
+      
+      /* Animación para el icono de check */
+      @keyframes checkmark {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      
+      .check-icon {
+        animation: checkmark 0.5s ease-in-out forwards;
+      }
+      
+      /* Animación para el icono de error */
+      @keyframes errormark {
+        0% { transform: scale(0) rotate(0deg); opacity: 0; }
+        50% { transform: scale(1.2) rotate(8deg); opacity: 1; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      }
+      
+      .error-icon {
+        animation: errormark 0.5s ease-in-out forwards;
+      }
     `;
     document.head.appendChild(style);
 
@@ -306,6 +365,50 @@ function Login() {
     };
   }, [currentUser, navigate]);
 
+  const showError = (message) => {
+    toast.error(message, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: false,
+      closeButton: false,    
+      style: {
+        background: "linear-gradient(to right, #991b1b, #ef4444)",
+        color: "white",
+        borderRadius: "8px",
+        boxShadow: "0 4px 12px rgba(239, 68, 68, 0.3), 0 6px 16px rgba(0, 0, 0, 0.4)",
+        fontSize: "16px",
+        padding: "12px 16px",
+        minHeight: "60px",
+        display: "flex",
+        alignItems: "center",
+        zIndex: 9999,
+        pointerEvents: "none", 
+      },
+      icon: () => (
+        <div className="flex items-center justify-center w-8 h-8 error-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </div>
+      ),
+    });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -332,16 +435,7 @@ function Login() {
       setPassword("");
       navigate("/home", { state: { loginSuccess: true } });
     } else {
-      toast.error("Credenciales inválidas", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        closeButton: false,
-      });
+      showError("Credenciales inválidas");
       setPassword("");
       setUsername("");
     }
@@ -453,7 +547,68 @@ function Login() {
         </form>
       </div>
 
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}         // No permitir cerrar al hacer clic
+        rtl={false}
+        pauseOnFocusLoss={false}     // No pausar cuando se pierde el foco
+        draggable={false}            // No permitir arrastrar
+        pauseOnHover={false}         // No pausar al pasar el mouse
+        theme="dark"
+        closeButton={false}          // No mostrar botón de cierre
+        style={{
+          zIndex: 99999,
+          pointerEvents: "none"      // Desactivar eventos del mouse
+        }}
+        toastClassName="non-interactive-toast"
+        icon={({ type }) => {
+          return type === 'error' ? (
+            <div className="flex items-center justify-center w-8 h-8 error-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-8 h-8 check-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          );
+        }}
+        progressStyle={{
+          background: "linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.7))",
+          height: "3px",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)"
+        }}
+      />
     </div>
   );
 }
