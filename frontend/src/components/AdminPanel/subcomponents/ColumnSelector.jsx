@@ -100,7 +100,9 @@ function ColumnSelector({
   }, [setColumnsDropdownOpen, columnToggleRef]);
 
   // Manejar cambio de checkbox sin cerrar el menú
+  // eslint-disable-next-line no-unused-vars
   const handleCheckboxChange = (tab, column, event) => {
+    event.preventDefault();
     event.stopPropagation();
     toggleColumn(tab, column);
   };
@@ -146,20 +148,24 @@ function ColumnSelector({
           
           {/* Usar el orden definido para mostrar las opciones en orden fijo */}
           {columnOrders[activeTab].map(column => (
-            <label 
+            <div 
               key={column} 
               className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                toggleColumn(activeTab, column);
+              }}
             >
               <input
                 type="checkbox"
                 className="mr-2 h-4 w-4 text-blue-500 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 cursor-pointer"
                 checked={visibleColumns[activeTab].includes(column)}
-                onChange={(e) => handleCheckboxChange(activeTab, column, e)}
+                onChange={(e) => e.stopPropagation()}
                 onClick={(e) => e.stopPropagation()}
               />
               <span className="text-sm text-gray-300">{columnLabels[activeTab][column]}</span>
-            </label>
+            </div>
           ))}
         </div>,
         portalContainer
