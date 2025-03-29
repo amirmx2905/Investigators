@@ -62,37 +62,60 @@ Create a PostgreSQL database:
 createdb investigators
 ```   
 
+#### 5. Configure the enviroment variables
 Create a `.env` file in the `Investigators` directory with the following content:
 ```bash
+# Django settings
 DEBUG=True
-yourSECRET_KEY=_secret_key_here
+SECRET_KEY=your_secret_key_here
+ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:5173
 
+# Database settings
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=investigators
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
+DB_USER=postgres
+DB_PASSWORD=your_password_here
 DB_HOST=localhost
 DB_PORT=5432
 
-ALLOWED_HOSTS=localhost,127.0.0.1
+# FrontEnd settings
+VITE_API_URL=http://127.0.0.1:8000/api
+
+# Other settings
 TIME_ZONE=UTC
 ```   
 
-#### 5. Run migrations
+#### How to get your own django `secret key`?
+```bash
+# Open Django Shell
+python manage.py shell
+
+# Run the following code
+from django.core.management.utils import get_random_secret_key
+print("\n" + "SECRET_KEY = " + get_random_secret_key() + "\n")
+```
+
+#### 6. Make the migrations
+```bash
+python manage.py makemigrations
+```
+
+#### 7. Run the migrations
 ```bash
 python manage.py migrate
 ```
 
-#### 6. Create a superuser (optional)
+#### 8. Create a superuser (optional)
 ```bash
 python manage.py createsuperuser
 ```
 
-#### 7. Run the development server
+#### 9. Run the development server
 ```bash
 python manage.py runserver
 ```
-Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to see the backend (optional).
+Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to see the backend.
 
 ---
 
@@ -127,11 +150,6 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
 
 1. Open two terminal windows or tabs.
 2. In the first terminal:
-   
-   Navigate to the `backend` directory.
-   ```bash
-    cd backend
-    ```
 
    Activate the virtual environment.
    ```bash
@@ -142,6 +160,11 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
     #For Windows
     python -m venv env
     env\Scripts\activate
+    ```
+   
+   Navigate to the `backend` directory.
+   ```bash
+    cd backend
     ```
 
    Run the Django server:
@@ -161,7 +184,7 @@ Visit the URL provided in the terminal (e.g., [http://127.0.0.1:5173](http://127
     ```
 
 Now you can access:
-- The **backend** at [http://127.0.0.1:8000](http://127.0.0.1:8000) (optional)
+- The **backend** at [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - The **frontend** at [http://127.0.0.1:5173](http://127.0.0.1:5173)
 
 ---
