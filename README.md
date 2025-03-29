@@ -5,18 +5,42 @@ A web platform connecting researchers in Mexico to collaborate on projects, arti
 ## Tech Stack
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-    <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
-    <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
-    <img src="https://img.shields.io/badge/Django_REST-FF1709?style=for-the-badge&logo=django&logoColor=white" alt="Django REST Framework">
-    <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
-    <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
-    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-    <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-    <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router">
-    <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios">
-    <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint">
+    <a href="https://www.python.org/">
+        <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+    </a>
+    <a href="https://www.djangoproject.com/">
+        <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
+    </a>
+    <a href="https://www.postgresql.org/">
+        <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+    </a>
+    <a href="https://www.django-rest-framework.org/">
+        <img src="https://img.shields.io/badge/Django_REST-FF1709?style=for-the-badge&logo=django&logoColor=white" alt="Django REST Framework">
+    </a>
+    <a href="https://jwt.io/">
+        <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
+    </a>
+    <a href="https://reactjs.org/">
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
+    </a>
+    <a href="https://vitejs.dev/">
+        <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
+    </a>
+    <a href="https://tailwindcss.com/">
+        <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+    </a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
+        <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+    </a>
+    <a href="https://reactrouter.com/">
+        <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router">
+    </a>
+    <a href="https://axios-http.com/">
+        <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios">
+    </a>
+    <a href="https://eslint.org/">
+        <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint">
+    </a>
 </p>
 
 ## Setup Guide
@@ -26,6 +50,7 @@ This guide will help you set up the project on either Mac or Windows.
 - Python 3.9 or higher
 - PostgreSQL 13 or higher
 - Node.js 16 or higher
+- npm 8+
 - Git
 
 ---
@@ -86,7 +111,7 @@ VITE_API_URL=http://127.0.0.1:8000/api
 TIME_ZONE=UTC
 ```   
 
-#### How to get your own django `secret key`?
+#### - How to get your own django `secret key`?
 ```bash
 # Open Django Shell
 python manage.py shell
