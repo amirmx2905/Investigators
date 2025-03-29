@@ -5,42 +5,18 @@ A web platform connecting researchers in Mexico to collaborate on projects, arti
 ## Tech Stack
 
 <p align="center">
-    <a href="https://www.python.org/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-    </a>
-    <a href="https://www.djangoproject.com/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
-    </a>
-    <a href="https://www.postgresql.org/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
-    </a>
-    <a href="https://www.django-rest-framework.org/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/Django_REST-FF1709?style=for-the-badge&logo=django&logoColor=white" alt="Django REST Framework">
-    </a>
-    <a href="https://jwt.io/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
-    </a>
-    <a href="https://reactjs.org/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React">
-    </a>
-    <a href="https://vitejs.dev/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-    </a>
-    <a href="https://tailwindcss.com/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-    </a>
-    <a href="https://reactrouter.com/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router">
-    </a>
-    <a href="https://axios-http.com/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios">
-    </a>
-    <a href="https://eslint.org/" style="text-decoration: none;">
-        <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint">
-    </a>
+    <a href="https://www.python.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>&nbsp;
+    <a href="https://www.djangoproject.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django"></a>&nbsp;
+    <a href="https://www.postgresql.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>&nbsp;
+    <a href="https://www.django-rest-framework.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Django_REST-FF1709?style=for-the-badge&logo=django&logoColor=white" alt="Django REST Framework"></a>&nbsp;
+    <a href="https://jwt.io/" style="text-decoration: none;"><img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT"></a>&nbsp;
+    <a href="https://reactjs.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React"></a>&nbsp;
+    <a href="https://vitejs.dev/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"></a>&nbsp;
+    <a href="https://tailwindcss.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"></a>&nbsp;
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" style="text-decoration: none;"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"></a>&nbsp;
+    <a href="https://reactrouter.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router"></a>&nbsp;
+    <a href="https://axios-http.com/" style="text-decoration: none;"><img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios"></a>&nbsp;
+    <a href="https://eslint.org/" style="text-decoration: none;"><img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint"></a>
 </p>
 
 ## Setup Guide
