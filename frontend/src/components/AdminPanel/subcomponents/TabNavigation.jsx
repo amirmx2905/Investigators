@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 
-// Datos de tabs esenciales (busca en Heroicons para iconos)
+// Datos de tabs esenciales (busca en Heroicons para iconos bro)
 const TABS_DATA = [
   { id: "usuarios", label: "Usuarios", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
   { id: "investigadores", label: "Investigadores", icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" },
   { id: "proyectos", label: "Proyectos", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" }
 ];
 
-// Componente de icono reutilizable
 const TabIcon = ({ path }) => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={path} />
@@ -19,7 +18,6 @@ function TabNavigation({ activeTab, changeTab }) {
   const dropdownRef = useRef(null);
   const scrollContainerRef = useRef(null);
   
-  // Cierra dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -31,7 +29,6 @@ function TabNavigation({ activeTab, changeTab }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Scroll al tab activo
   useEffect(() => {
     if (scrollContainerRef.current) {
       const activeElement = scrollContainerRef.current.querySelector(`[data-tab="${activeTab}"]`);
@@ -52,7 +49,6 @@ function TabNavigation({ activeTab, changeTab }) {
 
   const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0];
 
-  // Función para desplazar el scroll horizontal
   const scrollTabs = (direction) => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft += (direction === 'left' ? -200 : 200);

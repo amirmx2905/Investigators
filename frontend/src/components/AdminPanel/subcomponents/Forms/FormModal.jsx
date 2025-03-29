@@ -1,33 +1,38 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 
-function FormModal({ isOpen, onClose, title, children, centerContent = false }) {
+function FormModal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  centerContent = false,
+}) {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
-  // Añadir keydown listener para cerrar con Escape
   useEffect(() => {
     const handleEscape = (event) => {
-      if (event.key === 'Escape' && onClose) {
+      if (event.key === "Escape" && onClose) {
         onClose();
       }
     };
-    
+
     if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
+      window.addEventListener("keydown", handleEscape);
     }
-    
+
     return () => {
-      window.removeEventListener('keydown', handleEscape);
+      window.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
 
@@ -36,11 +41,11 @@ function FormModal({ isOpen, onClose, title, children, centerContent = false }) 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop con blur */}
-      <div 
+      <div
         className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
       <div className="bg-gray-800 border border-blue-500/30 rounded-lg shadow-lg w-full max-w-lg mx-4 z-10 overflow-hidden transform transition-all duration-300 animate-fadeIn">
         {/* Header */}
@@ -51,26 +56,30 @@ function FormModal({ isOpen, onClose, title, children, centerContent = false }) 
               onClick={onClose}
               className="cursor-pointer text-gray-400 hover:text-white transition-colors"
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="h-6 w-6" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M6 18L18 6M6 6l12 12" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
             </button>
           )}
         </div>
-        
+
         {/* Body */}
-        <div className={`p-4 max-h-[70vh] overflow-y-auto ${centerContent ? 'flex justify-center' : ''}`}>
+        <div
+          className={`p-4 max-h-[70vh] overflow-y-auto ${
+            centerContent ? "flex justify-center" : ""
+          }`}
+        >
           {children}
         </div>
       </div>

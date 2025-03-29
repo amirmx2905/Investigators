@@ -24,16 +24,13 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
 
-  // Normaliza los IDs para asegurar que sean enteros o null
   const normalizeId = (value) => {
     if (value === null || value === undefined || value === "") return "";
 
-    // Si es un objeto con id, devuelve el id como entero
     if (typeof value === "object" && value !== null && "id" in value) {
       return parseInt(value.id, 10);
     }
 
-    // Si es un string o número, conviértelo a entero
     return parseInt(value, 10);
   };
 
@@ -81,7 +78,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       setFetchingData(true);
       setError(null);
       try {
-        // Solicitar una cantidad grande de registros para asegurar que se carguen todos
         const [areasRes, nivelesEduRes, especialidadesRes, nivelesSNIIRes] =
           await Promise.all([
             api.get("/areas/?page_size=1000"),
@@ -90,7 +86,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
             api.get("/nivelsnii/?page_size=1000"),
           ]);
 
-        // Extraer y ordenar los datos por ID
         const areasData = areasRes.data.results || areasRes.data || [];
         const nivelesEduData =
           nivelesEduRes.data.results || nivelesEduRes.data || [];
@@ -99,7 +94,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         const nivelesSNIIData =
           nivelesSNIIRes.data.results || nivelesSNIIRes.data || [];
 
-        // Ordenar por ID para asegurar que los registros con ID 1 aparezcan primero
         const sortedAreas = Array.isArray(areasData)
           ? [...areasData].sort((a, b) => a.id - b.id)
           : [];
@@ -116,7 +110,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
           ? [...nivelesSNIIData].sort((a, b) => a.id - b.id)
           : [];
 
-        // Establecer los datos ordenados en el estado
         setAreas(sortedAreas);
         setNivelesEdu(sortedNivelesEdu);
         setEspecialidades(sortedEspecialidades);
@@ -175,7 +168,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     setError(null);
 
     try {
-      // Crear una copia para no modificar el estado directamente
       const dataToSend = { ...formData };
       console.log("Datos a enviar:", dataToSend);
 
@@ -195,12 +187,10 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       console.error("Error al guardar investigador:", err);
       let errorMsg = err.message || "Error al guardar. Revisa los datos.";
 
-      // Si hay un error de respuesta del servidor, mostrar detalles adicionales
       if (err.response) {
         const serverErrors = err.response.data;
         console.error("Detalles del error del servidor:", serverErrors);
 
-        // Formatear errores de validación del backend
         if (typeof serverErrors === "object") {
           const errorDetails = Object.entries(serverErrors)
             .map(

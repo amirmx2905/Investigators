@@ -14,7 +14,6 @@ export const useLoginLogic = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Verificar si es móvil
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -22,12 +21,10 @@ export const useLoginLogic = () => {
     checkMobile();
     window.addEventListener("resize", checkMobile);
 
-    // Redirigir si ya está autenticado
     if (currentUser) {
       navigate("/home");
     }
 
-    // Manejar movimiento del mouse para efecto 3D
     let lastTime = 0;
     const handleMouseMove = (e) => {
       if (window.innerWidth < 768) return;

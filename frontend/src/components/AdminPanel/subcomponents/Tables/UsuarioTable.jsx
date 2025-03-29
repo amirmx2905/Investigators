@@ -1,63 +1,65 @@
 import React, { useState, useEffect } from "react";
 
 function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
-
   const [showTable, setShowTable] = useState(false);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, []);
-  
+
   const columnLabels = {
     id: "ID",
     nombre_usuario: "Nombre",
     correo: "Correo",
     rol: "Rol",
     vinculado_a: "Vinculado a",
-    activo: "Estado"
+    activo: "Estado",
   };
-  
-  // Determinar color del rol
+
   const getRolColor = (rol) => {
-    switch(rol?.toLowerCase()) {
-      case 'admin':
-        return 'bg-purple-900/40 text-purple-300 border-purple-500/30';
-      case 'investigador':
-        return 'bg-blue-900/40 text-blue-300 border-blue-500/30';
-      case 'estudiante':
-        return 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30';
+    switch (rol?.toLowerCase()) {
+      case "admin":
+        return "bg-purple-900/40 text-purple-300 border-purple-500/30";
+      case "investigador":
+        return "bg-blue-900/40 text-blue-300 border-blue-500/30";
+      case "estudiante":
+        return "bg-emerald-900/40 text-emerald-300 border-emerald-500/30";
       default:
-        return 'bg-gray-700/50 text-gray-300 border-gray-500/30';
+        return "bg-gray-700/50 text-gray-300 border-gray-500/30";
     }
   };
-  
+
   const formatColumnValue = (column, value, usuario) => {
     if (column === "activo") {
       return (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            value ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
+            value
+              ? "bg-green-900/60 text-green-300"
+              : "bg-red-900/60 text-red-300"
           }`}
         >
           {value ? "Activo" : "Inactivo"}
         </span>
       );
     }
-    
-    // Formatear la columna "rol" con colores consistentes
+
     if (column === "rol") {
       return (
-        <span className={`text-xs px-2 py-0.5 rounded-full border ${getRolColor(value)}`}>
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full border ${getRolColor(
+            value
+          )}`}
+        >
           {value || "Usuario"}
         </span>
       );
     }
-    
-    // Formatear la columna "vinculado_a" (mantiene el formato original)
+
     if (column === "vinculado_a") {
       if (usuario.rol === "investigador" && usuario.investigador_nombre) {
         return usuario.investigador_nombre;
@@ -68,7 +70,7 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
       }
       return "Sin vincular";
     }
-    
+
     return value;
   };
 
@@ -81,7 +83,7 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
   }
 
   return (
-    <div 
+    <div
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}

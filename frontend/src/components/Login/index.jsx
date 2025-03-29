@@ -6,7 +6,6 @@ import Particles from './subcomponents/Particles.jsx';
 import LoginToast from './subcomponents/LoginToast.jsx';
 
 function Login() {
-  // Cargar animaciones
   useLoginAnimations();
   
   const {

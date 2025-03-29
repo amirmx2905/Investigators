@@ -3,44 +3,33 @@ import React from 'react';
 function Pagination({ totalItems, itemsPerPage, currentPage, paginate }) {
   const pageNumbers = [];
   
-  // Calcular total de páginas
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
   
-  // Asegurar que currentPage esté dentro de los límites válidos
   const safePage = Math.min(Math.max(1, currentPage), totalPages);
   
-  // Si la página actual es diferente a la página segura, actualizarla
   if (currentPage !== safePage) {
     setTimeout(() => paginate(safePage), 0);
-    return null; // No renderizar nada mientras se actualiza la página
+    return null;
   }
   
-  // Construir el array de números de página
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
   
-  // Determinar qué números de página mostrar
   let displayedPageNumbers = [];
   
   if (totalPages <= 5) {
-    // Si hay 5 o menos páginas, mostrar todas
     displayedPageNumbers = pageNumbers;
   } else {
-    // Mostrar siempre la primera y última página
     if (safePage <= 3) {
-      // Cerca del inicio
       displayedPageNumbers = [1, 2, 3, 4, '...', totalPages];
     } else if (safePage >= totalPages - 2) {
-      // Cerca del final
       displayedPageNumbers = [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
     } else {
-      // En medio
       displayedPageNumbers = [1, '...', safePage - 1, safePage, safePage + 1, '...', totalPages];
     }
   }
   
-  // No mostrar si solo hay una página
   if (totalPages <= 1) {
     return null;
   }

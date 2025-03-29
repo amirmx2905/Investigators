@@ -1,45 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import api from '../../../../api/apiConfig';
+import React, { useState, useEffect } from "react";
+import api from "../../../../api/apiConfig";
 
-function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete }) {
+function InvestigadorTable({
+  investigadores,
+  visibleColumns,
+  onEdit,
+  onDelete,
+}) {
   const [showTable, setShowTable] = useState(false);
   const [investigadoresConUsuario, setInvestigadoresConUsuario] = useState([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, []);
-  
-  // Obtener la lista de investigadores con usuario asignado
+
   useEffect(() => {
     const fetchUsuariosAsignados = async () => {
       setCargandoUsuarios(true);
       try {
-        // Solicitar una lista grande de usuarios para evitar problemas de paginación
-        const response = await api.get('/usuarios/?page_size=1000&rol=investigador');
+        const response = await api.get(
+          "/usuarios/?page_size=1000&rol=investigador"
+        );
         const usuarios = response.data.results || response.data || [];
-        
-        // Extraer IDs de investigadores que tienen usuario
+
         const idsConUsuario = usuarios
-          .filter(usuario => usuario.investigador !== null)
-          .map(usuario => usuario.investigador);
-        
-        console.log('Investigadores con usuario asignado:', idsConUsuario);
+          .filter((usuario) => usuario.investigador !== null)
+          .map((usuario) => usuario.investigador);
+
+        console.log("Investigadores con usuario asignado:", idsConUsuario);
         setInvestigadoresConUsuario(idsConUsuario);
       } catch (error) {
-        console.error('Error al cargar usuarios asignados:', error);
+        console.error("Error al cargar usuarios asignados:", error);
       } finally {
         setCargandoUsuarios(false);
       }
     };
-    
+
     fetchUsuariosAsignados();
   }, []);
-  
+
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
@@ -48,134 +52,148 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
     area: "Área",
     especialidad: "Especialidad",
     nivel_snii: "Nivel SNII",
-    activo: "Estado"
+    activo: "Estado",
   };
-  
-  // Determinar color del nivel SNII con matching exacto
+
   const getNivelSNIIColor = (nivel) => {
-    if (!nivel) return 'bg-gray-700/50 text-gray-300 border-gray-500/30';
-    
-    const nivelStr = typeof nivel === 'string' ? nivel.toLowerCase() : 
-                    (nivel.nivel ? nivel.nivel.toLowerCase() : '');
-    
-    // Usar match más específico para evitar falsos positivos
-    if (nivelStr.includes('candidato')) {
-      return 'bg-cyan-900/40 text-cyan-300 border-cyan-500/30';
-    } 
-    
-    // Usar un patrón más estricto: 'nivel i' como palabra completa, no como substring
-    if (/\bnivel i\b/.test(nivelStr) || nivelStr === 'nivel i') {
-      return 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30';
-    } 
-    
-    if (/\bnivel ii\b/.test(nivelStr) || nivelStr === 'nivel ii') {
-      return 'bg-amber-900/40 text-amber-300 border-amber-500/30';
-    } 
-    
-    if (/\bnivel iii\b/.test(nivelStr) || nivelStr === 'nivel iii') {
-      return 'bg-violet-900/40 text-violet-300 border-violet-500/30';
-    } 
-    
-    if (nivelStr.includes('emérito')) {
-      return 'bg-rose-900/40 text-rose-300 border-rose-500/30';
+    if (!nivel) return "bg-gray-700/50 text-gray-300 border-gray-500/30";
+
+    const nivelStr =
+      typeof nivel === "string"
+        ? nivel.toLowerCase()
+        : nivel.nivel
+        ? nivel.nivel.toLowerCase()
+        : "";
+
+    if (nivelStr.includes("candidato")) {
+      return "bg-cyan-900/40 text-cyan-300 border-cyan-500/30";
     }
-    
-    return 'bg-indigo-900/40 text-indigo-300 border-indigo-500/30';
+
+    if (/\bnivel i\b/.test(nivelStr) || nivelStr === "nivel i") {
+      return "bg-emerald-900/40 text-emerald-300 border-emerald-500/30";
+    }
+
+    if (/\bnivel ii\b/.test(nivelStr) || nivelStr === "nivel ii") {
+      return "bg-amber-900/40 text-amber-300 border-amber-500/30";
+    }
+
+    if (/\bnivel iii\b/.test(nivelStr) || nivelStr === "nivel iii") {
+      return "bg-violet-900/40 text-violet-300 border-violet-500/30";
+    }
+
+    if (nivelStr.includes("emérito")) {
+      return "bg-rose-900/40 text-rose-300 border-rose-500/30";
+    }
+
+    return "bg-indigo-900/40 text-indigo-300 border-indigo-500/30";
   };
-  
+
   const formatColumnValue = (column, value, investigador) => {
-    // Manejo especial para el ID - Marcar si tiene usuario asignado
     if (column === "id") {
       const tieneUsuario = investigadoresConUsuario.includes(value);
       return (
         <div className="flex items-center">
           <span
             className={`flex items-center justify-center ${
-              tieneUsuario 
-                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white" 
+              tieneUsuario
+                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white"
                 : "bg-gray-700 text-gray-300"
             } rounded-full h-6 w-6 text-xs font-medium`}
-            title={tieneUsuario ? "Tiene usuario asignado" : "Sin usuario asignado"}
+            title={
+              tieneUsuario ? "Tiene usuario asignado" : "Sin usuario asignado"
+            }
           >
             {value}
           </span>
           {tieneUsuario && (
             <span className="ml-2 text-xs text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 inline"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
               </svg>
             </span>
           )}
         </div>
       );
     }
-    
-    // Manejo de estado activo/inactivo
+
     if (column === "activo") {
       return (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            value ? "bg-green-900/60 text-green-300" : "bg-red-900/60 text-red-300"
+            value
+              ? "bg-green-900/60 text-green-300"
+              : "bg-red-900/60 text-red-300"
           }`}
         >
           {value ? "Activo" : "Inactivo"}
         </span>
       );
     }
-    
-    // Manejo de nivel SNII
+
     if (column === "nivel_snii") {
-      const nivelTexto = investigador.nivel_snii_nombre || 
-                        (value && typeof value === 'object' ? value.nivel : null) || 
-                        "Sin SNII";
-      
-      console.log('Nivel SNII:', nivelTexto, getNivelSNIIColor(nivelTexto));
-      
+      const nivelTexto =
+        investigador.nivel_snii_nombre ||
+        (value && typeof value === "object" ? value.nivel : null) ||
+        "Sin SNII";
+
+      console.log("Nivel SNII:", nivelTexto, getNivelSNIIColor(nivelTexto));
+
       return (
-        <span className={`text-xs px-2 py-0.5 rounded-full border ${getNivelSNIIColor(nivelTexto)}`}>
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full border ${getNivelSNIIColor(
+            nivelTexto
+          )}`}
+        >
           {nivelTexto}
         </span>
       );
     }
-    
-    // Manejo de objetos relacionados (área, especialidad)
+
     if (["area", "especialidad"].includes(column)) {
-      // Si el campo ya viene con un nombre formateado desde el backend
       if (column === "area" && investigador.area_nombre) {
         return investigador.area_nombre;
       }
-      
+
       if (column === "especialidad" && investigador.especialidad_nombre) {
         return investigador.especialidad_nombre;
       }
-      
-      // Si el valor es un objeto, mostrar la propiedad adecuada
-      if (value && typeof value === 'object') {
+
+      if (value && typeof value === "object") {
         if (column === "area" && value.nombre) {
           return value.nombre;
         }
-        
+
         if (column === "especialidad" && value.nombre_especialidad) {
           return value.nombre_especialidad;
         }
-        
-        // Intentar mostrar alguna propiedad común que pueda existir
-        return value.nombre || value.nivel || value.descripcion || JSON.stringify(value);
+
+        return (
+          value.nombre ||
+          value.nivel ||
+          value.descripcion ||
+          JSON.stringify(value)
+        );
       }
-      
-      // Valores predeterminados para valores nulos
+
       if (value === null || value === undefined) {
         if (column === "especialidad") return "Sin especialidad";
         return "No asignado";
       }
     }
-    
-    // Manejo de celular (si es nulo)
+
     if (column === "celular" && (value === null || value === "")) {
       return "No registrado";
     }
-    
-    // Para otros campos, devolver el valor tal cual
+
     return value;
   };
 
@@ -188,21 +206,37 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
   }
 
   return (
-    <div 
+    <div
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
       {cargandoUsuarios && (
         <div className="text-xs text-blue-400 mb-2 flex items-center">
-          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <svg
+            className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
           </svg>
           Cargando información de usuarios...
         </div>
       )}
-      
+
       {/* Leyenda para los indicadores de usuario */}
       <div className="mb-2 flex items-center text-xs text-gray-400">
         <span className="ml-2 py-4 flex items-center mr-4">
@@ -214,7 +248,7 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
           Sin usuario asignado
         </span>
       </div>
-      
+
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
         <table className="w-full table-auto">
           <thead>
@@ -237,7 +271,9 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
               <tr
                 key={investigador.id}
                 className={`hover:bg-gray-700/50 transition-colors duration-200 ${
-                  investigadoresConUsuario.includes(investigador.id) ? 'bg-blue-900/10' : ''
+                  investigadoresConUsuario.includes(investigador.id)
+                    ? "bg-blue-900/10"
+                    : ""
                 }`}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
@@ -246,7 +282,11 @@ function InvestigadorTable({ investigadores, visibleColumns, onEdit, onDelete })
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(column, investigador[column], investigador)}
+                    {formatColumnValue(
+                      column,
+                      investigador[column],
+                      investigador
+                    )}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">

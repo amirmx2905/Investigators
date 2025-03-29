@@ -1,25 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import TabNavigation from "./subcomponents/TabNavigation";
-import {
-  UsuarioForm,
-  InvestigadorForm,
-  ProyectoForm,
-  DeleteConfirmation,
-} from "./subcomponents/Forms/forms";
-
-// Custom hooks
 import { useAdminPanel } from "./hooks/useAdminPanel";
 import { useTableControls } from "./hooks/useTableControls";
-
-// Services
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
-
-// Utils and components
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -27,6 +13,13 @@ import CreateButton from "./components/Buttons/CreateButton";
 import ViewControls from "./components/Controls/ViewControls";
 import ContentDisplay from "./components/Content/ContentDisplay";
 import LoadingSpinner from "./components/Loaders/LoadingSpinner";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  UsuarioForm,
+  InvestigadorForm,
+  ProyectoForm,
+  DeleteConfirmation,
+} from "./subcomponents/Forms/forms";
 
 function AdminPanel() {
   const [contentReady, setContentReady] = useState(false);
@@ -73,7 +66,6 @@ function AdminPanel() {
 
   const columnToggleRef = useRef(null);
 
-  // Setup content ready effect
   useEffect(() => {
     let timer;
     if (!loading) {
@@ -84,7 +76,6 @@ function AdminPanel() {
     return () => clearTimeout(timer);
   }, [loading]);
 
-  // Setup styles
   useEffect(() => {
     const styleEl = setupAdminPanelStyles();
     return () => {
@@ -94,7 +85,6 @@ function AdminPanel() {
     };
   }, []);
 
-  // CRUD Handlers
   const handleCreate = (type) => {
     setFormModal({
       isOpen: true,
@@ -175,7 +165,6 @@ function AdminPanel() {
     });
   };
 
-  // Render form based on type
   const renderForm = () => {
     const { type, item, isOpen } = formModal;
 
@@ -214,7 +203,6 @@ function AdminPanel() {
     }
   };
 
-  // Get data for current tab
   const {
     title,
     items,
@@ -223,7 +211,15 @@ function AdminPanel() {
     columns,
     onEdit,
     onDelete,
-  } = getTabData(activeTab, visibleColumns, usuarios, investigadores, proyectos, handleEdit, handleDeleteClick);
+  } = getTabData(
+    activeTab,
+    visibleColumns,
+    usuarios,
+    investigadores,
+    proyectos,
+    handleEdit,
+    handleDeleteClick
+  );
 
   return (
     <div className="mt-4 pb-10 w-full px-2 sm:px-4 overflow-x-hidden no-scrollbar">
@@ -251,15 +247,12 @@ function AdminPanel() {
               </h3>
 
               <div className="w-full sm:w-auto">
-                <CreateButton 
-                  activeTab={activeTab} 
-                  onClick={handleCreate} 
-                />
+                <CreateButton activeTab={activeTab} onClick={handleCreate} />
               </div>
             </div>
 
             {/* Controles de Visualización */}
-            <ViewControls 
+            <ViewControls
               viewMode={viewMode}
               toggleViewMode={toggleViewMode}
               isMobile={isMobile}
@@ -274,7 +267,7 @@ function AdminPanel() {
             />
 
             {/* Contenido */}
-            <ContentDisplay 
+            <ContentDisplay
               contentRef={contentRef}
               viewMode={viewMode}
               isMobile={isMobile}

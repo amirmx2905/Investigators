@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 
 function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
   const [showTable, setShowTable] = useState(false);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, []);
-  
+
   const columnLabels = {
     id: "ID",
     nombre: "Nombre",
@@ -18,22 +18,22 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     fecha_inicio: "Fecha Inicio",
     fecha_fin: "Fecha Fin",
     lider: "Líder",
-    explicacion: "Descripción"
+    explicacion: "Descripción",
   };
-  
+
   const getStatusStyles = (status) => {
     const statusMap = {
-      'activo': "bg-green-900/60 text-green-300",
-      'en progreso': "bg-blue-900/60 text-blue-300",
-      'completado': "bg-emerald-900/60 text-emerald-300",
-      'suspendido': "bg-yellow-900/60 text-yellow-300",
-      'cancelado': "bg-red-900/60 text-red-300"
+      activo: "bg-green-900/60 text-green-300",
+      "en progreso": "bg-blue-900/60 text-blue-300",
+      completado: "bg-emerald-900/60 text-emerald-300",
+      suspendido: "bg-yellow-900/60 text-yellow-300",
+      cancelado: "bg-red-900/60 text-red-300",
     };
-    
+
     if (!status) return "bg-gray-900/60 text-gray-300";
     return statusMap[status.toLowerCase()] || "bg-gray-900/60 text-gray-300";
   };
-  
+
   const formatColumnValue = (column, value, proyecto) => {
     if (column === "estado") {
       return (
@@ -44,37 +44,32 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         </span>
       );
     }
-    
+
     if (column === "fecha_inicio" || column === "fecha_fin") {
       if (!value) return "Sin fecha";
-      
+
       const date = new Date(value);
       if (isNaN(date.getTime())) return value;
-      
-      // Formato de fecha localizado
-      return new Intl.DateTimeFormat('es-MX', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
+
+      return new Intl.DateTimeFormat("es-MX", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
       }).format(date);
     }
-    
-    // Manejo específico para el campo lider
+
     if (column === "lider") {
-      // Usar lider_nombre si está disponible desde el backend
       if (proyecto.lider_nombre) {
         return proyecto.lider_nombre;
       }
-      
-      // Como respaldo, mantener la lógica anterior
-      if (value && typeof value === 'object' && value.nombre) {
+
+      if (value && typeof value === "object" && value.nombre) {
         return value.nombre;
       }
-      
+
       return "No asignado";
     }
-    
-    // Manejo para explicación (posible texto largo)
+
     if (column === "explicacion" || column === "descripcion") {
       if (!value) return "Sin descripción";
       if (value.length > 50) {
@@ -82,12 +77,10 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
       }
       return value;
     }
-    
-    // Valor por defecto para las demás columnas
+
     return value !== null && value !== undefined ? value : "—";
   };
 
-  // Si no hay proyectos, mostrar mensaje
   if (!proyectos || proyectos.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
@@ -97,12 +90,11 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
   }
 
   return (
-    <div 
+    <div
       className={`w-full overflow-hidden transition-all duration-500 ${
         showTable ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
-    >  
-
+    >
       <div className="w-full overflow-x-auto rounded-lg border border-gray-700">
         <table className="w-full table-auto">
           <thead>
@@ -125,8 +117,11 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
               <tr
                 key={proyecto.id}
                 className={`hover:bg-gray-700/50 transition-colors duration-200 ${
-                  proyecto.estado?.toLowerCase() === 'activo' ? 'bg-green-900/10' : 
-                  proyecto.estado?.toLowerCase() === 'completado' ? 'bg-blue-900/10' : ''
+                  proyecto.estado?.toLowerCase() === "activo"
+                    ? "bg-green-900/10"
+                    : proyecto.estado?.toLowerCase() === "completado"
+                    ? "bg-blue-900/10"
+                    : ""
                 }`}
                 style={{ animationDelay: `${index * 50}ms` }}
               >

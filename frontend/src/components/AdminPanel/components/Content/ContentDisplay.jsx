@@ -1,5 +1,5 @@
-import React from 'react';
-import Pagination from '../../subcomponents/Pagination';
+import React from "react";
+import Pagination from "../../subcomponents/Pagination";
 
 const ContentDisplay = ({
   contentRef,
@@ -18,9 +18,8 @@ const ContentDisplay = ({
   totalItems,
   currentPage,
   itemsPerPage,
-  handlePageChange
+  handlePageChange,
 }) => {
-  // Render table component
   const renderTable = () => {
     return (
       <TableComponent
@@ -35,7 +34,6 @@ const ContentDisplay = ({
     );
   };
 
-  // Render card component
   const renderCards = () => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

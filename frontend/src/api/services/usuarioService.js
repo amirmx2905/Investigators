@@ -2,14 +2,11 @@ import api from "../apiConfig";
 
 const getUsuarios = async (page = 1, pageSize = 10, filters = {}) => {
   try {
-    
     const params = new URLSearchParams();
 
-    // Pa la pagination.py
     params.append("page", page);
     params.append("page_size", pageSize);
 
-    // Pa añadir filtros adicionales si los llega a pedir el profe
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== "") {
         params.append(key, value);

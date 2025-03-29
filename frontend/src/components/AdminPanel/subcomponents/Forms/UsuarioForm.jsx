@@ -7,7 +7,7 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
   const [formData, setFormData] = useState({
     nombre_usuario: "",
     contrasena: "",
-    confirmarContrasena: "", // Nuevo campo para confirmación
+    confirmarContrasena: "",
     rol: "investigador",
     investigador: null,
     estudiante: null,
@@ -19,22 +19,17 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchingData, setFetchingData] = useState(false);
-  // Estado para almacenar investigadores y estudiantes ya asignados a usuarios
   const [asignados, setAsignados] = useState({
     investigadores: [],
     estudiantes: [],
   });
 
-  // Estados para el buscador
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedName, setSelectedName] = useState("");
   const searchRef = useRef(null);
-
-  // Estado para errores de validación de contraseña
   const [passwordError, setPasswordError] = useState("");
 
-  // Estado para mostrar los requisitos de contraseña
   const [showPasswordRequirements, setShowPasswordRequirements] =
     useState(false);
 
@@ -43,14 +38,13 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       setFormData({
         nombre_usuario: usuario.nombre_usuario || "",
         contrasena: "",
-        confirmarContrasena: "", // Limpiar también la confirmación
+        confirmarContrasena: "",
         rol: usuario.rol || "estudiante",
         investigador: usuario.investigador || null,
         estudiante: usuario.estudiante || null,
         activo: usuario.activo !== undefined ? usuario.activo : true,
       });
 
-      // Si es edición, establecer el nombre seleccionado
       if (usuario.rol === "investigador" && usuario.investigador) {
         const inv = investigadores.find((i) => i.id === usuario.investigador);
         if (inv) setSelectedName(inv.nombre);
@@ -72,12 +66,11 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       setSearchTerm("");
     }
 
-    // Limpiar error de contraseña al abrir/cerrar el modal
     setPasswordError("");
     setShowPasswordRequirements(false);
   }, [usuario, isOpen, investigadores, estudiantes]);
 
-  // Efecto para cerrar el dropdown cuando se hace clic fuera
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -95,20 +88,17 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       setFetchingData(true);
       setError(null);
       try {
-        // Solicitar una cantidad grande de registros por página para asegurar que se carguen todos
         const [invResponse, estResponse, usuariosResponse] = await Promise.all([
           api.get("/investigadores/?page_size=1000"),
           api.get("/estudiantes/?page_size=1000"),
-          api.get("/usuarios/?page_size=1000"), // Obtener todos los usuarios para verificar asignaciones
+          api.get("/usuarios/?page_size=1000"),
         ]);
 
-        // Obtener los resultados y ordenarlos por ID
         const invData = invResponse.data.results || invResponse.data || [];
         const estData = estResponse.data.results || estResponse.data || [];
         const usuariosData =
           usuariosResponse.data.results || usuariosResponse.data || [];
 
-        // Identificar investigadores y estudiantes ya asignados a un usuario
         const investigadoresAsignados = usuariosData
           .filter((u) => u.rol === "investigador" && u.investigador !== null)
           .map((u) => u.investigador);
@@ -117,7 +107,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
           .filter((u) => u.rol === "estudiante" && u.estudiante !== null)
           .map((u) => u.estudiante);
 
-        // Si estamos editando, debemos excluir el ID del usuario actual de la lista de asignados
         const invAsignadosFiltrados = usuario
           ? investigadoresAsignados.filter((id) => id !== usuario.investigador)
           : investigadoresAsignados;
@@ -126,13 +115,11 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
           ? estudiantesAsignados.filter((id) => id !== usuario.estudiante)
           : estudiantesAsignados;
 
-        // Guardar la lista de asignados para referencia
         setAsignados({
           investigadores: invAsignadosFiltrados,
           estudiantes: estAsignadosFiltrados,
         });
 
-        // Ordenar por ID para asegurar que los registros con ID 1 aparezcan primero
         const sortedInv = Array.isArray(invData)
           ? [...invData].sort((a, b) => a.id - b.id)
           : [];
@@ -144,7 +131,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
         setInvestigadores(sortedInv);
         setEstudiantes(sortedEst);
 
-        // Si estamos editando, establecer el nombre seleccionado
         if (usuario) {
           if (usuario.rol === "investigador" && usuario.investigador) {
             const inv = sortedInv.find((i) => i.id === usuario.investigador);
@@ -199,7 +185,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       }));
     }
 
-    // Si cambia alguna contraseña, limpiar el error de contraseña
     if (name === "contrasena") {
       setPasswordError("");
       setShowPasswordRequirements(true);
@@ -217,25 +202,20 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       estudiante: rol === "estudiante" ? prev.estudiante : null,
     }));
 
-    // Limpiar búsqueda al cambiar de rol
     setSearchTerm("");
     setSelectedName("");
   };
 
-  // Validar que las contraseñas cumplan con requisitos de seguridad
   const validatePasswords = () => {
-    // Si estamos editando y no se está cambiando la contraseña, no validar
     if (usuario && !formData.contrasena) {
       return true;
     }
 
-    // Validar que ambas contraseñas coincidan
     if (formData.contrasena !== formData.confirmarContrasena) {
       setPasswordError("Las contraseñas no coinciden");
       return false;
     }
 
-    // Requisitos de seguridad
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(formData.contrasena);
     const hasLowerCase = /[a-z]/.test(formData.contrasena);
@@ -245,7 +225,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       formData.contrasena
     );
 
-    // Construir mensaje de error si no cumple con los requisitos
     let errorMsg = [];
 
     if (formData.contrasena.length < minLength) {
@@ -279,7 +258,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar contraseñas antes de enviar
     if (!validatePasswords()) {
       return;
     }
@@ -291,7 +269,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       let result;
 
       const dataToSend = { ...formData };
-      // Eliminar el campo confirmarContrasena antes de enviar al servidor
       delete dataToSend.confirmarContrasena;
 
       if (usuario && !dataToSend.contrasena) {
@@ -311,12 +288,10 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
       console.error("Error al guardar usuario:", err);
       let errorMsg = err.message || "Error al guardar. Revisa los datos.";
 
-      // Si hay un error de respuesta del servidor, mostrar detalles adicionales
       if (err.response) {
         const serverErrors = err.response.data;
         console.error("Detalles del error del servidor:", serverErrors);
 
-        // Formatear errores de validación del backend
         if (typeof serverErrors === "object") {
           const errorDetails = Object.entries(serverErrors)
             .map(
@@ -339,7 +314,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     }
   };
 
-  // Filtrar investigadores y estudiantes que no están asignados a un usuario
   const investigadoresDisponibles = investigadores.filter(
     (inv) => !asignados.investigadores.includes(inv.id)
   );
@@ -348,7 +322,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     (est) => !asignados.estudiantes.includes(est.id)
   );
 
-  // Manejar selección desde el dropdown
   const handleSelect = (item) => {
     const { id, nombre } = item;
     setSelectedName(nombre);
@@ -362,7 +335,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     }
   };
 
-  // Filtrar resultados de búsqueda
   const getFilteredResults = () => {
     if (formData.rol === "investigador") {
       return investigadoresDisponibles.filter((inv) =>
@@ -376,7 +348,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     return [];
   };
 
-  // Manejar clic en limpiar selección
   const handleClearSelection = () => {
     setSelectedName("");
     setSearchTerm("");
@@ -388,7 +359,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
     }
   };
 
-  // Verificar los requisitos de contraseña para mostrar indicadores
   const checkPasswordStrength = () => {
     if (!formData.contrasena) return {};
 

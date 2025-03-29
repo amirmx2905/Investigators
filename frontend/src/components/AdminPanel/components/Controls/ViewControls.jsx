@@ -1,5 +1,5 @@
-import React from 'react';
-import ColumnSelector from '../../subcomponents/ColumnSelector';
+import React from "react";
+import ColumnSelector from "../../subcomponents/ColumnSelector";
 
 const ViewControls = ({
   viewMode,
@@ -12,7 +12,7 @@ const ViewControls = ({
   toggleColumn,
   columnToggleRef,
   itemsPerPage,
-  handleItemsPerPageChange
+  handleItemsPerPageChange,
 }) => {
   return (
     <div className="mb-6">
@@ -58,7 +58,7 @@ const ViewControls = ({
           </svg>
           Tarjetas
         </button>
-        
+
         {viewMode === "table" && !isMobile && (
           <div className="relative z-30" ref={columnToggleRef}>
             <ColumnSelector
@@ -71,7 +71,7 @@ const ViewControls = ({
             />
           </div>
         )}
-        
+
         {/* Selector de elementos por página - Ancho completo en móvil */}
         <div className="flex justify-center items-center mobile-full-width mt-3">
           <div className="pt-2 flex items-center">
@@ -92,7 +92,7 @@ const ViewControls = ({
           </div>
         </div>
       </div>
-      
+
       {/* Vista para pantallas sm y mayores (>= 640px) */}
       <div className="hidden sm:flex sm:flex-row justify-between items-center">
         {/* Botones de Vista */}
