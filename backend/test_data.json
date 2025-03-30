@@ -1,0 +1,2546 @@
+[
+{
+    "model": "investigators.unidad",
+    "pk": 1,
+    "fields": {
+        "nombre": "Aguascalientes"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 2,
+    "fields": {
+        "nombre": "Baja California"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 3,
+    "fields": {
+        "nombre": "Baja California Sur"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 4,
+    "fields": {
+        "nombre": "Campeche"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 5,
+    "fields": {
+        "nombre": "Chiapas"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 6,
+    "fields": {
+        "nombre": "Chihuahua"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 7,
+    "fields": {
+        "nombre": "CDMX"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 8,
+    "fields": {
+        "nombre": "Coahuila"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 9,
+    "fields": {
+        "nombre": "Colima"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 10,
+    "fields": {
+        "nombre": "Durango"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 11,
+    "fields": {
+        "nombre": "Guanajuato"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 12,
+    "fields": {
+        "nombre": "Guerrero"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 13,
+    "fields": {
+        "nombre": "Hidalgo"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 14,
+    "fields": {
+        "nombre": "Jalisco"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 15,
+    "fields": {
+        "nombre": "Estado de México"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 16,
+    "fields": {
+        "nombre": "Michoacán"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 17,
+    "fields": {
+        "nombre": "Morelos"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 18,
+    "fields": {
+        "nombre": "Nayarit"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 19,
+    "fields": {
+        "nombre": "Nuevo León"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 20,
+    "fields": {
+        "nombre": "Oaxaca"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 21,
+    "fields": {
+        "nombre": "Puebla"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 22,
+    "fields": {
+        "nombre": "Querétaro"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 23,
+    "fields": {
+        "nombre": "Quintana Roo"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 24,
+    "fields": {
+        "nombre": "San Luis Potosí"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 25,
+    "fields": {
+        "nombre": "Sinaloa"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 26,
+    "fields": {
+        "nombre": "Sonora"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 27,
+    "fields": {
+        "nombre": "Tabasco"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 28,
+    "fields": {
+        "nombre": "Tamaulipas"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 29,
+    "fields": {
+        "nombre": "Tlaxcala"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 30,
+    "fields": {
+        "nombre": "Veracruz"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 31,
+    "fields": {
+        "nombre": "Yucatán"
+    }
+},
+{
+    "model": "investigators.unidad",
+    "pk": 32,
+    "fields": {
+        "nombre": "Zacatecas"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 1,
+    "fields": {
+        "unidad": 1,
+        "nombre": "Tecnologías de la Información y Comunicación"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 2,
+    "fields": {
+        "unidad": 2,
+        "nombre": "Salud y Ciencias Biomédicas"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 3,
+    "fields": {
+        "unidad": 3,
+        "nombre": "Economía y Desarrollo Sostenible"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 4,
+    "fields": {
+        "unidad": 4,
+        "nombre": "Energías Renovables y Sustentabilidad"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 5,
+    "fields": {
+        "unidad": 5,
+        "nombre": "Ciencias Sociales y Humanidades"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 6,
+    "fields": {
+        "unidad": 6,
+        "nombre": "Inteligencia Artificial y Aprendizaje Automático"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 7,
+    "fields": {
+        "unidad": 7,
+        "nombre": "Nanotecnología y Materiales Avanzados"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 8,
+    "fields": {
+        "unidad": 8,
+        "nombre": "Educación y Pedagogía"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 9,
+    "fields": {
+        "unidad": 9,
+        "nombre": "Ciencias del Medio Ambiente y Cambio Climático"
+    }
+},
+{
+    "model": "investigators.area",
+    "pk": 10,
+    "fields": {
+        "unidad": 10,
+        "nombre": "Robótica y Automatización"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 1,
+    "fields": {
+        "nombre_especialidad": "Inteligencia Artificial"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 2,
+    "fields": {
+        "nombre_especialidad": "Ciencias de Datos"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 3,
+    "fields": {
+        "nombre_especialidad": "Biotecnología"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 4,
+    "fields": {
+        "nombre_especialidad": "Ingeniería Biomédica"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 5,
+    "fields": {
+        "nombre_especialidad": "Energías Renovables"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 6,
+    "fields": {
+        "nombre_especialidad": "Nanotecnología"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 7,
+    "fields": {
+        "nombre_especialidad": "Ciencias Ambientales"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 8,
+    "fields": {
+        "nombre_especialidad": "Ingeniería de Software"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 9,
+    "fields": {
+        "nombre_especialidad": "Robótica"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 10,
+    "fields": {
+        "nombre_especialidad": "Ciberseguridad"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 11,
+    "fields": {
+        "nombre_especialidad": "Economía Aplicada"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 12,
+    "fields": {
+        "nombre_especialidad": "Psicología Clínica"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 13,
+    "fields": {
+        "nombre_especialidad": "Educación y Pedagogía"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 14,
+    "fields": {
+        "nombre_especialidad": "Química Orgánica"
+    }
+},
+{
+    "model": "investigators.especialidad",
+    "pk": 15,
+    "fields": {
+        "nombre_especialidad": "Física Teórica"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 1,
+    "fields": {
+        "nivel": "Licenciatura"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 2,
+    "fields": {
+        "nivel": "Maestría"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 3,
+    "fields": {
+        "nivel": "Doctorado"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 4,
+    "fields": {
+        "nivel": "Técnico Superior"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 5,
+    "fields": {
+        "nivel": "Diplomado"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 6,
+    "fields": {
+        "nivel": "PostDoctorado"
+    }
+},
+{
+    "model": "investigators.niveleducacion",
+    "pk": 7,
+    "fields": {
+        "nivel": "Catedrático"
+    }
+},
+{
+    "model": "investigators.nivelsnii",
+    "pk": 1,
+    "fields": {
+        "nivel": "Candidato"
+    }
+},
+{
+    "model": "investigators.nivelsnii",
+    "pk": 2,
+    "fields": {
+        "nivel": "Nivel I"
+    }
+},
+{
+    "model": "investigators.nivelsnii",
+    "pk": 3,
+    "fields": {
+        "nivel": "Nivel II"
+    }
+},
+{
+    "model": "investigators.nivelsnii",
+    "pk": 4,
+    "fields": {
+        "nivel": "Nivel III"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 1,
+    "fields": {
+        "nombre": "Ingeniería en Desarrollo de Software"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 2,
+    "fields": {
+        "nombre": "Ingeniería en Sistemas Computacionales"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 3,
+    "fields": {
+        "nombre": "Ingeniería Civil"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 4,
+    "fields": {
+        "nombre": "Ingeniería Mecánica"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 5,
+    "fields": {
+        "nombre": "Ingeniería Electrónica"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 6,
+    "fields": {
+        "nombre": "Ingeniería Industrial"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 7,
+    "fields": {
+        "nombre": "Medicina"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 8,
+    "fields": {
+        "nombre": "Derecho"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 9,
+    "fields": {
+        "nombre": "Administración de Empresas"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 10,
+    "fields": {
+        "nombre": "Contaduría Pública"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 11,
+    "fields": {
+        "nombre": "Psicología"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 12,
+    "fields": {
+        "nombre": "Arquitectura"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 13,
+    "fields": {
+        "nombre": "Diseño Gráfico"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 14,
+    "fields": {
+        "nombre": "Biología"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 15,
+    "fields": {
+        "nombre": "Química"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 16,
+    "fields": {
+        "nombre": "Física"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 17,
+    "fields": {
+        "nombre": "Matemáticas"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 18,
+    "fields": {
+        "nombre": "Economía"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 19,
+    "fields": {
+        "nombre": "Ciencias de la Comunicación"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 20,
+    "fields": {
+        "nombre": "Enfermería"
+    }
+},
+{
+    "model": "investigators.carrera",
+    "pk": 21,
+    "fields": {
+        "nombre": "Pedagogía"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 1,
+    "fields": {
+        "nombre": "Licenciatura"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 2,
+    "fields": {
+        "nombre": "Maestría"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 3,
+    "fields": {
+        "nombre": "Doctorado"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 4,
+    "fields": {
+        "nombre": "Postdoctorado"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 5,
+    "fields": {
+        "nombre": "Investigador en formación"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 6,
+    "fields": {
+        "nombre": "Estudiante de intercambio"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 7,
+    "fields": {
+        "nombre": "Estudiante de servicio social"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 8,
+    "fields": {
+        "nombre": "Estudiante de prácticas profesionales"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 9,
+    "fields": {
+        "nombre": "Estudiante de diplomado"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 10,
+    "fields": {
+        "nombre": "Estudiante de especialidad"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 11,
+    "fields": {
+        "nombre": "Estudiante de certificación"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 12,
+    "fields": {
+        "nombre": "Estudiante de curso libre"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 13,
+    "fields": {
+        "nombre": "Estudiante de verano científico"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 14,
+    "fields": {
+        "nombre": "Estudiante de movilidad nacional"
+    }
+},
+{
+    "model": "investigators.tipoestudiante",
+    "pk": 15,
+    "fields": {
+        "nombre": "Estudiante de movilidad internacional"
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 1,
+    "fields": {
+        "area": 1,
+        "nivel_edu": 1,
+        "especialidad": 1,
+        "nivel_snii": 1,
+        "fecha_asignacion_snii": "2022-01-15",
+        "nombre": "Juan Pérez",
+        "correo": "juan.perez@example.com",
+        "celular": "5551234563",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 2,
+    "fields": {
+        "area": 2,
+        "nivel_edu": 2,
+        "especialidad": 2,
+        "nivel_snii": 2,
+        "fecha_asignacion_snii": "2022-03-22",
+        "nombre": "María López",
+        "correo": "maria.lopez@example.com",
+        "celular": "5559876543",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 3,
+    "fields": {
+        "area": 3,
+        "nivel_edu": 3,
+        "especialidad": 3,
+        "nivel_snii": 3,
+        "fecha_asignacion_snii": "2021-11-05",
+        "nombre": "Carlos García",
+        "correo": "carlos.garcia@example.com",
+        "celular": "5554567890",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 4,
+    "fields": {
+        "area": 4,
+        "nivel_edu": 3,
+        "especialidad": 4,
+        "nivel_snii": 1,
+        "fecha_asignacion_snii": "2023-02-10",
+        "nombre": "Ana Martínez",
+        "correo": "ana.martinez@example.com",
+        "celular": "5556781234",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 5,
+    "fields": {
+        "area": 5,
+        "nivel_edu": 2,
+        "especialidad": 5,
+        "nivel_snii": 2,
+        "fecha_asignacion_snii": "2021-07-18",
+        "nombre": "Luis Hernández",
+        "correo": "luis.hernandez@example.com",
+        "celular": "5553219876",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 6,
+    "fields": {
+        "area": 6,
+        "nivel_edu": 3,
+        "especialidad": 6,
+        "nivel_snii": 3,
+        "fecha_asignacion_snii": "2022-09-30",
+        "nombre": "Laura González",
+        "correo": "laura.gonzalez@example.com",
+        "celular": "5557896543",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 7,
+    "fields": {
+        "area": 7,
+        "nivel_edu": 1,
+        "especialidad": 7,
+        "nivel_snii": 4,
+        "fecha_asignacion_snii": "2023-04-12",
+        "nombre": "Pedro Ramírez",
+        "correo": "pedro.ramirez@example.com",
+        "celular": "5556543210",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 8,
+    "fields": {
+        "area": 8,
+        "nivel_edu": 1,
+        "especialidad": 8,
+        "nivel_snii": 1,
+        "fecha_asignacion_snii": "2021-05-25",
+        "nombre": "Sofía Torres",
+        "correo": "sofia.torres@example.com",
+        "celular": "5554321098",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 9,
+    "fields": {
+        "area": 9,
+        "nivel_edu": 2,
+        "especialidad": 10,
+        "nivel_snii": 2,
+        "fecha_asignacion_snii": "2022-12-07",
+        "nombre": "Miguel Sánchez",
+        "correo": "miguel.sanchez@example.com",
+        "celular": "5558765432",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 10,
+    "fields": {
+        "area": 10,
+        "nivel_edu": 1,
+        "especialidad": 9,
+        "nivel_snii": 3,
+        "fecha_asignacion_snii": "2023-01-19",
+        "nombre": "Elena Ruiz",
+        "correo": "elena.ruiz@example.com",
+        "celular": "5550987654",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 14,
+    "fields": {
+        "area": 2,
+        "nivel_edu": 3,
+        "especialidad": 3,
+        "nivel_snii": 1,
+        "fecha_asignacion_snii": "2025-03-04",
+        "nombre": "Armando Bolaños",
+        "correo": "armando@gmail.com",
+        "celular": "3329582058",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.investigador",
+    "pk": 15,
+    "fields": {
+        "area": 2,
+        "nivel_edu": 5,
+        "especialidad": 4,
+        "nivel_snii": 2,
+        "fecha_asignacion_snii": "2025-03-19",
+        "nombre": "Jose Flores",
+        "correo": "jose.flores@example.com",
+        "celular": "3384959048",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.jefearea",
+    "pk": 1,
+    "fields": {
+        "area": 1,
+        "investigador": 2,
+        "fecha_inicio": "2025-03-26",
+        "fecha_fin": null,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.jefearea",
+    "pk": 2,
+    "fields": {
+        "area": 5,
+        "investigador": 6,
+        "fecha_inicio": "2025-03-21",
+        "fecha_fin": null,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.jefearea",
+    "pk": 3,
+    "fields": {
+        "area": 7,
+        "investigador": 7,
+        "fecha_inicio": "2021-02-21",
+        "fecha_fin": null,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 1,
+    "fields": {
+        "tipo_estudiante": 1,
+        "carrera": 1,
+        "investigador": 1,
+        "nombre": "Carlos Mendoza",
+        "correo": "carlos.mendoza@example.com",
+        "celular": "5551234567",
+        "area": 1,
+        "escuela": "UNAM",
+        "fecha_inicio": "2025-01-01",
+        "fecha_termino": "2025-12-31"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 2,
+    "fields": {
+        "tipo_estudiante": 2,
+        "carrera": 2,
+        "investigador": 2,
+        "nombre": "Ana Torres",
+        "correo": "ana.torres@example.com",
+        "celular": "5559876543",
+        "area": 2,
+        "escuela": "IPN",
+        "fecha_inicio": "2025-02-01",
+        "fecha_termino": "2025-11-30"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 3,
+    "fields": {
+        "tipo_estudiante": 3,
+        "carrera": 3,
+        "investigador": 3,
+        "nombre": "Luis Gómez",
+        "correo": "luis.gomez@example.com",
+        "celular": "5554567890",
+        "area": 3,
+        "escuela": "UAM",
+        "fecha_inicio": "2025-03-01",
+        "fecha_termino": "2025-10-31"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 4,
+    "fields": {
+        "tipo_estudiante": 4,
+        "carrera": 4,
+        "investigador": 4,
+        "nombre": "María Ramírez",
+        "correo": "maria.ramirez@example.com",
+        "celular": "5556781234",
+        "area": 4,
+        "escuela": "ITESM",
+        "fecha_inicio": "2025-04-01",
+        "fecha_termino": "2025-09-30"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 5,
+    "fields": {
+        "tipo_estudiante": 5,
+        "carrera": 5,
+        "investigador": 5,
+        "nombre": "Pedro Sánchez",
+        "correo": "pedro.sanchez@example.com",
+        "celular": "5553219876",
+        "area": 5,
+        "escuela": "UdeG",
+        "fecha_inicio": "2025-05-01",
+        "fecha_termino": "2025-08-31"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 6,
+    "fields": {
+        "tipo_estudiante": 6,
+        "carrera": 6,
+        "investigador": 6,
+        "nombre": "Laura Hernández",
+        "correo": "laura.hernandez@example.com",
+        "celular": "5557896543",
+        "area": 6,
+        "escuela": "UAEM",
+        "fecha_inicio": "2025-06-01",
+        "fecha_termino": "2025-07-31"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 7,
+    "fields": {
+        "tipo_estudiante": 7,
+        "carrera": 7,
+        "investigador": 7,
+        "nombre": "Miguel López",
+        "correo": "miguel.lopez@example.com",
+        "celular": "5556543210",
+        "area": 7,
+        "escuela": "UANL",
+        "fecha_inicio": "2025-07-01",
+        "fecha_termino": "2025-06-30"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 8,
+    "fields": {
+        "tipo_estudiante": 8,
+        "carrera": 8,
+        "investigador": 8,
+        "nombre": "Sofía Ruiz",
+        "correo": "sofia.ruiz@example.com",
+        "celular": "5554321098",
+        "area": 8,
+        "escuela": "UABC",
+        "fecha_inicio": "2025-08-01",
+        "fecha_termino": "2025-05-31"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 9,
+    "fields": {
+        "tipo_estudiante": 9,
+        "carrera": 9,
+        "investigador": 9,
+        "nombre": "Elena García",
+        "correo": "elena.garcia@example.com",
+        "celular": "5558765432",
+        "area": 9,
+        "escuela": "UASLP",
+        "fecha_inicio": "2025-09-01",
+        "fecha_termino": "2025-04-30"
+    }
+},
+{
+    "model": "investigators.estudiante",
+    "pk": 10,
+    "fields": {
+        "tipo_estudiante": 10,
+        "carrera": 10,
+        "investigador": 10,
+        "nombre": "Juan Martínez",
+        "correo": "juan.martinez@example.com",
+        "celular": "5550987654",
+        "area": 10,
+        "escuela": "UQROO",
+        "fecha_inicio": "2025-10-01",
+        "fecha_termino": "2025-03-31"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 1,
+    "fields": {
+        "nombre": "Inteligencia Artificial y Aprendizaje Automático"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 2,
+    "fields": {
+        "nombre": "Ciencias del Medio Ambiente y Cambio Climático"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 3,
+    "fields": {
+        "nombre": "Energías Renovables y Sustentabilidad"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 4,
+    "fields": {
+        "nombre": "Nanotecnología y Materiales Avanzados"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 5,
+    "fields": {
+        "nombre": "Salud y Ciencias Biomédicas"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 6,
+    "fields": {
+        "nombre": "Tecnologías de la Información y Comunicación"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 7,
+    "fields": {
+        "nombre": "Ciencias Sociales y Humanidades"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 8,
+    "fields": {
+        "nombre": "Robótica y Automatización"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 9,
+    "fields": {
+        "nombre": "Educación y Pedagogía"
+    }
+},
+{
+    "model": "investigators.linea",
+    "pk": 10,
+    "fields": {
+        "nombre": "Economía y Desarrollo Sostenible"
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 1,
+    "fields": {
+        "linea": 1,
+        "investigador": 1
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 2,
+    "fields": {
+        "linea": 1,
+        "investigador": 2
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 3,
+    "fields": {
+        "linea": 2,
+        "investigador": 3
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 4,
+    "fields": {
+        "linea": 2,
+        "investigador": 4
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 5,
+    "fields": {
+        "linea": 3,
+        "investigador": 5
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 6,
+    "fields": {
+        "linea": 3,
+        "investigador": 6
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 7,
+    "fields": {
+        "linea": 4,
+        "investigador": 7
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 8,
+    "fields": {
+        "linea": 4,
+        "investigador": 8
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 9,
+    "fields": {
+        "linea": 5,
+        "investigador": 9
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 10,
+    "fields": {
+        "linea": 5,
+        "investigador": 10
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 1,
+    "fields": {
+        "nombre": "Software de Análisis de Datos"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 2,
+    "fields": {
+        "nombre": "Herramientas de Simulación"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 3,
+    "fields": {
+        "nombre": "Plataformas de Gestión de Proyectos"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 4,
+    "fields": {
+        "nombre": "Instrumentos de Laboratorio"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 5,
+    "fields": {
+        "nombre": "Equipos de Medición"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 6,
+    "fields": {
+        "nombre": "Sistemas de Automatización"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 7,
+    "fields": {
+        "nombre": "Aplicaciones de Inteligencia Artificial"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 8,
+    "fields": {
+        "nombre": "Bases de Datos"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 9,
+    "fields": {
+        "nombre": "Herramientas de Diseño Gráfico"
+    }
+},
+{
+    "model": "investigators.tipoherramienta",
+    "pk": 10,
+    "fields": {
+        "nombre": "Sistemas de Información Geográfica"
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 1,
+    "fields": {
+        "nombre": "Python",
+        "tipo_herramienta": 1
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 2,
+    "fields": {
+        "nombre": "MATLAB",
+        "tipo_herramienta": 1
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 3,
+    "fields": {
+        "nombre": "Simulink",
+        "tipo_herramienta": 2
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 4,
+    "fields": {
+        "nombre": "Trello",
+        "tipo_herramienta": 3
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 5,
+    "fields": {
+        "nombre": "Microscopio Electrónico",
+        "tipo_herramienta": 4
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 6,
+    "fields": {
+        "nombre": "Multímetro Digital",
+        "tipo_herramienta": 5
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 7,
+    "fields": {
+        "nombre": "PLC Siemens",
+        "tipo_herramienta": 6
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 8,
+    "fields": {
+        "nombre": "TensorFlow",
+        "tipo_herramienta": 7
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 9,
+    "fields": {
+        "nombre": "PostgreSQL",
+        "tipo_herramienta": 8
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 10,
+    "fields": {
+        "nombre": "Adobe Photoshop",
+        "tipo_herramienta": 9
+    }
+},
+{
+    "model": "investigators.herramienta",
+    "pk": 11,
+    "fields": {
+        "nombre": "ArcGIS",
+        "tipo_herramienta": 10
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 1,
+    "fields": {
+        "nombre": "Inteligencia Artificial",
+        "lider": 1,
+        "estado": "En Progreso",
+        "explicacion": "Desarrollo de un modelo de IA para análisis de datos",
+        "fecha_inicio": "2025-01-01",
+        "fecha_fin": "2025-12-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 2,
+    "fields": {
+        "nombre": "Energías Renovables",
+        "lider": 2,
+        "estado": "En Progreso",
+        "explicacion": "Investigación sobre paneles solares eficientes",
+        "fecha_inicio": "2025-02-01",
+        "fecha_fin": "2025-11-30",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 3,
+    "fields": {
+        "nombre": "Robótica Futurista",
+        "lider": 3,
+        "estado": "Completado",
+        "explicacion": "Diseño de un robot autónomo",
+        "fecha_inicio": "2024-01-01",
+        "fecha_fin": "2024-12-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 4,
+    "fields": {
+        "nombre": "Ciberseguridad en la Nube",
+        "lider": 4,
+        "estado": "En Progreso",
+        "explicacion": "Desarrollo de un sistema de seguridad informática",
+        "fecha_inicio": "2025-03-01",
+        "fecha_fin": "2025-10-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 5,
+    "fields": {
+        "nombre": "Biotecnología",
+        "lider": 5,
+        "estado": "En Progreso",
+        "explicacion": "Estudio de microorganismos para aplicaciones médicas",
+        "fecha_inicio": "2025-04-01",
+        "fecha_fin": "2025-09-30",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 6,
+    "fields": {
+        "nombre": "Educación",
+        "lider": 6,
+        "estado": "En Progreso",
+        "explicacion": "Innovación en métodos de enseñanza",
+        "fecha_inicio": "2025-05-01",
+        "fecha_fin": "2025-08-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 7,
+    "fields": {
+        "nombre": "Ciencias Ambientales",
+        "lider": 7,
+        "estado": "En Progreso",
+        "explicacion": "Análisis del impacto del cambio climático",
+        "fecha_inicio": "2025-06-01",
+        "fecha_fin": "2025-07-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 8,
+    "fields": {
+        "nombre": "Machine Learning",
+        "lider": 8,
+        "estado": "En Progreso",
+        "explicacion": "Implementación de un modelo de aprendizaje automático",
+        "fecha_inicio": "2025-07-01",
+        "fecha_fin": "2025-06-30",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 9,
+    "fields": {
+        "nombre": "Diseño Gráfico",
+        "lider": 9,
+        "estado": "En Progreso",
+        "explicacion": "Creación de herramientas para diseño gráfico",
+        "fecha_inicio": "2025-08-01",
+        "fecha_fin": "2025-05-31",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.proyecto",
+    "pk": 10,
+    "fields": {
+        "nombre": "Innovación Tecnológica",
+        "lider": 10,
+        "estado": "En Progreso",
+        "explicacion": "Desarrollo de nuevas tecnologías",
+        "fecha_inicio": "2025-09-01",
+        "fecha_fin": "2025-04-30",
+        "activo": true
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 1,
+    "fields": {
+        "proyecto": 1,
+        "investigador": 1,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 2,
+    "fields": {
+        "proyecto": 1,
+        "investigador": 2,
+        "orden_importancia": 2
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 3,
+    "fields": {
+        "proyecto": 2,
+        "investigador": 3,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 4,
+    "fields": {
+        "proyecto": 2,
+        "investigador": 4,
+        "orden_importancia": 2
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 5,
+    "fields": {
+        "proyecto": 3,
+        "investigador": 5,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 6,
+    "fields": {
+        "proyecto": 3,
+        "investigador": 6,
+        "orden_importancia": 2
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 7,
+    "fields": {
+        "proyecto": 4,
+        "investigador": 7,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 8,
+    "fields": {
+        "proyecto": 4,
+        "investigador": 8,
+        "orden_importancia": 2
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 9,
+    "fields": {
+        "proyecto": 5,
+        "investigador": 9,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 10,
+    "fields": {
+        "proyecto": 5,
+        "investigador": 10,
+        "orden_importancia": 2
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 1,
+    "fields": {
+        "proyecto": 1,
+        "herramienta": 1
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 2,
+    "fields": {
+        "proyecto": 1,
+        "herramienta": 2
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 3,
+    "fields": {
+        "proyecto": 2,
+        "herramienta": 3
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 4,
+    "fields": {
+        "proyecto": 2,
+        "herramienta": 4
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 5,
+    "fields": {
+        "proyecto": 3,
+        "herramienta": 5
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 6,
+    "fields": {
+        "proyecto": 3,
+        "herramienta": 6
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 7,
+    "fields": {
+        "proyecto": 4,
+        "herramienta": 7
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 8,
+    "fields": {
+        "proyecto": 4,
+        "herramienta": 8
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 9,
+    "fields": {
+        "proyecto": 5,
+        "herramienta": 9
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 10,
+    "fields": {
+        "proyecto": 5,
+        "herramienta": 10
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 1,
+    "fields": {
+        "nombre_articulo": "Avances en IA",
+        "nombre_revista": "Revista de Tecnología",
+        "abstracto": "Estudio sobre avances en inteligencia artificial",
+        "pais_publicacion": "México",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-01-15",
+        "doi": "10.1234/ia.2025.001",
+        "url": "https://example.com/ia",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 2,
+    "fields": {
+        "nombre_articulo": "Energías Renovables",
+        "nombre_revista": "Revista de Energía",
+        "abstracto": "Investigación sobre paneles solares",
+        "pais_publicacion": "España",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-02-10",
+        "doi": "10.1234/energia.2025.002",
+        "url": "https://example.com/energia",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 3,
+    "fields": {
+        "nombre_articulo": "Robótica Avanzada",
+        "nombre_revista": "Revista de Robótica",
+        "abstracto": "Diseño de robots autónomos",
+        "pais_publicacion": "Estados Unidos",
+        "ano_publicacion": 2024,
+        "fecha_publicacion": "2024-03-05",
+        "doi": "10.1234/robotica.2024.003",
+        "url": "https://example.com/robotica",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 4,
+    "fields": {
+        "nombre_articulo": "Ciberseguridad",
+        "nombre_revista": "Revista de Seguridad",
+        "abstracto": "Estudio sobre sistemas de seguridad informática",
+        "pais_publicacion": "Canadá",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-04-01",
+        "doi": "10.1234/ciberseguridad.2025.004",
+        "url": "https://example.com/ciberseguridad",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 5,
+    "fields": {
+        "nombre_articulo": "Biotecnología Médica",
+        "nombre_revista": "Revista de Biotecnología",
+        "abstracto": "Aplicaciones médicas de microorganismos",
+        "pais_publicacion": "Argentina",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-05-10",
+        "doi": "10.1234/biotecnologia.2025.005",
+        "url": "https://example.com/biotecnologia",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 6,
+    "fields": {
+        "nombre_articulo": "Innovación Educativa",
+        "nombre_revista": "Revista de Educación",
+        "abstracto": "Métodos innovadores de enseñanza",
+        "pais_publicacion": "Chile",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-06-15",
+        "doi": "10.1234/educacion.2025.006",
+        "url": "https://example.com/educacion",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 7,
+    "fields": {
+        "nombre_articulo": "Cambio Climático",
+        "nombre_revista": "Revista de Medio Ambiente",
+        "abstracto": "Impacto del cambio climático",
+        "pais_publicacion": "Brasil",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-07-20",
+        "doi": "10.1234/medioambiente.2025.007",
+        "url": "https://example.com/medioambiente",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 8,
+    "fields": {
+        "nombre_articulo": "Machine Learning",
+        "nombre_revista": "Revista de IA",
+        "abstracto": "Modelos de aprendizaje automático",
+        "pais_publicacion": "Reino Unido",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-08-05",
+        "doi": "10.1234/ml.2025.008",
+        "url": "https://example.com/ml",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 9,
+    "fields": {
+        "nombre_articulo": "Diseño Gráfico",
+        "nombre_revista": "Revista de Diseño",
+        "abstracto": "Herramientas para diseño gráfico",
+        "pais_publicacion": "Francia",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-09-15",
+        "doi": "10.1234/diseno.2025.009",
+        "url": "https://example.com/diseno",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.articulo",
+    "pk": 10,
+    "fields": {
+        "nombre_articulo": "Innovación Tecnológica",
+        "nombre_revista": "Revista de Innovación",
+        "abstracto": "Nuevas tecnologías en desarrollo",
+        "pais_publicacion": "Alemania",
+        "ano_publicacion": 2025,
+        "fecha_publicacion": "2025-10-01",
+        "doi": "10.1234/innovacion.2025.010",
+        "url": "https://example.com/innovacion",
+        "estatus": true
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 1,
+    "fields": {
+        "articulo": 1,
+        "investigador": 1,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 2,
+    "fields": {
+        "articulo": 1,
+        "investigador": 2,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 3,
+    "fields": {
+        "articulo": 2,
+        "investigador": 3,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 4,
+    "fields": {
+        "articulo": 2,
+        "investigador": 4,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 5,
+    "fields": {
+        "articulo": 3,
+        "investigador": 5,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 6,
+    "fields": {
+        "articulo": 3,
+        "investigador": 6,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 7,
+    "fields": {
+        "articulo": 4,
+        "investigador": 7,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 8,
+    "fields": {
+        "articulo": 4,
+        "investigador": 8,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 9,
+    "fields": {
+        "articulo": 5,
+        "investigador": 9,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 10,
+    "fields": {
+        "articulo": 5,
+        "investigador": 10,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 1,
+    "fields": {
+        "nombre": "Congreso"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 2,
+    "fields": {
+        "nombre": "Seminario"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 3,
+    "fields": {
+        "nombre": "Taller"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 4,
+    "fields": {
+        "nombre": "Conferencia"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 5,
+    "fields": {
+        "nombre": "Simposio"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 6,
+    "fields": {
+        "nombre": "Mesa Redonda"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 7,
+    "fields": {
+        "nombre": "Foro"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 8,
+    "fields": {
+        "nombre": "Curso"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 9,
+    "fields": {
+        "nombre": "Webinar"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 10,
+    "fields": {
+        "nombre": "Exposición"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 1,
+    "fields": {
+        "nombre": "Ponente"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 2,
+    "fields": {
+        "nombre": "Asistente"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 3,
+    "fields": {
+        "nombre": "Moderador"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 4,
+    "fields": {
+        "nombre": "Organizador"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 5,
+    "fields": {
+        "nombre": "Panelista"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 6,
+    "fields": {
+        "nombre": "Instructor"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 7,
+    "fields": {
+        "nombre": "Coordinador"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 8,
+    "fields": {
+        "nombre": "Invitado Especial"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 9,
+    "fields": {
+        "nombre": "Participante"
+    }
+},
+{
+    "model": "investigators.rolevento",
+    "pk": 10,
+    "fields": {
+        "nombre": "Evaluador"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 1,
+    "fields": {
+        "tipo_evento": 1,
+        "nombre_evento": "Congreso Internacional de IA",
+        "descripcion": "Congreso sobre avances en inteligencia artificial",
+        "fecha_inicio": "2025-01-15",
+        "fecha_fin": "2025-01-20",
+        "lugar": "Ciudad de México",
+        "empresa_invita": "TechCorp"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 2,
+    "fields": {
+        "tipo_evento": 2,
+        "nombre_evento": "Seminario de Energías Renovables",
+        "descripcion": "Seminario sobre tecnologías limpias",
+        "fecha_inicio": "2025-02-10",
+        "fecha_fin": "2025-02-12",
+        "lugar": "Monterrey",
+        "empresa_invita": "GreenEnergy"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 3,
+    "fields": {
+        "tipo_evento": 3,
+        "nombre_evento": "Taller de Robótica",
+        "descripcion": "Taller práctico sobre robótica avanzada",
+        "fecha_inicio": "2025-03-05",
+        "fecha_fin": "2025-03-07",
+        "lugar": "Guadalajara",
+        "empresa_invita": "RoboticaMX"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 4,
+    "fields": {
+        "tipo_evento": 4,
+        "nombre_evento": "Conferencia de Ciberseguridad",
+        "descripcion": "Conferencia sobre seguridad informática",
+        "fecha_inicio": "2025-04-01",
+        "fecha_fin": "2025-04-02",
+        "lugar": "Querétaro",
+        "empresa_invita": "CyberSafe"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 5,
+    "fields": {
+        "tipo_evento": 5,
+        "nombre_evento": "Simposio de Biotecnología",
+        "descripcion": "Simposio sobre avances en biotecnología",
+        "fecha_inicio": "2025-05-10",
+        "fecha_fin": "2025-05-12",
+        "lugar": "Puebla",
+        "empresa_invita": "BioTech"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 6,
+    "fields": {
+        "tipo_evento": 6,
+        "nombre_evento": "Mesa Redonda de Educación",
+        "descripcion": "Discusión sobre innovación educativa",
+        "fecha_inicio": "2025-06-15",
+        "fecha_fin": "2025-06-15",
+        "lugar": "Toluca",
+        "empresa_invita": "EduFuture"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 7,
+    "fields": {
+        "tipo_evento": 7,
+        "nombre_evento": "Foro de Ciencias Ambientales",
+        "descripcion": "Foro sobre cambio climático y medio ambiente",
+        "fecha_inicio": "2025-07-20",
+        "fecha_fin": "2025-07-21",
+        "lugar": "Cancún",
+        "empresa_invita": "EcoWorld"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 8,
+    "fields": {
+        "tipo_evento": 8,
+        "nombre_evento": "Curso de Machine Learning",
+        "descripcion": "Curso intensivo sobre aprendizaje automático",
+        "fecha_inicio": "2025-08-05",
+        "fecha_fin": "2025-08-10",
+        "lugar": "Tijuana",
+        "empresa_invita": "AI Academy"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 9,
+    "fields": {
+        "tipo_evento": 9,
+        "nombre_evento": "Webinar de Diseño Gráfico",
+        "descripcion": "Webinar sobre herramientas de diseño",
+        "fecha_inicio": "2025-09-15",
+        "fecha_fin": "2025-09-15",
+        "lugar": "Online",
+        "empresa_invita": "DesignPro"
+    }
+},
+{
+    "model": "investigators.evento",
+    "pk": 10,
+    "fields": {
+        "tipo_evento": 10,
+        "nombre_evento": "Exposición de Innovación Tecnológica",
+        "descripcion": "Exposición de proyectos tecnológicos",
+        "fecha_inicio": "2025-10-01",
+        "fecha_fin": "2025-10-05",
+        "lugar": "León",
+        "empresa_invita": "InnovaTech"
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 1,
+    "fields": {
+        "evento": 1,
+        "investigador": 1,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 2,
+    "fields": {
+        "evento": 1,
+        "investigador": 2,
+        "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 3,
+    "fields": {
+        "evento": 2,
+        "investigador": 3,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 4,
+    "fields": {
+        "evento": 2,
+        "investigador": 4,
+        "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 5,
+    "fields": {
+        "evento": 3,
+        "investigador": 5,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 6,
+    "fields": {
+        "evento": 3,
+        "investigador": 6,
+        "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 7,
+    "fields": {
+        "evento": 4,
+        "investigador": 7,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 8,
+    "fields": {
+        "evento": 4,
+        "investigador": 8,
+        "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 9,
+    "fields": {
+        "evento": 5,
+        "investigador": 9,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 10,
+    "fields": {
+        "evento": 5,
+        "investigador": 10,
+        "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 1,
+    "fields": {
+        "nombre_usuario": "admin",
+        "contrasena": "pbkdf2_sha256$870000$tUwNHwj7yAEVNevydbkUhb$OTJKWbvIp9Togk5o9x9dYXTikJySpPQIMo/GdHu1aaM=",
+        "rol": "admin",
+        "investigador": null,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-24T09:13:49.338Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 2,
+    "fields": {
+        "nombre_usuario": "investigador",
+        "contrasena": "pbkdf2_sha256$870000$Ok2n3lZd6L2g3RDBmKwEP7$RcSwqTOcqbFFwvaoxzARyBkuQ/nJIMyI33T0tcxae8Y=",
+        "rol": "investigador",
+        "investigador": null,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-25T06:13:40.344Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 3,
+    "fields": {
+        "nombre_usuario": "estudiante",
+        "contrasena": "pbkdf2_sha256$870000$fGH83hPmsnogkfzZNHV0KT$xK3WZJsspxu/Bjj1s0s9X1Q/A2/tBlarrTTZTgs+gSY=",
+        "rol": "estudiante",
+        "investigador": null,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-25T06:14:43.650Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 4,
+    "fields": {
+        "nombre_usuario": "juanp1",
+        "contrasena": "pbkdf2_sha256$870000$E4NtQwOV3WGruxiTikBMtw$Kpvz/39+QKWvopsae/uNcVrwI5Yn0ywI0DHv01o93fc=",
+        "rol": "investigador",
+        "investigador": 1,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-27T22:05:44.276Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 5,
+    "fields": {
+        "nombre_usuario": "pedror2",
+        "contrasena": "pbkdf2_sha256$870000$yMfq9DhhGBXdLpCeBNsD39$Hmg6shsULcnmDi/4kPuOJ58ooTRMFX6hgOPbS1t+OGw=",
+        "rol": "investigador",
+        "investigador": 7,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-27T23:35:21.906Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 6,
+    "fields": {
+        "nombre_usuario": "juanm",
+        "contrasena": "pbkdf2_sha256$870000$T13Va2vR4zCSeuJ6M8gANu$8rA9QHs3pwAo46eaJr0ApZraX5wmAialRUOGse8wjzY=",
+        "rol": "estudiante",
+        "investigador": null,
+        "estudiante": 10,
+        "fecha_creacion": "2025-03-28T00:44:42.762Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 16,
+    "fields": {
+        "nombre_usuario": "marial",
+        "contrasena": "pbkdf2_sha256$870000$hiewJlq3FRwM0PdjK3BZ3A$IFClACI8PkKmlzj4Fy/4Bh1Jb6GpSSJlLoFACxSIIaY=",
+        "rol": "investigador",
+        "investigador": 2,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:39:26.565Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 17,
+    "fields": {
+        "nombre_usuario": "carlosg",
+        "contrasena": "pbkdf2_sha256$870000$0CwsEAHFluiMA1FuQn6KSV$Je/0amquhIanE7kj2etHdVoCoUU8yCk4m05DKZF3g6A=",
+        "rol": "investigador",
+        "investigador": 3,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:39:47.121Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 21,
+    "fields": {
+        "nombre_usuario": "sofiat",
+        "contrasena": "pbkdf2_sha256$870000$qVdcMgXQzlh9w9sEUx5g8r$2vLyLENWKbZkiDSVCFAstfKTaGB4c2Tl3aoFdJNhhMw=",
+        "rol": "investigador",
+        "investigador": 8,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:43:22.263Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 23,
+    "fields": {
+        "nombre_usuario": "elenar",
+        "contrasena": "pbkdf2_sha256$870000$k4gXoMuZYMVQH1Mwee7bzi$2DdLt3QWnnvf0/b0KSpAW3kmXNElfax5rOzDIa+UXOc=",
+        "rol": "investigador",
+        "investigador": 10,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:43:43.608Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 24,
+    "fields": {
+        "nombre_usuario": "armandob",
+        "contrasena": "pbkdf2_sha256$870000$0iWA4UUXqelDv1vZ8nQtCA$iKw0nOltZJuv8ItbAKt20tr0ryE6rgkCIVYz0enpUUE=",
+        "rol": "investigador",
+        "investigador": 14,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:43:52.422Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 25,
+    "fields": {
+        "nombre_usuario": "josef",
+        "contrasena": "pbkdf2_sha256$870000$3VETLjb1YufbLPYX7KI6oU$b3z2hsG/pn+58gb/GaWMTMbrDo+h5pDImJ7ObUG0HBs=",
+        "rol": "investigador",
+        "investigador": 15,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:44:02.976Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 26,
+    "fields": {
+        "nombre_usuario": "carlosm",
+        "contrasena": "pbkdf2_sha256$870000$gc4kWrL3VNcaIo3wWl4Ead$xTvinYkxMAKywvHjPPd+7VotjUCQeEETpo/nUB8qyrI=",
+        "rol": "estudiante",
+        "investigador": null,
+        "estudiante": 1,
+        "fecha_creacion": "2025-03-28T08:44:30.681Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 27,
+    "fields": {
+        "nombre_usuario": "laurag",
+        "contrasena": "pbkdf2_sha256$870000$pzqPYU0JmMk9RgCB2vDm7t$0YTlxCJaL8scL70m69hlbVrecIoThCfGmTFl/uDUsss=",
+        "rol": "investigador",
+        "investigador": 6,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-28T08:50:07.423Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+},
+{
+    "model": "investigators.usuario",
+    "pk": 30,
+    "fields": {
+        "nombre_usuario": "admin_user",
+        "contrasena": "pbkdf2_sha256$870000$ORjUWY18nZUjroTt469pfx$/gnyquZKddCOve6Ys2peDZHAHlcxmL3FACg2hMOcl9M=",
+        "rol": "admin",
+        "investigador": null,
+        "estudiante": null,
+        "fecha_creacion": "2025-03-30T03:11:22.522Z",
+        "ultimo_acceso": null,
+        "intentos_login": 0,
+        "activo": true
+    }
+}
+]
