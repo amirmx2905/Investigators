@@ -107,12 +107,31 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### 8. Create a superuser (optional)
+#### 8. Export test data to your db (make sure to be on the backend directory)
 ```bash
-python manage.py createsuperuser
+python manage.py loaddata test_data.json
 ```
 
-#### 9. Run the development server
+#### 9. If you wish to create an admin user by yourself, paste the following code on your terminal
+```bash
+#First Open Django Shell
+python manage.py shell
+
+#Change "your_username" for your user, and "your_password" for your password.
+from investigators.models import Usuario
+
+admin_user = Usuario(
+    nombre_usuario="your_username",
+    rol="admin"
+)
+admin_user.set_password("your_password")
+admin_user.save()
+
+# To exit Django Shell use the following command
+exit()
+```
+
+#### 10. Run the development server
 ```bash
 python manage.py runserver
 ```
