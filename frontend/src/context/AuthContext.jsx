@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import api from '../api/apiConfig';
 
 const AuthContext = createContext();
 
@@ -16,8 +17,42 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const decoded = jwtDecode(token);
-          const role = decoded.role || 'invitado';
-          setCurrentUser({ role });
+          
+          if (decoded.exp * 1000 < Date.now()) {
+            const refreshToken = localStorage.getItem('refresh_token');
+            if (refreshToken) {
+              try {
+                const response = await api.post('/token/refresh/', {
+                  refresh: refreshToken
+                });
+                localStorage.setItem('access_token', response.data.access);
+                
+                const newDecoded = jwtDecode(response.data.access);
+                setCurrentUser({
+                  id: newDecoded.usuario_id,
+                  username: newDecoded.nombre_usuario,
+                  role: newDecoded.rol
+                });
+              } catch (error) {
+                console.log('Error al renovar el token:', error);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                setCurrentUser(null);
+              }
+            } else {
+              // Sin refresh token, limpiar tokens
+              localStorage.removeItem('access_token');
+              localStorage.removeItem('refresh_token');
+              setCurrentUser(null);
+            }
+          } else {
+            // Token válido, establecer usuario
+            setCurrentUser({
+              id: decoded.usuario_id,
+              username: decoded.nombre_usuario,
+              role: decoded.rol
+            });
+          }
         } catch (error) {
           console.error('Error al decodificar el token:', error);
           localStorage.removeItem('access_token');
@@ -30,33 +65,31 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (nombre_usuario, contrasena) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await api.post('/token/', {
+        nombre_usuario,
+        contrasena
       });
       
-      if (!response.ok) {
-        throw new Error('Credenciales inválidas');
-      }
+      localStorage.setItem('access_token', response.data.access);
+      localStorage.setItem('refresh_token', response.data.refresh);
       
-      const data = await response.json();
+      const decoded = jwtDecode(response.data.access);
       
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
+      setCurrentUser({
+        id: decoded.usuario_id,
+        username: decoded.nombre_usuario,
+        role: decoded.rol
+      });
       
-      // Decodificar el token para obtener la información del usuario
-      const decoded = jwtDecode(data.access);
-      setCurrentUser({ role: decoded.role || data.role || 'invitado' });
-      
-      return { success: true, data };
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error(error.message);
-      return { success: false, error: error.message };
+      console.error('Error en login:', error.response?.data || error.message);
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Error al iniciar sesión' 
+      };
     }
   };
 

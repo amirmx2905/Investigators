@@ -28,7 +28,7 @@ export const useLoginLogic = () => {
     let lastTime = 0;
     const handleMouseMove = (e) => {
       if (window.innerWidth < 768) return;
-
+      
       const now = Date.now();
       if (now - lastTime < 16) return;
       lastTime = now;
@@ -126,6 +126,8 @@ export const useLoginLogic = () => {
     if (!isValid) return;
 
     setIsLoading(true);
+    
+    // Aquí está el cambio principal - usar nombre_usuario y contrasena en lugar de username y password
     const result = await login(username, password);
 
     if (result.success) {
@@ -134,9 +136,8 @@ export const useLoginLogic = () => {
       setPassword("");
       navigate("/home", { state: { loginSuccess: true } });
     } else {
-      showError("Credenciales inválidas");
+      showError(result.error || "Credenciales inválidas");
       setPassword("");
-      setUsername("");
     }
     setIsLoading(false);
   };

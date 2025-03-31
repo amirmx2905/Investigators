@@ -13,7 +13,7 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
     if (token) {
-      config.headers.Authorization = `${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -24,15 +24,36 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    console.error("Error en la respuesta API:", error.response || error);
-
+  async (error) => {
     if (error.response && error.response.status === 401) {
-      console.log("Error 401: Token inválido o expirado. Cerrando sesión...");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      window.location.href = "/";
+      const refreshToken = localStorage.getItem("refresh_token");
+
+      if (refreshToken) {
+        try {
+          const response = await axios.post(
+            `${API_URL}/token/refresh/`,
+            { refresh: refreshToken },
+            { headers: { "Content-Type": "application/json" } }
+          );
+
+          localStorage.setItem("access_token", response.data.access);
+
+          const originalRequest = error.config;
+          originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+          return axios(originalRequest);
+        } catch (refreshError) {
+          console.log("Error: " + refreshError);
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          window.location.href = "/";
+        }
+      } else {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "/";
+      }
     }
+
     return Promise.reject(error);
   }
 );
