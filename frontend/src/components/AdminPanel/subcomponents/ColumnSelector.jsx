@@ -41,6 +41,20 @@ function ColumnSelector({
       "fecha_fin",
       "explicacion",
     ],
+    estudiantes: [
+      "id",
+      "nombre",
+      "correo",
+      "celular",
+      "area",
+      "carrera",
+      "tipo_estudiante",
+      "investigador",
+      "escuela",
+      "fecha_inicio",
+      "fecha_termino",
+      "activo",
+    ],
   };
 
   // Etiquetas para las columnas
@@ -70,6 +84,20 @@ function ColumnSelector({
       fecha_inicio: "Fecha Inicio",
       fecha_fin: "Fecha Fin",
       explicacion: "Descripción",
+    },
+    estudiantes: {
+      id: "ID",
+      nombre: "Nombre",
+      correo: "Correo",
+      celular: "Celular",
+      area: "Área",
+      carrera: "Carrera",
+      tipo_estudiante: "Tipo",
+      investigador: "Asesor",
+      escuela: "Escuela",
+      fecha_inicio: "Fecha de Inicio",
+      fecha_termino: "Fecha de Término",
+      activo: "Estado",
     },
   };
 
@@ -167,7 +195,7 @@ function ColumnSelector({
 
             {/* Lista de columnas disponibles */}
             <div>
-              {columnOrders[activeTab].map((column) => (
+              {columnOrders[activeTab]?.map((column) => (
                 <div
                   key={column}
                   className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
@@ -185,17 +213,17 @@ function ColumnSelector({
                     <div
                       className="w-4 h-4 mr-2 flex items-center justify-center rounded-sm transition-all duration-200"
                       style={{
-                        backgroundColor: visibleColumns[activeTab].includes(
+                        backgroundColor: visibleColumns[activeTab]?.includes(
                           column
                         )
                           ? "#3b82f6"
                           : "transparent",
-                        border: visibleColumns[activeTab].includes(column)
+                        border: visibleColumns[activeTab]?.includes(column)
                           ? "1px solid rgba(96, 165, 250, 0.7)"
                           : "1px solid rgba(59, 130, 246, 0.3)",
                       }}
                     >
-                      {visibleColumns[activeTab].includes(column) && (
+                      {visibleColumns[activeTab]?.includes(column) && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="10"
@@ -208,7 +236,7 @@ function ColumnSelector({
                       )}
                     </div>
                     <span className="text-sm text-gray-300">
-                      {columnLabels[activeTab][column]}
+                      {columnLabels[activeTab]?.[column]}
                     </span>
                   </div>
                 </div>

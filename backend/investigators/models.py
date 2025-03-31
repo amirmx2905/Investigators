@@ -106,6 +106,7 @@ class Estudiante(models.Model):
     escuela = models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
+    activo = models.BooleanField(default=True)
     
     def __str__(self):
         return self.nombre

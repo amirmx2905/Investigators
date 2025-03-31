@@ -3,11 +3,13 @@ import {
   UsuarioTable,
   InvestigadorTable,
   ProyectoTable,
+  EstudianteTable,
 } from "../subcomponents/Tables/tables";
 import {
   UsuarioCards,
   InvestigadorCards,
   ProyectoCards,
+  EstudianteCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -28,6 +30,7 @@ export const getTabData = (
   usuarios,
   investigadores,
   proyectos,
+  estudiantes,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -43,6 +46,9 @@ export const getTabData = (
     case "proyectos":
       type = "proyecto";
       break;
+    case "estudiantes":
+      type = "estudiante";
+      break;
     default:
       type = "usuario";
   }
@@ -50,11 +56,9 @@ export const getTabData = (
   // Obtener columnas visibles ordenadas según el orden definido
   const orderedColumns = {
     usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
-    investigadores: sortColumnsByOrder(
-      visibleColumns.investigadores || [],
-      "investigadores"
-    ),
+    investigadores: sortColumnsByOrder(visibleColumns.investigadores || [],"investigadores"),
     proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], "proyectos"),
+    estudiantes: sortColumnsByOrder(visibleColumns.estudiantes || [],"estudiantes"),
   };
 
   const tabConfig = {
@@ -82,6 +86,15 @@ export const getTabData = (
       TableComponent: ProyectoTable,
       CardComponent: ProyectoCards,
       columns: orderedColumns.proyectos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    estudiantes: {
+      title: "Lista de Estudiantes",
+      items: estudiantes || [],
+      TableComponent: EstudianteTable,
+      CardComponent: EstudianteCards,
+      columns: orderedColumns.estudiantes,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

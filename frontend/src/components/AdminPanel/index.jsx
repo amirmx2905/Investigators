@@ -6,6 +6,7 @@ import { useTableControls } from "./hooks/useTableControls";
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
+import { estudianteService } from "../../api/services/estudianteService";
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -18,6 +19,7 @@ import {
   UsuarioForm,
   InvestigadorForm,
   ProyectoForm,
+  EstudianteForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -43,6 +45,7 @@ function AdminPanel() {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
     activeTab,
     changeTab,
     refreshData,
@@ -123,7 +126,9 @@ function AdminPanel() {
         await investigadorService.deleteInvestigador(item.id);
       } else if (type === "proyecto") {
         await proyectoService.deleteProyecto(item.id);
-      }
+      } else if (type === "estudiante") {
+        await estudianteService.deleteEstudiante(item.id);
+      } 
 
       refreshData();
 
@@ -138,7 +143,7 @@ function AdminPanel() {
       });
     } catch (error) {
       console.error(`Error al eliminar ${type}:`, error);
-      showNotification(`Error al eliminar: ${error.message}`);
+      showNotification(`Error al eliminar: ${error.message || "Error desconocido"}`);
     } finally {
       setIsDeleting(false);
     }
@@ -198,6 +203,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "estudiante":
+        return (
+          <EstudianteForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            estudiante={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -217,6 +231,7 @@ function AdminPanel() {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
     handleEdit,
     handleDeleteClick
   );

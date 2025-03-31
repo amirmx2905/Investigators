@@ -1,7 +1,9 @@
+// Import necessary services and libraries
 import { useState, useEffect, useCallback } from "react";
 import { investigadorService } from "../../../api/services/investigadorService";
 import { usuarioService } from "../../../api/services/usuarioService";
 import { proyectoService } from "../../../api/services/proyectoService";
+import { estudianteService } from "../../../api/services/estudianteService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -11,9 +13,11 @@ export const useAdminPanel = (initialResource = "usuarios") => {
 
   const [activeTab, setActiveTab] = useState(initialResource);
 
+  // State for each resource, add here for each new resource
   const [usuarios, setUsuarios] = useState([]);
   const [investigadores, setInvestigadores] = useState([]);
   const [proyectos, setProyectos] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -39,6 +43,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     };
   }, []);
 
+  // Fetch data based on the resource type
   const fetchData = useCallback(
     async (
       resourceType = resource,
@@ -76,6 +81,15 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               filterOptions
             );
             setProyectos(data.results);
+            break;
+            
+          case "estudiantes":
+            data = await estudianteService.getEstudiantes(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setEstudiantes(data.results);
             break;
           default:
             throw new Error("Recurso no soportado");
@@ -178,6 +192,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
     isMobile,
     currentPage,
     itemsPerPage,

@@ -1,13 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export const columnOrders = {
-  usuarios: [
-    "id",
-    "nombre_usuario",
-    "rol",
-    "vinculado_a",
-    "activo"
-  ],
+  usuarios: ["id","nombre_usuario", "rol", "vinculado_a", "activo"],
   investigadores: [
     "id",
     "nombre",
@@ -27,12 +21,39 @@ export const columnOrders = {
     "fecha_fin",
     "explicacion",
   ],
+  estudiantes: [
+    "id",
+    "nombre",
+    "correo",
+    "celular",
+    "matricula",
+    "area",
+    "carrera",
+    "tipo_estudiante",
+    "investigador",
+    "escuela",
+    "fecha_inicio",
+    "fecha_termino",
+    "activo",
+  ],
 };
 
 const defaultVisibleColumns = {
   usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
   investigadores: ["id", "nombre", "correo", "area", "nivel_snii", "activo"],
   proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio"],
+  estudiantes: [
+    "id",
+    "nombre",
+    "correo",
+    "area",
+    "carrera",
+    "tipo_estudiante",
+    "investigador",
+    "escuela",
+    "fecha_inicio",
+    "activo",
+  ],
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -72,7 +93,7 @@ export const useTableControls = (initialTab = "usuarios") => {
     return () => {
       window.removeEventListener("resize", checkIfMobile);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
