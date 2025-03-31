@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from .views.token_view import CustomTokenObtainView, TokenRefreshView
 from .views.api_crud import (
     InvestigadorViewSet, UsuarioViewSet, ProyectoViewSet,
     AreaViewSet, EspecialidadViewSet, NivelEducacionViewSet,
@@ -9,9 +10,8 @@ from .views.api_crud import (
     TipoEventoViewSet, RolEventoViewSet, EventoViewSet, UnidadViewSet,
     JefeAreaViewSet
 )
-from .views.token_view import CustomTokenObtainView
 
-# Router pa las vistas del api_crud
+# Router para las vistas del api_crud
 router = DefaultRouter()
 router.register(r'investigadores', InvestigadorViewSet)
 router.register(r'usuarios', UsuarioViewSet)
@@ -36,4 +36,5 @@ router.register(r'jefesareas', JefeAreaViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
