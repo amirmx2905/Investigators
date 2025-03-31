@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import api from '../api/apiConfig';
 
 const AuthContext = createContext();
 
@@ -12,59 +12,61 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          const role = decoded.role || 'invitado';
-          setCurrentUser({ role });
-        } catch (error) {
-          console.error('Error al decodificar el token:', error);
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-        }
+      try {
+        const response = await api.get('/usuarios/me/');
+        setCurrentUser({
+          id: response.data.id,
+          username: response.data.nombre_usuario,
+          role: response.data.rol
+        });
+      } catch (error) {
+        console.log('Error: ' + error)
+        console.log('No hay sesión activa');
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     initAuth();
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (nombre_usuario, contrasena) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/token/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await api.post('/token/', {
+        nombre_usuario,
+        contrasena
       });
       
-      if (!response.ok) {
-        throw new Error('Credenciales inválidas');
-      }
+      setCurrentUser({
+        username: response.data.username,
+        role: response.data.role
+      });
       
-      const data = await response.json();
+      const userResponse = await api.get('/usuarios/me/');
+      setCurrentUser({
+        id: userResponse.data.id,
+        username: userResponse.data.nombre_usuario,
+        role: userResponse.data.rol
+      });
       
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-      
-      // Decodificar el token para obtener la información del usuario
-      const decoded = jwtDecode(data.access);
-      setCurrentUser({ role: decoded.role || data.role || 'invitado' });
-      
-      return { success: true, data };
+      return { success: true };
     } catch (error) {
-      console.error(error.message);
-      return { success: false, error: error.message };
+      console.error('Error en login:', error.response?.data || error.message);
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Error al iniciar sesión' 
+      };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('toastShown');
-    setCurrentUser(null);
+  const logout = async () => {
+    try {
+      await api.post('/token/logout/');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    } finally {
+      setCurrentUser(null);
+    }
   };
 
   const isAdmin = () => {
@@ -81,3 +83,5 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthContext;

@@ -272,28 +272,6 @@ class Usuario(models.Model):
     class Meta:
         verbose_name_plural = "Usuarios"
     
-    def get_perfil(self):
-        """Obtiene el perfil asociado según el rol del usuario"""
-        if self.rol == 'investigador' and self.investigador:
-            return self.investigador
-        elif self.rol == 'estudiante' and self.estudiante:
-            return self.estudiante
-        return None
-    
-    def get_nombre(self):
-        """Obtiene el nombre del usuario desde su perfil vinculado"""
-        perfil = self.get_perfil()
-        if perfil:
-            return perfil.nombre
-        return self.nombre_usuario
-    
-    def get_correo(self):
-        """Obtiene el correo del usuario desde su perfil vinculado"""
-        perfil = self.get_perfil()
-        if perfil:
-            return perfil.correo
-        return None
-        
     def check_password(self, raw_password):
         """
         Verifica si la contraseña ingresada coincide con la almacenada
@@ -329,5 +307,78 @@ class Usuario(models.Model):
         """
         Resetea el contador de intentos de login fallidos
         """
-        self.intentos_login = 0
-        self.save(update_fields=['intentos_login'])
+        if self.intentos_login > 0:
+            self.intentos_login = 0
+            self.save(update_fields=['intentos_login'])
+    
+    def get_nombre(self):
+        """
+        Obtiene el nombre del perfil relacionado con el usuario
+        """
+        if self.rol == 'investigador' and self.investigador:
+            return self.investigador.nombre
+        elif self.rol == 'estudiante' and self.estudiante:
+            return self.estudiante.nombre
+        return self.nombre_usuario
+    
+    def get_correo(self):
+        """
+        Obtiene el correo del perfil relacionado con el usuario
+        """
+        if self.rol == 'investigador' and self.investigador:
+            return self.investigador.correo
+        elif self.rol == 'estudiante' and self.estudiante:
+            return self.estudiante.correo
+        return None
+    
+    # Métodos para compatibilidad con DRF y JWT
+    @property
+    def is_anonymous(self):
+        """Para compatibilidad con DRF"""
+        return False
+    
+    @property
+    def is_authenticated(self):
+        """Para compatibilidad con DRF"""
+        return True
+        
+    @property
+    def is_staff(self):
+        """Para verificar permisos de administrador en DRF"""
+        return self.rol == 'admin'
+    
+    @property
+    def is_active(self):
+        """Para compatibilidad con DRF"""
+        return self.activo
+    
+    def get_username(self):
+        """Para compatibilidad con DRF"""
+        return self.nombre_usuario
+    
+    @property
+    def username(self):
+        """Propiedad alternativa para compatibilidad"""
+        return self.nombre_usuario
+    
+    def has_perm(self, perm, obj=None):
+        """
+        Para compatibilidad con el sistema de permisos de Django
+        Devuelve True si el usuario tiene el permiso especificado
+        """
+        return self.is_staff
+    
+    def has_module_perms(self, app_label):
+        """
+        Para compatibilidad con el sistema de permisos de Django
+        Devuelve True si el usuario tiene permisos para el módulo
+        """
+        return self.is_staff
+    
+    def get_all_permissions(self, obj=None):
+        """
+        Devuelve todos los permisos que tiene este usuario
+        """
+        if self.is_staff:
+            return {'*'}
+        return set()

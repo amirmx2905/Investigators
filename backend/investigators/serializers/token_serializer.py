@@ -1,32 +1,35 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
 from investigators.models import Usuario
+from investigators.authentication import UsuarioRefreshToken
 
 class CustomTokenObtainSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
+    nombre_usuario = serializers.CharField()
+    contrasena = serializers.CharField(trim_whitespace=False)
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
     role = serializers.CharField(read_only=True)
 
     def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+        nombre_usuario = attrs.get('nombre_usuario')
+        contrasena = attrs.get('contrasena')
 
         try:
-            user = Usuario.objects.get(nombre_usuario=username, activo=True)
+            usuario = Usuario.objects.get(nombre_usuario=nombre_usuario, activo=True)
         except Usuario.DoesNotExist:
             raise serializers.ValidationError("Credenciales inválidas.")
 
-        if not user.check_password(password):
+        if not usuario.check_password(contrasena):
+            usuario.incrementar_intentos_login()
             raise serializers.ValidationError("Credenciales inválidas.")
 
-        refresh = RefreshToken.for_user(user)
+        usuario.resetear_intentos_login()
+        usuario.actualizar_ultimo_acceso()
         
-        refresh['role'] = user.rol
+        refresh = UsuarioRefreshToken.for_usuario(usuario)
         
         return {
-            'access': str(refresh.access_token),
+            'access': refresh['access_token'],
             'refresh': str(refresh),
-            'role': user.rol,
+            'role': usuario.rol,
+            'username': usuario.nombre_usuario,
         }

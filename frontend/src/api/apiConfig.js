@@ -7,32 +7,30 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
-
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      config.headers.Authorization = `${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    console.error("Error en la respuesta API:", error.response || error);
-
+  async (error) => {
     if (error.response && error.response.status === 401) {
-      console.log("Error 401: Token inválido o expirado. Cerrando sesión...");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      window.location.href = "/";
+      try {
+        await axios.post(
+          `${API_URL}/token/refresh/`,
+          {},
+          { withCredentials: true }
+        );
+
+        const originalRequest = error.config;
+        originalRequest.withCredentials = true;
+        return axios(originalRequest);
+      } catch (refreshError) {
+        console.log("Error al refrescar token:", refreshError);
+        window.location.href = "/";
+        return Promise.reject(refreshError);
+      }
     }
+
     return Promise.reject(error);
   }
 );
