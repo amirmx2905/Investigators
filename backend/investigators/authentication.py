@@ -52,6 +52,25 @@ class UsuarioRefreshToken(UsuarioToken):
         return refresh
 
 class UsuarioJWTAuthentication(JWTAuthentication):
+    def authenticate(self, request):
+        token = request.COOKIES.get('access_token')
+        if not token:
+            header = self.get_header(request)
+            if header is None:
+                return None
+            
+            raw_token = self.get_raw_token(header)
+            if raw_token is None:
+                return None
+            
+            token = raw_token.decode()
+        try:
+            validated_token = self.get_validated_token(token)
+            user = self.get_user(validated_token)
+            return user, validated_token
+        except Exception as e:
+            raise AuthenticationFailed(str(e))
+    
     def get_user(self, validated_token):
         try:
             usuario_id = validated_token['usuario_id']

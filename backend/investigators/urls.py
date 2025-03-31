@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views.token_view import CustomTokenObtainView, TokenRefreshView
+from .views.token_view import CustomTokenObtainView, TokenRefreshView, TokenLogoutView
 from .views.api_crud import (
     InvestigadorViewSet, UsuarioViewSet, ProyectoViewSet,
     AreaViewSet, EspecialidadViewSet, NivelEducacionViewSet,
@@ -37,4 +37,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/logout/', TokenLogoutView.as_view(), name='token_logout'),
 ]

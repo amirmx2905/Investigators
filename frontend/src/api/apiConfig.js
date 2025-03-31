@@ -7,50 +7,27 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
-
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401) {
-      const refreshToken = localStorage.getItem("refresh_token");
+      try {
+        await axios.post(
+          `${API_URL}/token/refresh/`,
+          {},
+          { withCredentials: true }
+        );
 
-      if (refreshToken) {
-        try {
-          const response = await axios.post(
-            `${API_URL}/token/refresh/`,
-            { refresh: refreshToken },
-            { headers: { "Content-Type": "application/json" } }
-          );
-
-          localStorage.setItem("access_token", response.data.access);
-
-          const originalRequest = error.config;
-          originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
-          return axios(originalRequest);
-        } catch (refreshError) {
-          console.log("Error: " + refreshError);
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          window.location.href = "/";
-        }
-      } else {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+        const originalRequest = error.config;
+        originalRequest.withCredentials = true;
+        return axios(originalRequest);
+      } catch (refreshError) {
+        console.log("Error al refrescar token:", refreshError);
         window.location.href = "/";
+        return Promise.reject(refreshError);
       }
     }
 

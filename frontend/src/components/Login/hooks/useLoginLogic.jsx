@@ -127,11 +127,9 @@ export const useLoginLogic = () => {
 
     setIsLoading(true);
     
-    // Aquí está el cambio principal - usar nombre_usuario y contrasena en lugar de username y password
     const result = await login(username, password);
 
     if (result.success) {
-      localStorage.removeItem("toastShown");
       setUsername("");
       setPassword("");
       navigate("/home", { state: { loginSuccess: true } });
