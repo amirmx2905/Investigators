@@ -4,12 +4,14 @@ import {
   InvestigadorTable,
   ProyectoTable,
   EstudianteTable,
+  ArticuloTable,
 } from "../subcomponents/Tables/tables";
 import {
   UsuarioCards,
   InvestigadorCards,
   ProyectoCards,
   EstudianteCards,
+  ArticuloCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -31,6 +33,7 @@ export const getTabData = (
   investigadores,
   proyectos,
   estudiantes,
+  articulos,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -49,6 +52,9 @@ export const getTabData = (
     case "estudiantes":
       type = "estudiante";
       break;
+    case "articulos":
+      type = "articulo";
+      break;
     default:
       type = "usuario";
   }
@@ -56,9 +62,16 @@ export const getTabData = (
   // Obtener columnas visibles ordenadas según el orden definido
   const orderedColumns = {
     usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
-    investigadores: sortColumnsByOrder(visibleColumns.investigadores || [],"investigadores"),
+    investigadores: sortColumnsByOrder(
+      visibleColumns.investigadores || [],
+      "investigadores"
+    ),
     proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], "proyectos"),
-    estudiantes: sortColumnsByOrder(visibleColumns.estudiantes || [],"estudiantes"),
+    estudiantes: sortColumnsByOrder(
+      visibleColumns.estudiantes || [],
+      "estudiantes"
+    ),
+    articulos: sortColumnsByOrder(visibleColumns.articulos || [], "articulos"),
   };
 
   const tabConfig = {
@@ -95,6 +108,15 @@ export const getTabData = (
       TableComponent: EstudianteTable,
       CardComponent: EstudianteCards,
       columns: orderedColumns.estudiantes,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    articulos: {
+      title: "Lista de Artículos",
+      items: articulos || [],
+      TableComponent: ArticuloTable,
+      CardComponent: ArticuloCards,
+      columns: orderedColumns.articulos,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

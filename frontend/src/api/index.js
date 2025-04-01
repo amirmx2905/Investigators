@@ -2,7 +2,8 @@ import api from "./apiConfig";
 import { usuarioService } from "./services/usuarioService";
 import { investigadorService } from "./services/investigadorService";
 import { proyectoService } from "./services/proyectoService";
-import { estudianteService } from "./services/EstudianteService";
+import { estudianteService } from "./services/estudianteService";
+import { articuloService } from "./services/articuloService";
 
 export {
   api,
@@ -10,4 +11,5 @@ export {
   investigadorService,
   proyectoService,
   estudianteService,
+  articuloService,
 };

@@ -27,6 +27,7 @@ const ContentDisplay = ({
         investigadores={activeTab === "investigadores" ? items || [] : []}
         proyectos={activeTab === "proyectos" ? items || [] : []}
         estudiantes={activeTab === "estudiantes" ? items || [] : []}
+        articulos={activeTab === "articulos" ? items || [] : []}
         visibleColumns={columns || []}
         onCopy={onCopy}
         onEdit={onEdit}

@@ -56,6 +56,17 @@ function ColumnSelector({
       "fecha_termino",
       "activo",
     ],
+    articulos: [
+      "id",
+      "nombre_articulo",
+      "nombre_revista",
+      "pais_publicacion",
+      "fecha_publicacion",
+      "doi",
+      "abstracto",
+      "investigadores",
+      "estatus",
+    ],
   };
 
   // Etiquetas para las columnas
@@ -101,9 +112,22 @@ function ColumnSelector({
       fecha_termino: "Fecha de Término",
       activo: "Estado",
     },
+    articulos: {
+      id: "ID",
+      nombre_articulo: "Título",
+      nombre_revista: "Revista",
+      pais_publicacion: "País",
+      fecha_publicacion: "Fecha",
+      doi: "DOI",
+      abstracto: "Resumen",
+      investigadores: "Autores",
+      estatus: "Estado",
+    },
   };
 
+  // Crear el portal para el dropdown
   useEffect(() => {
+    // Asegurarse de que solo haya un portal
     if (!document.getElementById("column-menu-portal")) {
       const portalNode = document.createElement("div");
       portalNode.id = "column-menu-portal";
@@ -115,14 +139,15 @@ function ColumnSelector({
 
     return () => {
       const portalNode = document.getElementById("column-menu-portal");
-      if (portalNode) {
-        document.body.removeChild(portalNode);
+      if (portalNode && portalNode.parentNode) {
+        portalNode.parentNode.removeChild(portalNode);
       }
     };
   }, []);
 
+  // Calcular la posición del menú cuando se abre
   useEffect(() => {
-    if (columnsDropdownOpen && columnToggleRef.current) {
+    if (columnsDropdownOpen && columnToggleRef?.current) {
       const rect = columnToggleRef.current.getBoundingClientRect();
       setMenuPosition({
         top: rect.bottom + window.scrollY,
@@ -131,6 +156,7 @@ function ColumnSelector({
     }
   }, [columnsDropdownOpen, columnToggleRef]);
 
+  // Cerrar el dropdown cuando se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -150,6 +176,7 @@ function ColumnSelector({
     };
   }, [columnsDropdownOpen, setColumnsDropdownOpen, columnToggleRef]);
 
+  // Manejar el toggle de columnas
   const handleColumnToggle = (column) => {
     toggleColumn(activeTab, column);
   };
@@ -176,8 +203,7 @@ function ColumnSelector({
         Columnas
       </button>
 
-      {columnsDropdownOpen &&
-        portalContainer &&
+      {columnsDropdownOpen && portalContainer && 
         ReactDOM.createPortal(
           <div
             ref={menuRef}
@@ -246,7 +272,8 @@ function ColumnSelector({
             </div>
           </div>,
           portalContainer
-        )}
+        )
+      }
     </>
   );
 }

@@ -21,6 +21,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "estudiante";
       label = "Estudiante";
       break;
+    case "articulos":
+      type = "articulo";
+      label = "Artículo";
+      break;
     default:
       type = "usuario";
       label = "Usuario";

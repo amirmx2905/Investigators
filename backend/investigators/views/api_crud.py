@@ -16,7 +16,7 @@ from investigators.serializers import (
     RolEventoSerializer, EventoSerializer, UnidadSerializer,
     JefeAreaSerializer
 )
-from investigators.permissions import IsAdminOrReadOnly, IsInvestigadorOrReadOnly, IsOwnerOrAdmin
+from investigators.permissions import IsAdminOrReadOnly, IsInvestigadorOrReadOnly, IsOwnerOrAdmin, CanCreateArticuloPermission
 
 # ViewSet base con ordenamiento
 class OrderedModelViewSet(viewsets.ModelViewSet):
@@ -133,7 +133,7 @@ class RolEventoViewSet(OrderedModelViewSet):
 class EventoViewSet(OrderedModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    permission_classes = [IsInvestigadorOrReadOnly, IsOwnerOrAdmin]
+    permission_classes = [CanCreateArticuloPermission]
 
 class UnidadViewSet(OrderedModelViewSet):
     queryset = Unidad.objects.all()

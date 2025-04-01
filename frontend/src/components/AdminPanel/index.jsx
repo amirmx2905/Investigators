@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { ToastContainer } from "react-toastify";
 import TabNavigation from "./subcomponents/TabNavigation";
 import { useAdminPanel } from "./hooks/useAdminPanel";
-import { useTableControls } from "./hooks/useTableControls";
+// Corregir la importación como default en lugar de named export
+import useTableControls from "./hooks/useTableControls";
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
 import { estudianteService } from "../../api/services/estudianteService";
+import { articuloService } from "../../api/services/articuloService"; // Añadir importación de servicio de artículos
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -20,6 +22,7 @@ import {
   InvestigadorForm,
   ProyectoForm,
   EstudianteForm,
+  ArticuloForm, // Añadir importación del formulario de artículos
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -46,6 +49,7 @@ function AdminPanel() {
     investigadores,
     proyectos,
     estudiantes,
+    articulos, // Añadir artículos al desestructurar
     activeTab,
     changeTab,
     refreshData,
@@ -128,7 +132,9 @@ function AdminPanel() {
         await proyectoService.deleteProyecto(item.id);
       } else if (type === "estudiante") {
         await estudianteService.deleteEstudiante(item.id);
-      } 
+      } else if (type === "articulo") { // Añadir caso para artículos
+        await articuloService.deleteArticulo(item.id);
+      }
 
       refreshData();
 
@@ -212,6 +218,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "articulo": // Añadir caso para artículos
+        return (
+          <ArticuloForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            articulo={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -232,6 +247,7 @@ function AdminPanel() {
     investigadores,
     proyectos,
     estudiantes,
+    articulos, // Añadir artículos como parámetro
     handleEdit,
     handleDeleteClick
   );
@@ -312,7 +328,10 @@ function AdminPanel() {
         }
         onConfirm={handleConfirmDelete}
         itemName={
-          deleteModal.item?.nombre || deleteModal.item?.nombre_usuario || ""
+          deleteModal.item?.nombre || 
+          deleteModal.item?.nombre_usuario || 
+          deleteModal.item?.nombre_articulo || // Añadir campo para nombre de artículo
+          ""
         }
         itemType={
           deleteModal.type

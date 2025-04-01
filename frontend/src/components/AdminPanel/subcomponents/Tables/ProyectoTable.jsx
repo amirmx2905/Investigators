@@ -35,6 +35,16 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
   };
 
   const formatColumnValue = (column, value, proyecto) => {
+    if (column === "id") {
+      return (
+        <div className="flex items-center">
+          <span className="flex items-center justify-center bg-gray-700 text-gray-300 rounded-full h-6 w-6 text-xs font-medium">
+            {value}
+          </span>
+        </div>
+      );
+    }
+    
     if (column === "estado") {
       return (
         <span

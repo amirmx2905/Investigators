@@ -4,6 +4,7 @@ import { investigadorService } from "../../../api/services/investigadorService";
 import { usuarioService } from "../../../api/services/usuarioService";
 import { proyectoService } from "../../../api/services/proyectoService";
 import { estudianteService } from "../../../api/services/estudianteService";
+import { articuloService } from "../../../api/services/articuloService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -18,6 +19,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [investigadores, setInvestigadores] = useState([]);
   const [proyectos, setProyectos] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
+  const [articulos, setArticulos] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -82,7 +84,6 @@ export const useAdminPanel = (initialResource = "usuarios") => {
             );
             setProyectos(data.results);
             break;
-            
           case "estudiantes":
             data = await estudianteService.getEstudiantes(
               page,
@@ -90,6 +91,14 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               filterOptions
             );
             setEstudiantes(data.results);
+            break;
+          case "articulos":
+            data = await articuloService.getArticulos(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setArticulos(data.results);
             break;
           default:
             throw new Error("Recurso no soportado");
@@ -193,6 +202,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     investigadores,
     proyectos,
     estudiantes,
+    articulos,
     isMobile,
     currentPage,
     itemsPerPage,
