@@ -21,6 +21,8 @@ export const columnOrders = {
     "fecha_inicio",
     "fecha_fin",
     "explicacion",
+    "herramientas",
+    "investigadores",
   ],
   estudiantes: [
     "id",
@@ -50,7 +52,7 @@ export const columnOrders = {
   eventos: [
     "id",
     "nombre_evento",
-    "tipo_evento",
+    "tipo_evento_nombre",
     "fecha_inicio",
     "fecha_fin",
     "lugar",
@@ -71,7 +73,14 @@ const defaultVisibleColumns = {
     "linea",
     "activo",
   ],
-  proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio"],
+  proyectos: [
+    "id",
+    "nombre",
+    "estado",
+    "fecha_inicio",
+    "herramientas",
+    "investigadores",
+  ],
   estudiantes: [
     "id",
     "nombre",
@@ -96,7 +105,7 @@ const defaultVisibleColumns = {
   eventos: [
     "id",
     "nombre_evento",
-    "tipo_evento",
+    "tipo_evento_nombre",
     "fecha_inicio",
     "fecha_fin",
     "lugar",
@@ -112,7 +121,6 @@ const useTableControls = () => {
   const columnToggleRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detectar dispositivos móviles
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -123,7 +131,6 @@ const useTableControls = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Recuperar configuración guardada
   useEffect(() => {
     try {
       const savedConfig = localStorage.getItem("tableConfig");
@@ -140,7 +147,6 @@ const useTableControls = () => {
     }
   }, []);
 
-  // Guardar configuración cuando cambia
   useEffect(() => {
     try {
       localStorage.setItem(

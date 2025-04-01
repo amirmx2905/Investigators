@@ -4,6 +4,7 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
   const [showTable, setShowTable] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
   const [showParticipantesModal, setShowParticipantesModal] = useState(false);
+  const [tiposEvento, setTiposEvento] = useState([]);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -20,41 +21,63 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         closeModal();
       }
     };
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
     return () => {
-      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener("keydown", handleEsc);
     };
   }, []);
 
   useEffect(() => {
     if (showParticipantesModal) {
       const scrollY = window.scrollY;
-      
-      document.body.style.position = 'fixed';
+
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      
-      const tabNavigation = document.querySelector('.admin-fadeIn');
+      document.body.style.width = "100%";
+
+      const tabNavigation = document.querySelector(".admin-fadeIn");
       if (tabNavigation) {
-        tabNavigation.style.zIndex = '20';
+        tabNavigation.style.zIndex = "20";
       }
-      
+
       if (modalRef.current) {
         setTimeout(() => {
-          modalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          modalRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }, 100);
       }
     } else {
       const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+        window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
       }
     }
   }, [showParticipantesModal]);
+
+  useEffect(() => {
+    async function fetchTiposEvento() {
+      try {
+        const { eventoService } = await import("../../../../api/services/eventoService");
+        const tipos = await eventoService.getTiposEvento();
+        window.tiposEventoCache = tipos;
+        setTiposEvento(tipos);
+      } catch (error) {
+        console.error("Error al cargar tipos de evento:", error);
+      }
+    }
+
+    if (!window.tiposEventoCache) {
+      fetchTiposEvento();
+    } else {
+      setTiposEvento(window.tiposEventoCache);
+    }
+  }, []);
 
   const openModal = (evento) => {
     setSelectedEvento(evento);
@@ -91,14 +114,14 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
 
   const getSafeValue = (value) => {
     if (value === null || value === undefined) return "—";
-    if (typeof value === 'object') return JSON.stringify(value);
+    if (typeof value === "object") return JSON.stringify(value);
     return value;
   };
 
   const formatColumnValue = (column, value, evento) => {
-    if (column === 'investigadores') {
+    if (column === "investigadores") {
       const numParticipantes = Array.isArray(value) ? value.length : 0;
-      
+
       if (!numParticipantes) {
         return <span className="text-gray-400">Sin participantes</span>;
       }
@@ -132,8 +155,11 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
       );
     }
 
-    // Verificar si el valor es un objeto (y no null) para evitar errores
-    if (value !== null && typeof value === 'object' && !React.isValidElement(value)) {
+    if (
+      value !== null &&
+      typeof value === "object" &&
+      !React.isValidElement(value)
+    ) {
       console.warn(`Valor de columna '${column}' es un objeto:`, value);
       return JSON.stringify(value);
     }
@@ -155,11 +181,102 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         </div>
       );
     }
-    
+
     if (column === "tipo_evento_nombre") {
+      // Añadir log para depuración
+      console.log("Renderizando tipo_evento_nombre:", {
+        value,
+        tipoEventoNombre: evento.tipo_evento_nombre,
+        tipoEvento: evento.tipo_evento,
+        tipoEventoObj: evento.tipo_evento_obj
+      });
+      
+      // 1. Si tenemos el nombre directamente en tipo_evento_nombre
+      if (evento.tipo_evento_nombre) {
+        return (
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+            {evento.tipo_evento_nombre}
+          </span>
+        );
+      }
+      
+      // 2. Si tenemos el valor directamente en value (parámetro)
+      if (value) {
+        return (
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+            {value}
+          </span>
+        );
+      }
+
+      // 3. Si tenemos un objeto tipo_evento con propiedad nombre
+      if (
+        evento.tipo_evento &&
+        typeof evento.tipo_evento === "object" &&
+        evento.tipo_evento.nombre
+      ) {
+        return (
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+            {evento.tipo_evento.nombre}
+          </span>
+        );
+      }
+
+      // 4. Si tenemos tipo_evento_obj (del serializador)
+      if (evento.tipo_evento_obj && evento.tipo_evento_obj.nombre) {
+        return (
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+            {evento.tipo_evento_obj.nombre}
+          </span>
+        );
+      }
+
+      // 5. Si solo tenemos el ID numérico del tipo de evento
+      if (
+        evento.tipo_evento &&
+        (typeof evento.tipo_evento === "number" ||
+          !isNaN(parseInt(evento.tipo_evento)))
+      ) {
+        // Primero buscar en el estado local
+        const tipoEncontrado = tiposEvento.find(
+          (tipo) => tipo.id === parseInt(evento.tipo_evento)
+        );
+        
+        if (tipoEncontrado) {
+          return (
+            <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+              {tipoEncontrado.nombre}
+            </span>
+          );
+        }
+        
+        // Luego buscar en la caché global
+        if (window.tiposEventoCache && window.tiposEventoCache.length > 0) {
+          const tipoEncontradoCache = window.tiposEventoCache.find(
+            (tipo) => tipo.id === parseInt(evento.tipo_evento)
+          );
+
+          if (tipoEncontradoCache) {
+            return (
+              <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+                {tipoEncontradoCache.nombre}
+              </span>
+            );
+          }
+        }
+
+        // Si no encontramos nada, mostrar con mejor formato
+        return (
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
+            Tipo {evento.tipo_evento}
+          </span>
+        );
+      }
+
+      // 6. Si no tenemos información del tipo de evento
       return (
-        <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
-          {value || "Sin tipo"}
+        <span className="px-2 py-1 text-xs rounded-full bg-gray-700/40 text-gray-300">
+          Sin tipo
         </span>
       );
     }
@@ -170,14 +287,10 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
 
     if (column === "descripcion") {
       if (!value) return "—";
-      
-      // Mostrar una versión recortada con tooltip para el texto completo
+
       return (
         <div className="max-w-md">
-          <span 
-            className="text-sm text-gray-200 cursor-help"
-            title={value}
-          >
+          <span className="text-sm text-gray-200 cursor-help" title={value}>
             {value.length > 100 ? `${value.substring(0, 100)}...` : value}
           </span>
         </div>
@@ -189,7 +302,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         return <span className="text-gray-400">Sin participantes</span>;
       }
 
-      // Botón de participantes con estilo similar a los botones de acción (ahora amarillo)
       return (
         <button
           onClick={() => openModal(evento)}
@@ -266,11 +378,7 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
                       key={column}
                       className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                     >
-                      {formatColumnValue(
-                        column,
-                        evento[column],
-                        evento
-                      )}
+                      {formatColumnValue(column, evento[column], evento)}
                     </td>
                   ))}
                   <td className="px-4 py-2 whitespace-nowrap text-sm">
@@ -324,25 +432,23 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         </div>
       </div>
 
-      {/* Modal de Participantes */}
       {showParticipantesModal && selectedEvento && (
-        <div 
+        <div
           className="fixed inset-0 z-[99999] overflow-auto bg-gray-900/80 flex items-center justify-center"
           style={{
-            animation: "fadeIn 0.2s ease-out forwards"
+            animation: "fadeIn 0.2s ease-out forwards",
           }}
           onClick={closeModal}
         >
-          <div 
+          <div
             ref={modalRef}
             className="relative bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] border border-gray-700 my-8"
             style={{
-              animation: "scaleIn 0.3s ease-out forwards"
+              animation: "scaleIn 0.3s ease-out forwards",
             }}
             onClick={(e) => e.stopPropagation()}
             tabIndex={-1}
           >
-            {/* Encabezado del modal MEJORADO */}
             <div className="bg-gray-800 px-6 py-5 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 bg-amber-900/30 rounded-full p-2">
@@ -385,83 +491,131 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
                 </svg>
               </button>
             </div>
-            
-            {/* Información del evento - MEJORADA */}
+
             <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div className="flex-grow">
-                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1.5">Evento</h4>
-                  <p className="text-blue-300 font-medium text-lg">{selectedEvento.nombre_evento}</p>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1.5">
+                    Evento
+                  </h4>
+                  <p className="text-blue-300 font-medium text-lg">
+                    {selectedEvento.nombre_evento}
+                  </p>
                 </div>
                 <div className="mt-3 md:mt-0 flex items-center space-x-6">
                   <div className="flex flex-col text-right">
-                    <span className="text-xs text-gray-400 uppercase tracking-wider mb-1">Tipo</span>
-                    <span className="text-gray-300">{selectedEvento.tipo_evento_nombre}</span>
+                    <span className="text-xs text-gray-400 uppercase tracking-wider mb-1">
+                      Tipo
+                    </span>
+                    <span className="text-gray-300">
+                      {selectedEvento.tipo_evento_nombre || 
+                       (selectedEvento.tipo_evento_obj && selectedEvento.tipo_evento_obj.nombre) || 
+                       "Sin tipo"}
+                    </span>
                   </div>
                   <div className="flex flex-col text-right">
-                    <span className="text-xs text-gray-400 uppercase tracking-wider mb-1">Fecha</span>
+                    <span className="text-xs text-gray-400 uppercase tracking-wider mb-1">
+                      Fecha
+                    </span>
                     <span className="text-amber-300">
-                      {formatDate(selectedEvento.fecha_inicio)} - {formatDate(selectedEvento.fecha_fin)}
+                      {formatDate(selectedEvento.fecha_inicio)} -{" "}
+                      {formatDate(selectedEvento.fecha_fin)}
                     </span>
                   </div>
                 </div>
               </div>
               {selectedEvento.lugar && (
                 <div className="mt-3 text-sm">
-                  <span className="text-gray-400">Lugar:</span> {selectedEvento.lugar}
+                  <span className="text-gray-400">Lugar:</span>{" "}
+                  {selectedEvento.lugar}
                   {selectedEvento.empresa_invita && (
                     <span className="ml-2">
-                      • <span className="text-gray-400">Organizado por:</span> {selectedEvento.empresa_invita}
+                      • <span className="text-gray-400">Organizado por:</span>{" "}
+                      {selectedEvento.empresa_invita}
                     </span>
                   )}
                 </div>
               )}
               <div className="mt-4 flex items-center">
                 <div className="h-1 flex-grow bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-500/50 rounded-full" style={{ width: '100%' }}></div>
+                  <div
+                    className="h-full bg-amber-500/50 rounded-full"
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
             </div>
-            
-            {/* Contenido del modal */}
+
             <div className="p-6 overflow-auto max-h-[50vh]">
-              {selectedEvento.investigadores && Array.isArray(selectedEvento.investigadores) && selectedEvento.investigadores.length > 0 ? (
+              {selectedEvento.investigadores &&
+              Array.isArray(selectedEvento.investigadores) &&
+              selectedEvento.investigadores.length > 0 ? (
                 <>
                   <div className="text-sm text-gray-400 bg-gray-800/80 border border-gray-700/50 p-3 mb-4 rounded">
                     <div className="flex">
                       <div className="mr-2 text-amber-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                       </div>
-                      Cada participante tiene un rol específico en el evento. Los participantes con rol "Ponente" o "Expositor" son los principales.
+                      Cada participante tiene un rol específico en el evento.
+                      Los participantes con rol "Ponente" o "Expositor" son los
+                      principales.
                     </div>
                   </div>
                   <ul className="space-y-2">
-                    {selectedEvento.investigadores.map((participante, index) => (
-                      <li 
-                        key={`${participante.investigador_id || index}-${index}`}
-                        className="flex items-center p-3 rounded-lg border border-gray-700 bg-gray-800/30 hover:bg-gray-700/50 transition-colors"
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-lg font-medium text-amber-300 mr-4">
-                          {index + 1}
-                        </div>
-                        <div className="flex-grow">
-                          <p className="text-white font-medium">{participante.nombre || "Investigador"}</p>
-                          <p className="text-xs text-gray-400 mt-0.5">
-                            <span className="inline-flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
-                              Investigador
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0 bg-amber-900/20 text-amber-300 rounded-md py-1 px-2 text-xs">
-                          {participante.rol_nombre || "Participante"}
-                        </div>
-                      </li>
-                    ))}
+                    {selectedEvento.investigadores.map(
+                      (participante, index) => (
+                        <li
+                          key={`${
+                            participante.investigador_id || index
+                          }-${index}`}
+                          className="flex items-center p-3 rounded-lg border border-gray-700 bg-gray-800/30 hover:bg-gray-700/50 transition-colors"
+                        >
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-lg font-medium text-amber-300 mr-4">
+                            {index + 1}
+                          </div>
+                          <div className="flex-grow">
+                            <p className="text-white font-medium">
+                              {participante.nombre || "Investigador"}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              <span className="inline-flex items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-3 w-3 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                  />
+                                </svg>
+                                Investigador
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0 bg-amber-900/20 text-amber-300 rounded-md py-1 px-2 text-xs">
+                            {participante.rol_nombre || "Participante"}
+                          </div>
+                        </li>
+                      )
+                    )}
                   </ul>
                 </>
               ) : (
@@ -480,13 +634,16 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-300">Sin participantes</h3>
-                  <p className="mt-1 text-sm text-gray-500">Este evento no tiene participantes registrados</p>
+                  <h3 className="mt-2 text-sm font-medium text-gray-300">
+                    Sin participantes
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Este evento no tiene participantes registrados
+                  </p>
                 </div>
               )}
             </div>
-            
-            {/* Pie del modal */}
+
             <div className="bg-gray-800 px-6 py-4 border-t border-gray-700 flex justify-end">
               <button
                 onClick={closeModal}
@@ -501,13 +658,23 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
 
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
         @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
         }
       `}</style>
     </>

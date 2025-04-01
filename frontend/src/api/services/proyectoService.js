@@ -66,10 +66,21 @@ const deleteProyecto = async (id) => {
   }
 };
 
+const getHerramientasProyecto = async (id) => {
+  try {
+    const response = await api.get(`/proyectos/${id}/herramientas/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error al obtener herramientas del proyecto ${id}:`, error);
+    throw error;
+  }
+};
+
 export const proyectoService = {
   getProyectos,
   getProyecto,
   createProyecto,
   updateProyecto,
   deleteProyecto,
+  getHerramientasProyecto,
 };

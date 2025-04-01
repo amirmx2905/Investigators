@@ -45,7 +45,6 @@ class InvestigadorViewSet(OrderedModelViewSet):
         investigador = self.get_object()
         eventos = Evento.objects.filter(detevento__investigador=investigador)
         
-        # Opcionalmente filtrar por rol
         rol_id = request.query_params.get('rol', None)
         if rol_id:
             eventos = eventos.filter(detevento__rol_evento_id=rol_id)
@@ -72,12 +71,9 @@ class UsuarioViewSet(OrderedModelViewSet):
     serializer_class = UsuarioSerializer
     
     def get_queryset(self):
-        # Primero obtenemos todos los usuarios
         queryset = Usuario.objects.all()
-        # Aplicamos prefetch_related y luego ordenamos por ID
         return queryset.prefetch_related('investigador', 'estudiante').order_by('id')
     
-    # Endpoint para obtener el usuario actual
     @action(detail=False, methods=['get'], permission_classes=[])
     def me(self, request):
         if hasattr(request, 'usuario') and request.usuario:
@@ -95,19 +91,25 @@ class ProyectoViewSet(OrderedModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Si el usuario no es admin, ver solo los proyectos en los que participa
-        if hasattr(self.request, 'usuario') and self.request.usuario and self.request.usuario.rol != 'admin':
-            try:
-                if self.request.usuario.rol == 'investigador' and self.request.usuario.investigador:
-                    investigador = self.request.usuario.investigador
-                    # Filtrar proyectos donde el usuario es líder o investigador
-                    return queryset.filter(
-                        models.Q(lider=investigador) | 
-                        models.Q(detproyecto__investigador=investigador)
-                    ).distinct()
-            except:
-                return queryset.none()
+        
+        if hasattr(self.request, 'usuario') and self.request.usuario:
+            if self.request.usuario.rol == 'admin':
+                return queryset
+            elif self.request.usuario.rol == 'investigador' and self.request.usuario.investigador:
+                investigador = self.request.usuario.investigador
+                return queryset.filter(
+                    models.Q(lider=investigador) | 
+                    models.Q(investigadores=investigador)
+                ).distinct()
+        
         return queryset
+    
+    @action(detail=True, methods=['get'])
+    def herramientas(self, request, pk=None):
+        proyecto = self.get_object()
+        herramientas = proyecto.herramientas.all()
+        serializer = HerramientaSerializer(herramientas, many=True)
+        return Response(serializer.data)
 
 class AreaViewSet(OrderedModelViewSet):
     queryset = Area.objects.all()
@@ -230,7 +232,7 @@ class EventoViewSet(OrderedModelViewSet):
             'tipo_evento', 
             'detevento_set__investigador',
             'detevento_set__rol_evento'
-        ).order_by('id')  # Cambiado a ordenamiento ascendente por ID
+        ).order_by('id')
     
     @action(detail=True, methods=['get'])
     def investigadores(self, request, pk=None):

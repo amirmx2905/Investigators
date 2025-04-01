@@ -361,6 +361,84 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
                 </p>
               </div>
             )}
+
+            {/* Herramientas */}
+            {proyecto.herramientas && proyecto.herramientas.length > 0 && (
+              <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex flex-col w-full">
+                <div className="flex items-center flex-shrink-0 mb-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span className="ml-1.5 text-gray-400">Herramientas:</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {proyecto.herramientas.map((herramienta, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs bg-blue-900/40 text-blue-300 px-2 py-1 rounded-full"
+                    >
+                      {typeof herramienta === "object"
+                        ? herramienta.nombre
+                        : `Herramienta #${herramienta}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Investigadores */}
+            {proyecto.investigadores && proyecto.investigadores.length > 0 && (
+              <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex flex-col w-full mb-3">
+                <div className="flex items-center flex-shrink-0 mb-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                  <span className="ml-1.5 text-gray-400">
+                    Investigadores participantes:
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {proyecto.investigadores.map((investigador, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs bg-green-800/40 text-green-200 px-2 py-1 rounded-full"
+                    >
+                      {typeof investigador === "object"
+                        ? investigador.nombre
+                        : `Investigador #${investigador}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
