@@ -5,6 +5,7 @@ import { usuarioService } from "../../../api/services/usuarioService";
 import { proyectoService } from "../../../api/services/proyectoService";
 import { estudianteService } from "../../../api/services/estudianteService";
 import { articuloService } from "../../../api/services/articuloService";
+import { eventoService } from "../../../api/services/eventoService"; // Añadir importación del servicio de eventos
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -20,6 +21,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [proyectos, setProyectos] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [articulos, setArticulos] = useState([]);
+  const [eventos, setEventos] = useState([]); // Añadir estado para eventos
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -99,6 +101,14 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               filterOptions
             );
             setArticulos(data.results);
+            break;
+          case "eventos": // Añadir caso para eventos
+            data = await eventoService.getEventos(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setEventos(data.results);
             break;
           default:
             throw new Error("Recurso no soportado");
@@ -203,6 +213,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     proyectos,
     estudiantes,
     articulos,
+    eventos, // Añadir eventos al retorno
     isMobile,
     currentPage,
     itemsPerPage,

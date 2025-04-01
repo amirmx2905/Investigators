@@ -47,6 +47,17 @@ export const columnOrders = {
     "investigadores",
     "estatus",
   ],
+  eventos: [
+    "id",
+    "nombre_evento",
+    "tipo_evento",
+    "fecha_inicio",
+    "fecha_fin",
+    "lugar",
+    "empresa_invita",
+    "descripcion",
+    "investigadores",
+  ],
 };
 
 const defaultVisibleColumns = {
@@ -81,6 +92,15 @@ const defaultVisibleColumns = {
     "doi",
     "investigadores",
     "estatus",
+  ],
+  eventos: [
+    "id",
+    "nombre_evento",
+    "tipo_evento",
+    "fecha_inicio",
+    "fecha_fin",
+    "lugar",
+    "investigadores",
   ],
 };
 
@@ -160,21 +180,36 @@ const useTableControls = () => {
     setViewMode((prev) => (prev === "table" ? "cards" : "table"));
   };
 
-  const getAllColumnsForTab = (tab) => {
-    return columnOrders[tab] || [];
+  const toggleColumnsDropdown = () => {
+    setColumnsDropdownOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        columnToggleRef.current &&
+        !columnToggleRef.current.contains(event.target)
+      ) {
+        setColumnsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return {
     visibleColumns,
     toggleColumn,
     resetColumns,
-    getAllColumnsForTab,
     viewMode,
     toggleViewMode,
     columnsDropdownOpen,
-    setColumnsDropdownOpen,
-    contentRef,
+    toggleColumnsDropdown,
     columnToggleRef,
+    contentRef,
     isMobile,
   };
 };

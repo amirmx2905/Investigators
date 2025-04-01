@@ -15,6 +15,6 @@ from .herramienta_serializer import HerramientaSerializer
 from .articulo_serializer import ArticuloSerializer
 from .tipo_evento_serializer import TipoEventoSerializer
 from .rol_evento_serializer import RolEventoSerializer
-from .evento_serializer import EventoSerializer
+from .evento_serializer import EventoSerializer, InvestigadorEventoSerializer
 from .unidad_serializer import UnidadSerializer
 from .jefe_area_serializer import JefeAreaSerializer

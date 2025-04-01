@@ -1,3 +1,4 @@
+// Import necessary services and libraries
 import { columnOrders } from "../hooks/useTableControls";
 import {
   UsuarioTable,
@@ -5,6 +6,7 @@ import {
   ProyectoTable,
   EstudianteTable,
   ArticuloTable,
+  EventoTable,
 } from "../subcomponents/Tables/tables";
 import {
   UsuarioCards,
@@ -12,6 +14,7 @@ import {
   ProyectoCards,
   EstudianteCards,
   ArticuloCards,
+  EventoCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -34,6 +37,7 @@ export const getTabData = (
   proyectos,
   estudiantes,
   articulos,
+  eventos,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -55,6 +59,9 @@ export const getTabData = (
     case "articulos":
       type = "articulo";
       break;
+    case "eventos":
+      type = "evento";
+      break;
     default:
       type = "usuario";
   }
@@ -72,6 +79,7 @@ export const getTabData = (
       "estudiantes"
     ),
     articulos: sortColumnsByOrder(visibleColumns.articulos || [], "articulos"),
+    eventos: sortColumnsByOrder(visibleColumns.eventos || [], "eventos"),
   };
 
   const tabConfig = {
@@ -117,6 +125,15 @@ export const getTabData = (
       TableComponent: ArticuloTable,
       CardComponent: ArticuloCards,
       columns: orderedColumns.articulos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    eventos: {
+      title: "Lista de Eventos",
+      items: eventos || [],
+      TableComponent: EventoTable,
+      CardComponent: EventoCards,
+      columns: orderedColumns.eventos,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

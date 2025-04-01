@@ -1,5 +1,10 @@
 from rest_framework import serializers
 from investigators.models import Investigador, Linea, DetLinea
+from django.db import transaction
+from django.db.models import Q
+import logging
+
+logger = logging.getLogger(__name__)
 
 class InvestigadorSerializer(serializers.ModelSerializer):
     area_nombre = serializers.SerializerMethodField()
@@ -46,6 +51,7 @@ class InvestigadorSerializer(serializers.ModelSerializer):
         return [{'id': det.linea.id, 'nombre': det.linea.nombre} 
                 for det in DetLinea.objects.filter(investigador=obj).select_related('linea')]
     
+    @transaction.atomic
     def create(self, validated_data):
         lineas_data = validated_data.pop('lineas_ids', [])
         
@@ -56,17 +62,49 @@ class InvestigadorSerializer(serializers.ModelSerializer):
             
         return investigador
     
+    @transaction.atomic
     def update(self, instance, validated_data):
-        lineas_data = validated_data.pop('lineas_ids', None)
-        
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+            if attr != 'lineas_ids':
+                setattr(instance, attr, value)
         instance.save()
         
-        if lineas_data is not None:
-            DetLinea.objects.filter(investigador=instance).delete()
+        if 'lineas_ids' not in validated_data:
+            return instance
             
-            for linea in lineas_data:
-                DetLinea.objects.create(investigador=instance, linea=linea)
+        lineas_data = validated_data.get('lineas_ids')
+        
+        detalles_existentes = list(DetLinea.objects.filter(investigador=instance))
+        
+        detalles_por_linea = {detalle.linea_id: detalle for detalle in detalles_existentes}
+        lineas_nuevas = {linea.id for linea in lineas_data}
+        lineas_existentes = set(detalles_por_linea.keys())
+        
+        if detalles_existentes:
+            primer_detalle = detalles_existentes[0]
+            
+            lineas_a_eliminar = lineas_existentes - lineas_nuevas
+            lineas_a_agregar = lineas_nuevas - lineas_existentes
+            
+            for linea_id in lineas_a_agregar:
+                if lineas_a_eliminar:
+                    linea_a_eliminar = list(lineas_a_eliminar)[0]
+                    detalle = detalles_por_linea[linea_a_eliminar]
+                    
+                    DetLinea.objects.filter(id=detalle.id).update(linea_id=linea_id)
+                    
+                    lineas_a_eliminar.remove(linea_a_eliminar)
+                    detalles_por_linea[linea_id] = detalles_por_linea.pop(linea_a_eliminar)
+                else:
+                    DetLinea.objects.create(investigador=instance, linea_id=linea_id)
+            
+            if lineas_a_eliminar:
+                DetLinea.objects.filter(
+                    investigador=instance, 
+                    linea_id__in=lineas_a_eliminar
+                ).delete()
+        else:
+            for linea_id in lineas_nuevas:
+                DetLinea.objects.create(investigador=instance, linea_id=linea_id)
         
         return instance

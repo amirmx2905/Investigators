@@ -67,6 +67,17 @@ function ColumnSelector({
       "investigadores",
       "estatus",
     ],
+    eventos: [
+      "id",
+      "nombre_evento",
+      "tipo_evento",
+      "fecha_inicio",
+      "fecha_fin",
+      "lugar",
+      "empresa_invita",
+      "descripcion",
+      "investigadores",
+    ],
   };
 
   // Etiquetas para las columnas
@@ -122,6 +133,17 @@ function ColumnSelector({
       abstracto: "Resumen",
       investigadores: "Autores",
       estatus: "Estado",
+    },
+    eventos: {
+      id: "ID",
+      nombre_evento: "Nombre",
+      tipo_evento: "Tipo",
+      fecha_inicio: "Fecha Inicio",
+      fecha_fin: "Fecha Fin",
+      lugar: "Lugar",
+      empresa_invita: "Empresa",
+      descripcion: "Descripción",
+      investigadores: "Participantes",
     },
   };
 

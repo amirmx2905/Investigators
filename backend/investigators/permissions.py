@@ -1,4 +1,6 @@
 from rest_framework import permissions
+from django.db.models import Q
+from investigators.models import DetEvento, DetArticulo
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -47,30 +49,64 @@ class IsOwnerOrAdmin(permissions.BasePermission):
                 obj.lider == request.usuario.investigador
             )
         
-        elif hasattr(obj, 'investigadores') and hasattr(obj, 'investigadores_articulo'):
+        elif hasattr(obj, 'detarticulo_set'):
             return (
                 hasattr(request, 'usuario') and 
                 request.usuario and 
                 request.usuario.rol == 'investigador' and 
                 request.usuario.investigador and
-                request.usuario.investigador.id in [inv.investigador.id for inv in obj.investigadores_articulo.all()]
+                DetArticulo.objects.filter(
+                    articulo=obj,
+                    investigador=request.usuario.investigador
+                ).exists()
             )
             
         return False
 
 class CanCreateArticuloPermission(permissions.BasePermission):
-    """
-    Permiso personalizado para permitir la creación de artículos a investigadores y administradores
-    """
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS or request.method == 'POST':
-            if hasattr(request, 'usuario') and request.usuario and request.usuario.rol == 'admin':
-                return True
+            if hasattr(request, 'usuario') and request.usuario:
+                return request.usuario.rol in ['admin', 'investigador']
                 
-            if hasattr(request, 'usuario') and request.usuario and request.usuario.rol == 'investigador':
-                return True
-                
-        return False
+        return True
         
     def has_object_permission(self, request, view, obj):
-        return IsOwnerOrAdmin().has_object_permission(request, view, obj)
+        if hasattr(request, 'usuario') and request.usuario and request.usuario.rol == 'admin':
+            return True
+            
+        if (hasattr(request, 'usuario') and request.usuario and 
+            request.usuario.rol == 'investigador' and request.usuario.investigador):
+            return DetArticulo.objects.filter(
+                articulo=obj,
+                investigador=request.usuario.investigador
+            ).exists()
+            
+        return False
+    
+class CanManageEventosPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        if request.method == 'POST':
+            if hasattr(request, 'usuario') and request.usuario:
+                return request.usuario.rol in ['admin', 'investigador']
+                
+        return True
+    
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+            
+        if hasattr(request, 'usuario') and request.usuario and request.usuario.rol == 'admin':
+            return True
+            
+        if (hasattr(request, 'usuario') and request.usuario and 
+            request.usuario.rol == 'investigador' and request.usuario.investigador):
+            return DetEvento.objects.filter(
+                evento=obj, 
+                investigador=request.usuario.investigador
+            ).exists()
+            
+        return False

@@ -2,7 +2,6 @@ from rest_framework import serializers
 from investigators.models import Usuario, Investigador, Estudiante
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    # Añadimos campos de solo lectura para mostrar información de perfiles
     investigador_nombre = serializers.SerializerMethodField(read_only=True)
     estudiante_nombre = serializers.SerializerMethodField(read_only=True)
     

@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import TabNavigation from "./subcomponents/TabNavigation";
 import { useAdminPanel } from "./hooks/useAdminPanel";
-// Corregir la importación como default en lugar de named export
 import useTableControls from "./hooks/useTableControls";
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
 import { estudianteService } from "../../api/services/estudianteService";
-import { articuloService } from "../../api/services/articuloService"; // Añadir importación de servicio de artículos
+import { articuloService } from "../../api/services/articuloService";
+import { eventoService } from "../../api/services/eventoService"; 
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -22,7 +22,8 @@ import {
   InvestigadorForm,
   ProyectoForm,
   EstudianteForm,
-  ArticuloForm, // Añadir importación del formulario de artículos
+  ArticuloForm,
+  EventoForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -49,7 +50,8 @@ function AdminPanel() {
     investigadores,
     proyectos,
     estudiantes,
-    articulos, // Añadir artículos al desestructurar
+    articulos,
+    eventos,
     activeTab,
     changeTab,
     refreshData,
@@ -66,12 +68,11 @@ function AdminPanel() {
     visibleColumns,
     toggleColumn,
     columnsDropdownOpen,
-    setColumnsDropdownOpen,
+    toggleColumnsDropdown,
     contentRef,
     isMobile,
+    columnToggleRef,
   } = useTableControls();
-
-  const columnToggleRef = useRef(null);
 
   useEffect(() => {
     let timer;
@@ -132,8 +133,10 @@ function AdminPanel() {
         await proyectoService.deleteProyecto(item.id);
       } else if (type === "estudiante") {
         await estudianteService.deleteEstudiante(item.id);
-      } else if (type === "articulo") { // Añadir caso para artículos
+      } else if (type === "articulo") {
         await articuloService.deleteArticulo(item.id);
+      } else if (type === "evento") {
+        await eventoService.deleteEvento(item.id);
       }
 
       refreshData();
@@ -218,12 +221,21 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case "articulo": // Añadir caso para artículos
+      case "articulo":
         return (
           <ArticuloForm
             isOpen={isOpen}
             onClose={handleCloseForm}
             articulo={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "evento":
+        return (
+          <EventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            evento={item}
             onSuccess={handleFormSuccess}
           />
         );
@@ -247,7 +259,8 @@ function AdminPanel() {
     investigadores,
     proyectos,
     estudiantes,
-    articulos, // Añadir artículos como parámetro
+    articulos,
+    eventos,
     handleEdit,
     handleDeleteClick
   );
@@ -288,7 +301,7 @@ function AdminPanel() {
               toggleViewMode={toggleViewMode}
               isMobile={isMobile}
               columnsDropdownOpen={columnsDropdownOpen}
-              setColumnsDropdownOpen={setColumnsDropdownOpen}
+              setColumnsDropdownOpen={toggleColumnsDropdown}
               activeTab={activeTab}
               visibleColumns={visibleColumns}
               toggleColumn={toggleColumn}
@@ -330,7 +343,8 @@ function AdminPanel() {
         itemName={
           deleteModal.item?.nombre || 
           deleteModal.item?.nombre_usuario || 
-          deleteModal.item?.nombre_articulo || // Añadir campo para nombre de artículo
+          deleteModal.item?.nombre_articulo ||
+          deleteModal.item?.nombre_evento ||
           ""
         }
         itemType={
