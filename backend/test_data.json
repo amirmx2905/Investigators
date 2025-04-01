@@ -671,70 +671,70 @@
     "model": "investigators.tipoestudiante",
     "pk": 6,
     "fields": {
-        "nombre": "Estudiante de intercambio"
+        "nombre": "Intercambio"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 7,
     "fields": {
-        "nombre": "Estudiante de servicio social"
+        "nombre": "Servicio social"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 8,
     "fields": {
-        "nombre": "Estudiante de prácticas profesionales"
+        "nombre": "Becario"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 9,
     "fields": {
-        "nombre": "Estudiante de diplomado"
+        "nombre": "Diplomado"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 10,
     "fields": {
-        "nombre": "Estudiante de especialidad"
+        "nombre": "Especialidad"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 11,
     "fields": {
-        "nombre": "Estudiante de certificación"
+        "nombre": "Certificación"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 12,
     "fields": {
-        "nombre": "Estudiante de curso libre"
+        "nombre": "Curso libre"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 13,
     "fields": {
-        "nombre": "Estudiante de verano científico"
+        "nombre": "Verano científico"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 14,
     "fields": {
-        "nombre": "Estudiante de movilidad nacional"
+        "nombre": "Movilidad nacional"
     }
 },
 {
     "model": "investigators.tipoestudiante",
     "pk": 15,
     "fields": {
-        "nombre": "Estudiante de movilidad internacional"
+        "nombre": "Movilidad internacional"
     }
 },
 {
@@ -743,7 +743,7 @@
     "fields": {
         "area": 1,
         "nivel_edu": 1,
-        "especialidad": 1,
+        "especialidad": 2,
         "nivel_snii": 1,
         "fecha_asignacion_snii": "2022-01-15",
         "nombre": "Juan Pérez",
@@ -918,6 +918,21 @@
     }
 },
 {
+    "model": "investigators.investigador",
+    "pk": 19,
+    "fields": {
+        "area": 1,
+        "nivel_edu": 1,
+        "especialidad": 3,
+        "nivel_snii": 2,
+        "fecha_asignacion_snii": "2025-03-12",
+        "nombre": "Prueba",
+        "correo": "prueba@example.com",
+        "celular": "3243546577",
+        "activo": true
+    }
+},
+{
     "model": "investigators.jefearea",
     "pk": 1,
     "fields": {
@@ -963,7 +978,8 @@
         "area": 1,
         "escuela": "UNAM",
         "fecha_inicio": "2025-01-01",
-        "fecha_termino": "2025-12-31"
+        "fecha_termino": "2025-12-31",
+        "activo": true
     }
 },
 {
@@ -979,7 +995,8 @@
         "area": 2,
         "escuela": "IPN",
         "fecha_inicio": "2025-02-01",
-        "fecha_termino": "2025-11-30"
+        "fecha_termino": "2025-11-30",
+        "activo": true
     }
 },
 {
@@ -995,7 +1012,8 @@
         "area": 3,
         "escuela": "UAM",
         "fecha_inicio": "2025-03-01",
-        "fecha_termino": "2025-10-31"
+        "fecha_termino": "2025-10-31",
+        "activo": true
     }
 },
 {
@@ -1011,7 +1029,8 @@
         "area": 4,
         "escuela": "ITESM",
         "fecha_inicio": "2025-04-01",
-        "fecha_termino": "2025-09-30"
+        "fecha_termino": "2025-09-30",
+        "activo": true
     }
 },
 {
@@ -1027,7 +1046,8 @@
         "area": 5,
         "escuela": "UdeG",
         "fecha_inicio": "2025-05-01",
-        "fecha_termino": "2025-08-31"
+        "fecha_termino": "2025-08-31",
+        "activo": true
     }
 },
 {
@@ -1043,7 +1063,8 @@
         "area": 6,
         "escuela": "UAEM",
         "fecha_inicio": "2025-06-01",
-        "fecha_termino": "2025-07-31"
+        "fecha_termino": "2025-07-31",
+        "activo": true
     }
 },
 {
@@ -1059,7 +1080,8 @@
         "area": 7,
         "escuela": "UANL",
         "fecha_inicio": "2025-07-01",
-        "fecha_termino": "2025-06-30"
+        "fecha_termino": "2025-06-30",
+        "activo": true
     }
 },
 {
@@ -1075,7 +1097,8 @@
         "area": 8,
         "escuela": "UABC",
         "fecha_inicio": "2025-08-01",
-        "fecha_termino": "2025-05-31"
+        "fecha_termino": "2025-05-31",
+        "activo": true
     }
 },
 {
@@ -1091,7 +1114,8 @@
         "area": 9,
         "escuela": "UASLP",
         "fecha_inicio": "2025-09-01",
-        "fecha_termino": "2025-04-30"
+        "fecha_termino": "2025-04-30",
+        "activo": true
     }
 },
 {
@@ -1107,7 +1131,8 @@
         "area": 10,
         "escuela": "UQROO",
         "fecha_inicio": "2025-10-01",
-        "fecha_termino": "2025-03-31"
+        "fecha_termino": "2025-03-31",
+        "activo": true
     }
 },
 {
@@ -1182,22 +1207,6 @@
 },
 {
     "model": "investigators.detlinea",
-    "pk": 1,
-    "fields": {
-        "linea": 1,
-        "investigador": 1
-    }
-},
-{
-    "model": "investigators.detlinea",
-    "pk": 2,
-    "fields": {
-        "linea": 1,
-        "investigador": 2
-    }
-},
-{
-    "model": "investigators.detlinea",
     "pk": 3,
     "fields": {
         "linea": 2,
@@ -1258,6 +1267,46 @@
     "fields": {
         "linea": 5,
         "investigador": 10
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 12,
+    "fields": {
+        "linea": 8,
+        "investigador": 2
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 13,
+    "fields": {
+        "linea": 10,
+        "investigador": 14
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 14,
+    "fields": {
+        "linea": 3,
+        "investigador": 15
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 15,
+    "fields": {
+        "linea": 1,
+        "investigador": 1
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 24,
+    "fields": {
+        "linea": 6,
+        "investigador": 19
     }
 },
 {
@@ -1424,7 +1473,7 @@
     "fields": {
         "nombre": "Inteligencia Artificial",
         "lider": 1,
-        "estado": "En Progreso",
+        "estado": "Completado",
         "explicacion": "Desarrollo de un modelo de IA para análisis de datos",
         "fecha_inicio": "2025-01-01",
         "fecha_fin": "2025-12-31",
@@ -1726,7 +1775,6 @@
         "nombre_revista": "Revista de Tecnología",
         "abstracto": "Estudio sobre avances en inteligencia artificial",
         "pais_publicacion": "México",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-01-15",
         "doi": "10.1234/ia.2025.001",
         "url": "https://example.com/ia",
@@ -1741,7 +1789,6 @@
         "nombre_revista": "Revista de Energía",
         "abstracto": "Investigación sobre paneles solares",
         "pais_publicacion": "España",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-02-10",
         "doi": "10.1234/energia.2025.002",
         "url": "https://example.com/energia",
@@ -1756,7 +1803,6 @@
         "nombre_revista": "Revista de Robótica",
         "abstracto": "Diseño de robots autónomos",
         "pais_publicacion": "Estados Unidos",
-        "ano_publicacion": 2024,
         "fecha_publicacion": "2024-03-05",
         "doi": "10.1234/robotica.2024.003",
         "url": "https://example.com/robotica",
@@ -1771,7 +1817,6 @@
         "nombre_revista": "Revista de Seguridad",
         "abstracto": "Estudio sobre sistemas de seguridad informática",
         "pais_publicacion": "Canadá",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-04-01",
         "doi": "10.1234/ciberseguridad.2025.004",
         "url": "https://example.com/ciberseguridad",
@@ -1786,7 +1831,6 @@
         "nombre_revista": "Revista de Biotecnología",
         "abstracto": "Aplicaciones médicas de microorganismos",
         "pais_publicacion": "Argentina",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-05-10",
         "doi": "10.1234/biotecnologia.2025.005",
         "url": "https://example.com/biotecnologia",
@@ -1801,7 +1845,6 @@
         "nombre_revista": "Revista de Educación",
         "abstracto": "Métodos innovadores de enseñanza",
         "pais_publicacion": "Chile",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-06-15",
         "doi": "10.1234/educacion.2025.006",
         "url": "https://example.com/educacion",
@@ -1816,7 +1859,6 @@
         "nombre_revista": "Revista de Medio Ambiente",
         "abstracto": "Impacto del cambio climático",
         "pais_publicacion": "Brasil",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-07-20",
         "doi": "10.1234/medioambiente.2025.007",
         "url": "https://example.com/medioambiente",
@@ -1831,7 +1873,6 @@
         "nombre_revista": "Revista de IA",
         "abstracto": "Modelos de aprendizaje automático",
         "pais_publicacion": "Reino Unido",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-08-05",
         "doi": "10.1234/ml.2025.008",
         "url": "https://example.com/ml",
@@ -1846,7 +1887,6 @@
         "nombre_revista": "Revista de Diseño",
         "abstracto": "Herramientas para diseño gráfico",
         "pais_publicacion": "Francia",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-09-15",
         "doi": "10.1234/diseno.2025.009",
         "url": "https://example.com/diseno",
@@ -1861,29 +1901,10 @@
         "nombre_revista": "Revista de Innovación",
         "abstracto": "Nuevas tecnologías en desarrollo",
         "pais_publicacion": "Alemania",
-        "ano_publicacion": 2025,
         "fecha_publicacion": "2025-10-01",
         "doi": "10.1234/innovacion.2025.010",
         "url": "https://example.com/innovacion",
         "estatus": true
-    }
-},
-{
-    "model": "investigators.detarticulo",
-    "pk": 1,
-    "fields": {
-        "articulo": 1,
-        "investigador": 1,
-        "orden_autor": 1
-    }
-},
-{
-    "model": "investigators.detarticulo",
-    "pk": 2,
-    "fields": {
-        "articulo": 1,
-        "investigador": 2,
-        "orden_autor": 2
     }
 },
 {
@@ -1956,6 +1977,150 @@
         "articulo": 5,
         "investigador": 10,
         "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 26,
+    "fields": {
+        "articulo": 6,
+        "investigador": 5,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 27,
+    "fields": {
+        "articulo": 6,
+        "investigador": 10,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 28,
+    "fields": {
+        "articulo": 7,
+        "investigador": 3,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 29,
+    "fields": {
+        "articulo": 7,
+        "investigador": 7,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 30,
+    "fields": {
+        "articulo": 8,
+        "investigador": 1,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 31,
+    "fields": {
+        "articulo": 8,
+        "investigador": 9,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 32,
+    "fields": {
+        "articulo": 9,
+        "investigador": 3,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 33,
+    "fields": {
+        "articulo": 9,
+        "investigador": 7,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 34,
+    "fields": {
+        "articulo": 9,
+        "investigador": 8,
+        "orden_autor": 3
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 35,
+    "fields": {
+        "articulo": 10,
+        "investigador": 2,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 36,
+    "fields": {
+        "articulo": 10,
+        "investigador": 14,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 37,
+    "fields": {
+        "articulo": 10,
+        "investigador": 10,
+        "orden_autor": 3
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 52,
+    "fields": {
+        "articulo": 1,
+        "investigador": 4,
+        "orden_autor": 1
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 53,
+    "fields": {
+        "articulo": 1,
+        "investigador": 3,
+        "orden_autor": 2
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 54,
+    "fields": {
+        "articulo": 1,
+        "investigador": 1,
+        "orden_autor": 3
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 55,
+    "fields": {
+        "articulo": 1,
+        "investigador": 10,
+        "orden_autor": 4
     }
 },
 {
@@ -2230,24 +2395,6 @@
 },
 {
     "model": "investigators.detevento",
-    "pk": 1,
-    "fields": {
-        "evento": 1,
-        "investigador": 1,
-        "rol_evento": 1
-    }
-},
-{
-    "model": "investigators.detevento",
-    "pk": 2,
-    "fields": {
-        "evento": 1,
-        "investigador": 2,
-        "rol_evento": 2
-    }
-},
-{
-    "model": "investigators.detevento",
     "pk": 3,
     "fields": {
         "evento": 2,
@@ -2311,11 +2458,29 @@
 },
 {
     "model": "investigators.detevento",
-    "pk": 10,
+    "pk": 56,
     "fields": {
-        "evento": 5,
-        "investigador": 10,
+        "evento": 1,
+        "investigador": 1,
+        "rol_evento": 1
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 57,
+    "fields": {
+        "evento": 1,
+        "investigador": 2,
         "rol_evento": 2
+    }
+},
+{
+    "model": "investigators.detevento",
+    "pk": 58,
+    "fields": {
+        "evento": 1,
+        "investigador": 3,
+        "rol_evento": 3
     }
 },
 {
@@ -2328,7 +2493,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-24T09:13:49.338Z",
-        "ultimo_acceso": null,
+        "ultimo_acceso": "2025-04-01T18:39:08.722Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2343,7 +2508,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-25T06:13:40.344Z",
-        "ultimo_acceso": null,
+        "ultimo_acceso": "2025-03-31T05:02:32.381Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2523,21 +2688,6 @@
         "investigador": 6,
         "estudiante": null,
         "fecha_creacion": "2025-03-28T08:50:07.423Z",
-        "ultimo_acceso": null,
-        "intentos_login": 0,
-        "activo": true
-    }
-},
-{
-    "model": "investigators.usuario",
-    "pk": 30,
-    "fields": {
-        "nombre_usuario": "admin_user",
-        "contrasena": "pbkdf2_sha256$870000$ORjUWY18nZUjroTt469pfx$/gnyquZKddCOve6Ys2peDZHAHlcxmL3FACg2hMOcl9M=",
-        "rol": "admin",
-        "investigador": null,
-        "estudiante": null,
-        "fecha_creacion": "2025-03-30T03:11:22.522Z",
         "ultimo_acceso": null,
         "intentos_login": 0,
         "activo": true
