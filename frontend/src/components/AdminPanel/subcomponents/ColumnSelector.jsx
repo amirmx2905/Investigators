@@ -30,6 +30,7 @@ function ColumnSelector({
       "area",
       "especialidad",
       "nivel_snii",
+      "linea",
       "activo",
     ],
     proyectos: [
@@ -74,6 +75,7 @@ function ColumnSelector({
       area: "Área",
       especialidad: "Especialidad",
       nivel_snii: "Nivel SNII",
+      linea: "Línea",
       activo: "Estado",
     },
     proyectos: {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export const columnOrders = {
-  usuarios: ["id","nombre_usuario", "rol", "vinculado_a", "activo"],
+  usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
   investigadores: [
     "id",
     "nombre",
@@ -10,6 +10,7 @@ export const columnOrders = {
     "area",
     "especialidad",
     "nivel_snii",
+    "linea",
     "activo",
   ],
   proyectos: [
@@ -40,7 +41,15 @@ export const columnOrders = {
 
 const defaultVisibleColumns = {
   usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
-  investigadores: ["id", "nombre", "correo", "area", "nivel_snii", "activo"],
+  investigadores: [
+    "id",
+    "nombre",
+    "correo",
+    "area",
+    "nivel_snii",
+    "linea",
+    "activo",
+  ],
   proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio"],
   estudiantes: [
     "id",

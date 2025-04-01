@@ -52,6 +52,7 @@ function InvestigadorTable({
     area: "Área",
     especialidad: "Especialidad",
     nivel_snii: "Nivel SNII",
+    linea: "Línea",
     activo: "Estado",
   };
 
@@ -122,6 +123,19 @@ function InvestigadorTable({
             </span>
           )}
         </div>
+      );
+    }
+
+    if (column === "linea") {
+      if (investigador.lineas && investigador.lineas.length > 0) {
+        return (
+          <span className="px-2 py-1 text-xs bg-gray-700/60 text-blue-300 rounded-full">
+            {investigador.lineas[0].nombre}
+          </span>
+        );
+      }
+      return (
+        <span className="text-gray-400 text-xs">Sin línea asignada</span>
       );
     }
 

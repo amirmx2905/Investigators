@@ -164,6 +164,14 @@ function InvestigadorCard({
   };
 
   const nivelSNII = getNivelSNII();
+  const getLineaInvestigacion = () => {
+    if (investigador.lineas && investigador.lineas.length > 0) {
+      return investigador.lineas[0].nombre;
+    }
+    return "Sin línea asignada";
+  };
+
+  const lineaInvestigacion = getLineaInvestigacion();
 
   return (
     <div
@@ -312,6 +320,13 @@ function InvestigadorCard({
                 {investigador.area_nombre || "Sin área"}
               </span>
             </div>
+            {/* Línea de investigación en vista compacta */}
+            <div className="bg-gray-700/40 p-2 rounded col-span-2">
+              <span className="text-gray-400">Línea:</span>
+              <span className="ml-1.5 text-gray-200 block truncate">
+                {lineaInvestigacion}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -405,6 +420,30 @@ function InvestigadorCard({
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
                 {investigador.especialidad_nombre || "Sin especialidad"}
+              </span>
+            </div>
+
+            {/* Línea de Investigación */}
+            <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
+              <div className="flex items-center flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span className="ml-1.5 text-gray-400">Línea:</span>
+              </div>
+              <span className={`text-gray-200 font-medium truncate max-w-[60%] ${lineaInvestigacion === "Sin línea asignada" ? "text-gray-400" : ""}`}>
+                {lineaInvestigacion}
               </span>
             </div>
 
