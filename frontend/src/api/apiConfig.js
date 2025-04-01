@@ -25,7 +25,7 @@ api.interceptors.response.use(
         originalRequest.withCredentials = true;
         return axios(originalRequest);
       } catch (refreshError) {
-        console.log("Error al refrescar token:", refreshError);
+        console.log("No se pudo renovar la sesión");
         window.location.href = "/";
         return Promise.reject(refreshError);
       }
