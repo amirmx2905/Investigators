@@ -5,9 +5,7 @@ const ContentDisplay = ({
   contentRef,
   viewMode,
   isMobile,
-  // eslint-disable-next-line no-unused-vars
   TableComponent,
-  // eslint-disable-next-line no-unused-vars
   CardComponent,
   activeTab,
   items,
@@ -20,7 +18,21 @@ const ContentDisplay = ({
   itemsPerPage,
   handlePageChange,
 }) => {
+  // Lista de módulos que solo usan tarjetas
+  const cardsOnlyModules = ["carreras"]; // Aquí puedes agregar más módulos en el futuro
+  
+  // Verificar si el módulo actual es de solo tarjetas
+  const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
+
   const renderTable = () => {
+    if (!TableComponent || isCardsOnlyModule) {
+      return (
+        <div className="text-center py-8 text-gray-400">
+          Este recurso solo está disponible en vista de tarjetas.
+        </div>
+      );
+    }
+    
     return (
       <TableComponent
         usuarios={activeTab === "usuarios" ? items || [] : []}
@@ -29,8 +41,9 @@ const ContentDisplay = ({
         estudiantes={activeTab === "estudiantes" ? items || [] : []}
         articulos={activeTab === "articulos" ? items || [] : []}
         eventos={activeTab === "eventos" ? items || [] : []}
-        visibleColumns={columns || []}
-        onCopy={onCopy}
+        carreras={activeTab === "carreras" ? items || [] : []}
+        // ALAN AQUÍ AGREGAR LOS ITEMS QUE FALTAN
+        visibleColumns={columns}
         onEdit={onEdit}
         onDelete={onDelete}
       />
@@ -38,31 +51,40 @@ const ContentDisplay = ({
   };
 
   const renderCards = () => {
+    if (!CardComponent) return null;
+
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <CardComponent
-          items={items || []}
-          onCopy={onCopy}
+          items={items}
           onEdit={onEdit}
           onDelete={onDelete}
+          onCopy={onCopy}
         />
       </div>
     );
   };
 
-  return (
-    <div ref={contentRef} className="relative min-h-[200px]">
-      <div className="view-transition">
-        {viewMode === "table" && !isMobile ? renderTable() : renderCards()}
+  const currentViewMode = isCardsOnlyModule ? "cards" : viewMode;
 
-        {/* Paginación */}
-        <div className="mt-8 pt-4 border-t border-gray-700/50 flex justify-center">
-          <Pagination
-            totalItems={totalItems}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            paginate={handlePageChange}
-          />
+  return (
+    <div
+      ref={contentRef}
+      className="mt-6 view-transition animate-fade-in"
+      style={{ animationDelay: "0.3s" }}
+    >
+      <div className="space-y-6">
+        {currentViewMode === "table" && !isMobile ? renderTable() : renderCards()}
+
+        <div className="pagination-container mt-8">
+          {totalItems > itemsPerPage && (
+            <Pagination
+              totalItems={totalItems}
+              currentPage={currentPage}
+              itemsPerPage={itemsPerPage}
+              paginate={handlePageChange}
+            />
+          )}
         </div>
       </div>
     </div>

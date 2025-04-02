@@ -5,6 +5,7 @@ import { proyectoService } from "./services/proyectoService";
 import { estudianteService } from "./services/estudianteService";
 import { articuloService } from "./services/articuloService";
 import { eventoService } from "./services/eventoService";
+import { carreraService } from "./services/carreraService";
 
 export {
   api,
@@ -14,4 +15,5 @@ export {
   estudianteService,
   articuloService,
   eventoService,
+  carreraService,
 };

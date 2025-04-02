@@ -9,6 +9,7 @@ import { proyectoService } from "../../api/services/proyectoService";
 import { estudianteService } from "../../api/services/estudianteService";
 import { articuloService } from "../../api/services/articuloService";
 import { eventoService } from "../../api/services/eventoService"; 
+import { carreraService } from "../../api/services/carreraService";
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -21,9 +22,10 @@ import {
   UsuarioForm,
   InvestigadorForm,
   ProyectoForm,
-  EstudianteForm,
+  EstudianteForm, 
   ArticuloForm,
   EventoForm,
+  CarreraForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -52,6 +54,7 @@ function AdminPanel() {
     estudiantes,
     articulos,
     eventos,
+    carreras,
     activeTab,
     changeTab,
     refreshData,
@@ -137,6 +140,8 @@ function AdminPanel() {
         await articuloService.deleteArticulo(item.id);
       } else if (type === "evento") {
         await eventoService.deleteEvento(item.id);
+      } else if (type === "carrera") {
+        await carreraService.deleteCarrera(item.id);
       }
 
       refreshData();
@@ -239,6 +244,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "carrera":
+        return (
+          <CarreraForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            carrera={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -261,6 +275,7 @@ function AdminPanel() {
     estudiantes,
     articulos,
     eventos,
+    carreras,
     handleEdit,
     handleDeleteClick
   );
@@ -345,6 +360,7 @@ function AdminPanel() {
           deleteModal.item?.nombre_usuario || 
           deleteModal.item?.nombre_articulo ||
           deleteModal.item?.nombre_evento ||
+          deleteModal.item?.nombre_carrera ||
           ""
         }
         itemType={

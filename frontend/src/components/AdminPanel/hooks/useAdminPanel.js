@@ -5,7 +5,8 @@ import { usuarioService } from "../../../api/services/usuarioService";
 import { proyectoService } from "../../../api/services/proyectoService";
 import { estudianteService } from "../../../api/services/estudianteService";
 import { articuloService } from "../../../api/services/articuloService";
-import { eventoService } from "../../../api/services/eventoService"; // Añadir importación del servicio de eventos
+import { eventoService } from "../../../api/services/eventoService";
+import { carreraService } from "../../../api/services/carreraService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -21,7 +22,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [proyectos, setProyectos] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
   const [articulos, setArticulos] = useState([]);
-  const [eventos, setEventos] = useState([]); // Añadir estado para eventos
+  const [eventos, setEventos] = useState([]);
+  const [carreras, setCarreras] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -102,13 +104,21 @@ export const useAdminPanel = (initialResource = "usuarios") => {
             );
             setArticulos(data.results);
             break;
-          case "eventos": // Añadir caso para eventos
+          case "eventos":
             data = await eventoService.getEventos(
               page,
               pageSize,
               filterOptions
             );
             setEventos(data.results);
+            break;
+          case "carreras":
+            data = await carreraService.getCarreras(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setCarreras(data.results);
             break;
           default:
             throw new Error("Recurso no soportado");
@@ -125,8 +135,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
         setLoading(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [resource, currentPage, itemsPerPage, filters]
   );
 
   useEffect(() => {
@@ -213,7 +222,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     proyectos,
     estudiantes,
     articulos,
-    eventos, // Añadir eventos al retorno
+    eventos,
+    carreras,
     isMobile,
     currentPage,
     itemsPerPage,

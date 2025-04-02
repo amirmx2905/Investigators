@@ -4,7 +4,7 @@ import {
   UsuarioTable,
   InvestigadorTable,
   ProyectoTable,
-  EstudianteTable,
+  EstudianteTable, 
   ArticuloTable,
   EventoTable,
 } from "../subcomponents/Tables/tables";
@@ -15,6 +15,7 @@ import {
   EstudianteCards,
   ArticuloCards,
   EventoCards,
+  CarreraCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -38,6 +39,7 @@ export const getTabData = (
   estudiantes,
   articulos,
   eventos,
+  carreras,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -62,6 +64,9 @@ export const getTabData = (
     case "eventos":
       type = "evento";
       break;
+    case "carreras":
+      type = "carrera";
+      break;
     default:
       type = "usuario";
   }
@@ -80,6 +85,7 @@ export const getTabData = (
     ),
     articulos: sortColumnsByOrder(visibleColumns.articulos || [], "articulos"),
     eventos: sortColumnsByOrder(visibleColumns.eventos || [], "eventos"),
+    carreras: sortColumnsByOrder(visibleColumns.carreras || [], "carreras"),
   };
 
   const tabConfig = {
@@ -134,6 +140,15 @@ export const getTabData = (
       TableComponent: EventoTable,
       CardComponent: EventoCards,
       columns: orderedColumns.eventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    carreras: {
+      title: "Lista de Carreras",
+      items: carreras || [],
+      TableComponent: null,
+      CardComponent: CarreraCards,
+      columns: orderedColumns.carreras,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

@@ -4,5 +4,6 @@ export { default as ProyectoForm } from './ProyectoForm';
 export { default as EstudianteForm } from './EstudianteForm';
 export { default as ArticuloForm } from './ArticuloForm';
 export { default as EventoForm } from './EventoForm';
+export { default as CarreraForm } from './CarreraForm';
 
 export { default as DeleteConfirmation } from './DeleteConfirmation';
