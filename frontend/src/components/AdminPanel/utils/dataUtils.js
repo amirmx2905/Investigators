@@ -1,5 +1,5 @@
 // Import necessary services and libraries
-import { columnOrders } from "../hooks/useTableControls";
+import { columnOrders } from "../hooks/useTableControls"; //order of columns
 import {
   UsuarioTable,
   InvestigadorTable,
@@ -7,7 +7,7 @@ import {
   EstudianteTable, 
   ArticuloTable,
   EventoTable,
-} from "../subcomponents/Tables/tables";
+} from "../subcomponents/Tables/tables"; 
 import {
   UsuarioCards,
   InvestigadorCards,
@@ -30,7 +30,7 @@ export const sortColumnsByOrder = (columns, tabName) => {
   });
 };
 
-export const getTabData = (
+export const getTabData = ( 
   activeTab,
   visibleColumns,
   usuarios,

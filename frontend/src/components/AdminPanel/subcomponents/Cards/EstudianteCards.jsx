@@ -47,7 +47,7 @@ function EstudianteCards({ items, onEdit, onDelete }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
-  if (items.length === 0) {
+  if (items.length === 0) { 
     return (
       <div className="col-span-full text-center py-8 text-gray-400">
         No hay estudiantes para mostrar
