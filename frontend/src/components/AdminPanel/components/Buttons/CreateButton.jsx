@@ -33,6 +33,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "carrera";
       label = "Carrera";
       break;
+    case "especialidades":
+      type = "especialidad";
+      label = "Especialidad";
+      break;
     default:
       type = "";
       label = "";

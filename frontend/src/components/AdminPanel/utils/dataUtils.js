@@ -16,6 +16,7 @@ import {
   ArticuloCards,
   EventoCards,
   CarreraCards,
+  EspecialidadCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -40,6 +41,7 @@ export const getTabData = (
   articulos,
   eventos,
   carreras,
+  especialidades,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -67,6 +69,9 @@ export const getTabData = (
     case "carreras":
       type = "carrera";
       break;
+    case "especialidades":
+      type = "especialidad";
+      break;
     default:
       type = "usuario";
   }
@@ -74,18 +79,13 @@ export const getTabData = (
   // Obtener columnas visibles ordenadas según el orden definido
   const orderedColumns = {
     usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
-    investigadores: sortColumnsByOrder(
-      visibleColumns.investigadores || [],
-      "investigadores"
-    ),
+    investigadores: sortColumnsByOrder(visibleColumns.investigadores || [],"investigadores"),
     proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], "proyectos"),
-    estudiantes: sortColumnsByOrder(
-      visibleColumns.estudiantes || [],
-      "estudiantes"
-    ),
+    estudiantes: sortColumnsByOrder(visibleColumns.estudiantes || [],"estudiantes"),
     articulos: sortColumnsByOrder(visibleColumns.articulos || [], "articulos"),
     eventos: sortColumnsByOrder(visibleColumns.eventos || [], "eventos"),
     carreras: sortColumnsByOrder(visibleColumns.carreras || [], "carreras"),
+    especialidades: sortColumnsByOrder(visibleColumns.especialidades || [],"especialidades"),
   };
 
   const tabConfig = {
@@ -149,6 +149,15 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: CarreraCards,
       columns: orderedColumns.carreras,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    especialidades: {
+      title: "Lista de Especialidades",
+      items: especialidades || [],
+      TableComponent: null,
+      CardComponent: EspecialidadCards,
+      columns: orderedColumns.especialidades,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
