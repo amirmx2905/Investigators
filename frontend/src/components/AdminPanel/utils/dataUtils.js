@@ -17,6 +17,7 @@ import {
   EventoCards,
   CarreraCards,
   EspecialidadCards,
+  UnidadCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -42,6 +43,7 @@ export const getTabData = (
   eventos,
   carreras,
   especialidades,
+  unidades,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -72,6 +74,9 @@ export const getTabData = (
     case "especialidades":
       type = "especialidad";
       break;
+    case "unidades":
+      type = "unidad";
+      break;
     default:
       type = "usuario";
   }
@@ -86,6 +91,7 @@ export const getTabData = (
     eventos: sortColumnsByOrder(visibleColumns.eventos || [], "eventos"),
     carreras: sortColumnsByOrder(visibleColumns.carreras || [], "carreras"),
     especialidades: sortColumnsByOrder(visibleColumns.especialidades || [],"especialidades"),
+    unidades: sortColumnsByOrder(visibleColumns.unidades || [], "unidades"),
   };
 
   const tabConfig = {
@@ -158,6 +164,15 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: EspecialidadCards,
       columns: orderedColumns.especialidades,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    unidades: {
+      title: "Lista de Unidades",
+      items: unidades || [],
+      TableComponent: null,
+      CardComponent: UnidadCards,
+      columns: orderedColumns.unidades,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

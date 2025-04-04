@@ -6,3 +6,4 @@ export { default as ArticuloCards } from './ArticuloCards';
 export { default as EventoCards } from './EventoCards';
 export { default as CarreraCards } from './CarreraCards';
 export { default as EspecialidadCards } from './EspecialidadCards';
+export { default as UnidadCards } from './UnidadCards';

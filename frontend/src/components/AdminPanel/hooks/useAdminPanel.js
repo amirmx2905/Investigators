@@ -8,6 +8,7 @@ import { articuloService } from "../../../api/services/articuloService";
 import { eventoService } from "../../../api/services/eventoService";
 import { carreraService } from "../../../api/services/carreraService";
 import { especialidadService } from "../../../api/services/especialidadService";
+import { unidadService } from "../../../api/services/unidadService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -26,6 +27,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [eventos, setEventos] = useState([]);
   const [carreras, setCarreras] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
+  const [unidades, setUnidades] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -129,6 +131,14 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               filterOptions
             );
             setEspecialidades(data.results);
+            break;
+          case "unidades":
+            data = await unidadService.getUnidades(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setUnidades(data.results);
             break;
           default:
             throw new Error("Recurso no soportado");
@@ -235,6 +245,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     eventos,
     carreras,
     especialidades,
+    unidades,
     isMobile,
     currentPage,
     itemsPerPage,

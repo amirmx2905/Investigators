@@ -6,5 +6,6 @@ export { default as ArticuloForm } from './ArticuloForm';
 export { default as EventoForm } from './EventoForm';
 export { default as CarreraForm } from './CarreraForm';
 export { default as EspecialidadForm } from './EspecialidadForm';
+export { default as UnidadForm } from './UnidadForm';
 
 export { default as DeleteConfirmation } from './DeleteConfirmation';

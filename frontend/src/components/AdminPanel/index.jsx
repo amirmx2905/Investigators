@@ -11,6 +11,7 @@ import { articuloService } from "../../api/services/articuloService";
 import { eventoService } from "../../api/services/eventoService"; 
 import { carreraService } from "../../api/services/carreraService";
 import { especialidadService } from "../../api/services/especialidadService";
+import { unidadService } from "../../api/services/unidadService";
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -28,6 +29,7 @@ import {
   EventoForm,
   CarreraForm,
   EspecialidadForm,
+  UnidadForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -58,6 +60,7 @@ function AdminPanel() {
     eventos,
     carreras,
     especialidades,
+    unidades,
     activeTab,
     changeTab,
     refreshData,
@@ -147,6 +150,8 @@ function AdminPanel() {
         await carreraService.deleteCarrera(item.id);
       } else if (type === "especialidad") {
         await especialidadService.deleteEspecialidad(item.id);
+      } else if (type === "unidad") {
+        await unidadService.deleteUnidad(item.id);
       }
 
       refreshData();
@@ -267,6 +272,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "unidad":
+        return (
+          <UnidadForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            unidad={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -291,6 +305,7 @@ function AdminPanel() {
     eventos,
     carreras,
     especialidades,
+    unidades,
     handleEdit,
     handleDeleteClick
   );

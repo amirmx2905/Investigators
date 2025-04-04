@@ -19,7 +19,7 @@ const ContentDisplay = ({
   handlePageChange,
 }) => {
   // Lista de módulos que solo usan tarjetas
-  const cardsOnlyModules = ["carreras","especialidades"]; // Aquí puedes agregar más módulos en el futuro  
+  const cardsOnlyModules = ["carreras","especialidades","unidades"]; // Aquí puedes agregar más módulos en el futuro  
 
 
   // Verificar si el módulo actual es de solo tarjetas
@@ -44,6 +44,7 @@ const ContentDisplay = ({
         eventos={activeTab === "eventos" ? items || [] : []}
         carreras={activeTab === "carreras" ? items || [] : []}
         especialidades={activeTab === "especialidades" ? items || [] : []}
+        unidades={activeTab === "unidades" ? items || [] : []}
         visibleColumns={columns}
         onEdit={onEdit}
         onDelete={onDelete}
