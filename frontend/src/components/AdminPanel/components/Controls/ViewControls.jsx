@@ -15,7 +15,7 @@ function ViewControls({
   handleItemsPerPageChange,
 }) {
   
-  const cardsOnlyModules = ["carreras"]; // Aquí puedes agregar más módulos en el futuro
+  const cardsOnlyModules = ["carreras","especialidades"]; // Aquí puedes agregar más módulos en el futuro
   
   const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
 
