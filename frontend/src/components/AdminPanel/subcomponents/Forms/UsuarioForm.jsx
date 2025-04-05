@@ -397,7 +397,7 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
         <form onSubmit={handleSubmit} className="space-y-4">
 
 
-          {/* Campo de rol - solo editable en creación, no en edición */}
+          {/* Campo de rol */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Rol {usuario && "(No modificable)"}
@@ -436,7 +436,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
               </label>
 
               <div ref={searchRef} className="relative">
-                {/* Si hay un valor seleccionado, mostrar el nombre */}
                 {selectedName ? (
                   <div
                     className={`flex items-center justify-between px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white ${
@@ -466,7 +465,6 @@ function UsuarioForm({ isOpen, onClose, usuario = null, onSuccess }) {
                     )}
                   </div>
                 ) : (
-                  /* Si no hay selección, mostrar campo de búsqueda */
                   <div className={`${usuario ? "hidden" : ""}`}>
                     <input
                       type="text"

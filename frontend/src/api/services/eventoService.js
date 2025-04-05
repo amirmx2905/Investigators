@@ -13,12 +13,7 @@ const getEventos = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando eventos (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/eventos/?${params.toString()}`);
-    console.log("Respuesta de eventos:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getEventos:", error);

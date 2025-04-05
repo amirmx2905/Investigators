@@ -1,8 +1,5 @@
 import api from "../apiConfig";
 
-/**
- * Obtiene la lista de carreras con paginación y filtros opcionales
- */
 const getCarreras = async (page = 1, pageSize = 10, filters = {}) => {
   try {
     const params = new URLSearchParams();
@@ -16,12 +13,7 @@ const getCarreras = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando carreras (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/carreras/?${params.toString()}`);
-    console.log("Respuesta de carreras:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getCarreras:", error);
@@ -29,9 +21,6 @@ const getCarreras = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
-/**
- * Obtiene una carrera por su ID
- */
 const getCarrera = async (id) => {
   try {
     const response = await api.get(`/carreras/${id}/`);
@@ -42,9 +31,6 @@ const getCarrera = async (id) => {
   }
 };
 
-/**
- * Crea una nueva carrera
- */
 const createCarrera = async (data) => {
   try {
     const response = await api.post("/carreras/", data);
@@ -55,9 +41,6 @@ const createCarrera = async (data) => {
   }
 };
 
-/**
- * Actualiza una carrera existente
- */
 const updateCarrera = async (id, data) => {
   try {
     const response = await api.put(`/carreras/${id}/`, data);
@@ -68,9 +51,6 @@ const updateCarrera = async (id, data) => {
   }
 };
 
-/**
- * Elimina una carrera
- */
 const deleteCarrera = async (id) => {
   try {
     await api.delete(`/carreras/${id}/`);

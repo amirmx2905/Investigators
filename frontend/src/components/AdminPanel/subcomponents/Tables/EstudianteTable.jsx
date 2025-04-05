@@ -24,9 +24,7 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
 
         const idsConUsuario = usuarios
           .filter((usuario) => usuario.estudiante !== null)
-          .map((usuario) => usuario.estudiante);
-        
-        console.log("Estudiantes con usuario asignado:", idsConUsuario);
+          .map((usuario) => usuario.estudiante);        
         setEstudiantesConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);
@@ -142,7 +140,6 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
       return "No registrado";
     }
     
-    // Formateo para los nuevos campos
     if (column === "escuela") {
       return value || "No registrado";
     }

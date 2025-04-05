@@ -13,12 +13,7 @@ const getArticulos = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando artículos (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/articulos/?${params.toString()}`);
-    console.log("Respuesta de artículos:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getArticulos:", error);

@@ -6,22 +6,20 @@ import { showNotification } from "../../utils/notificationsUtils";
 function EspecialidadForm({ isOpen, onClose, especialidad = null, onSuccess }) {
   const isEdit = !!especialidad?.id;
   const [formData, setFormData] = useState({
-    nombre_especialidad: "",  // Cambiado de "nombre" a "nombre_especialidad"
+    nombre_especialidad: "",
   });
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Cargar datos cuando se edita una especialidad existente
   useEffect(() => {
     if (isOpen && especialidad) {
       setFormData({
-        nombre_especialidad: especialidad.nombre_especialidad || "",  // Cambiado
+        nombre_especialidad: especialidad.nombre_especialidad || "",
       });
     } else if (isOpen) {
-      // Resetear formulario al abrir para crear una nueva especialidad
       setFormData({
-        nombre_especialidad: "",  // Cambiado
+        nombre_especialidad: "",
       });
     }
   }, [isOpen, especialidad]);
@@ -35,7 +33,7 @@ function EspecialidadForm({ isOpen, onClose, especialidad = null, onSuccess }) {
   };
 
   const validateForm = () => {
-    if (!formData.nombre_especialidad.trim()) {  // Cambiado
+    if (!formData.nombre_especialidad.trim()) {
       setError("El nombre de la especialidad es obligatorio");
       return false;
     }
@@ -91,9 +89,9 @@ function EspecialidadForm({ isOpen, onClose, especialidad = null, onSuccess }) {
           </label>
           <input
             type="text"
-            name="nombre_especialidad"  // Cambiado
-            id="nombre_especialidad"    // Cambiado
-            value={formData.nombre_especialidad}  // Cambiado
+            name="nombre_especialidad"
+            id="nombre_especialidad"
+            value={formData.nombre_especialidad}
             onChange={handleChange}
             autoComplete="off"
             className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"

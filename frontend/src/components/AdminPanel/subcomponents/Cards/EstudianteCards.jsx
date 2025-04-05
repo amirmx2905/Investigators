@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import api from "../../../../api/apiConfig";
 
 function EstudianteCards({ items, onEdit, onDelete }) {
-  const [setVisibleItems] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [visibleItems, setVisibleItems] = useState([]);
   const [estudiantesConUsuario, setEstudiantesConUsuario] = useState([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
 
@@ -18,8 +19,6 @@ function EstudianteCards({ items, onEdit, onDelete }) {
         const idsConUsuario = usuarios
           .filter((usuario) => usuario.estudiante !== null)
           .map((usuario) => usuario.estudiante);
-        
-        console.log("Estudiantes con usuario asignado (cards):", idsConUsuario);
         setEstudiantesConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);
@@ -44,10 +43,9 @@ function EstudianteCards({ items, onEdit, onDelete }) {
     }, 50);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
-  if (items.length === 0) { 
+  if (items.length === 0) {
     return (
       <div className="col-span-full text-center py-8 text-gray-400">
         No hay estudiantes para mostrar
@@ -128,10 +126,11 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
       }}
     >
       <div className="p-4">
-        {/* Cabecera con foto, nombre y badge */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-xl relative">
-            {estudiante.nombre ? estudiante.nombre.charAt(0).toUpperCase() : "E"}
+            {estudiante.nombre
+              ? estudiante.nombre.charAt(0).toUpperCase()
+              : "E"}
 
             {/* Indicador de estado (activo/inactivo) */}
             <span
@@ -145,9 +144,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           <div className="ml-3 flex-grow min-w-0">
             <h3 className="font-semibold text-white flex items-center space-x-2">
               <span className="truncate">{estudiante.nombre}</span>
-              <span
-                className="text-xs px-2 py-0.5 rounded-full border bg-emerald-900/40 text-emerald-300 border-emerald-500/30 whitespace-nowrap"
-              >
+              <span className="text-xs px-2 py-0.5 rounded-full border bg-emerald-900/40 text-emerald-300 border-emerald-500/30 whitespace-nowrap">
                 {estudiante.tipo_estudiante_nombre || "Estudiante"}
               </span>
             </h3>
@@ -156,7 +153,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
             </p>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -185,7 +182,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           </button>
         </div>
 
-        {/* Badge de ID con indicador si tiene usuario */}
+        {/* Badge de ID */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 mb-3 flex items-center justify-between">
           <div className="text-sm text-gray-300 flex items-center">
             <svg
@@ -240,7 +237,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           </div>
         </div>
 
-        {/* Tarjetas de info (para versión no expandida) */}
+        {/* Tarjetas de info */}
         <div
           className={`transition-all duration-300 ${
             expanded ? "hidden" : "block"
@@ -290,7 +287,9 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              <span className="text-emerald-300 max-[435px]:hidden">Usuario:</span>
+              <span className="text-emerald-300 max-[435px]:hidden">
+                Usuario:
+              </span>
             </div>
             <div className="flex items-center max-[435px]:mx-auto">
               <span
@@ -345,7 +344,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                    d="M12 14l9-5-9-5-9 5-9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
                   />
                 </svg>
                 <span className="ml-1.5 text-gray-400">Carrera:</span>

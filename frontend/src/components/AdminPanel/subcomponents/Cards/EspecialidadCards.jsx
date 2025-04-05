@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 
 function EspecialidadCards({ items, onEdit, onDelete }) {
-  console.log("EspecialidadCards recibió:", items);
-  
+  const prevItemsRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [visibleItems, setVisibleItems] = useState([]);
 
-  // Asegurarse de que items sea un array y manejar su carga
+  useEffect(() => {
+    if (JSON.stringify(prevItemsRef.current) !== JSON.stringify(items)) {
+      prevItemsRef.current = items;
+    }
+  }, [items]);
+
   useEffect(() => {
     if (Array.isArray(items)) {
       const timer = setTimeout(() => {
@@ -24,12 +29,26 @@ function EspecialidadCards({ items, onEdit, onDelete }) {
     }
   }, [items]);
 
-  // Si items no es un array o está vacío
+  const handleEdit = useCallback(
+    (especialidad) => {
+      onEdit(especialidad);
+    },
+    [onEdit]
+  );
+
+  const handleDelete = useCallback(
+    (especialidad) => {
+      onDelete(especialidad);
+    },
+    [onDelete]
+  );
+
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <div className="w-full flex justify-center items-center p-8 bg-gray-800/60 rounded-lg border border-gray-700">
         <p className="text-gray-400 text-lg">
-          No hay especialidades registradas. Crea una nueva especialidad usando el botón "Nueva Especialidad".
+          No hay especialidades registradas. Crea una nueva especialidad usando
+          el botón "Nueva Especialidad".
         </p>
       </div>
     );
@@ -38,12 +57,12 @@ function EspecialidadCards({ items, onEdit, onDelete }) {
   return (
     <>
       {items.map((especialidad, index) => (
-        <EspecialidadCard
+        <MemoizedEspecialidadCard
           key={especialidad.id}
           especialidad={especialidad}
           index={index}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       ))}
     </>
@@ -64,7 +83,9 @@ function EspecialidadCard({ especialidad, index, onEdit, onDelete }) {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl">
-              {especialidad.nombre_especialidad ? especialidad.nombre_especialidad.charAt(0).toUpperCase() : "E"}
+              {especialidad.nombre_especialidad
+                ? especialidad.nombre_especialidad.charAt(0).toUpperCase()
+                : "E"}
             </div>
             <div className="ml-3 flex-grow min-w-0">
               <h3 className="text-lg font-semibold text-white">
@@ -85,12 +106,14 @@ function EspecialidadCard({ especialidad, index, onEdit, onDelete }) {
                     d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
                   />
                 </svg>
-                <span className="text-sm text-gray-400 ml-1.5">Especialidad académica</span>
+                <span className="text-sm text-gray-400 ml-1.5">
+                  Especialidad académica
+                </span>
               </div>
             </div>
           </div>
         </div>
-        
+
         {/* Badge de ID */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 my-3 flex items-center">
           <svg
@@ -160,5 +183,7 @@ function EspecialidadCard({ especialidad, index, onEdit, onDelete }) {
     </div>
   );
 }
+
+const MemoizedEspecialidadCard = memo(EspecialidadCard);
 
 export default EspecialidadCards;

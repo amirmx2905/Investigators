@@ -12,14 +12,12 @@ function UnidadForm({ isOpen, onClose, unidad = null, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Cargar datos cuando se edita una unidad existente
   useEffect(() => {
     if (isOpen && unidad) {
       setFormData({
         nombre: unidad.nombre || "",
       });
     } else if (isOpen) {
-      // Resetear formulario al abrir para crear una nueva unidad
       setFormData({
         nombre: "",
       });

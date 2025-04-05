@@ -188,7 +188,6 @@ function DeleteConfirmation({
             ></div>
           </div>
 
-          {/* Línea del suelo con animación */}
           <div
             className={`absolute bottom-[-20px] left-1/2 transform -translate-x-1/2 h-[2px] bg-red-500 transition-all duration-500 ${
               confirmClicked ? "w-0" : "w-32"

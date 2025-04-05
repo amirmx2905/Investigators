@@ -26,7 +26,6 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
   
-  // Estados para la búsqueda de investigador
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedInvestigador, setSelectedInvestigador] = useState("");
@@ -67,7 +66,6 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         activo: estudiante.activo !== undefined ? estudiante.activo : true,
       });
       
-      // Si el estudiante tiene un investigador asignado, establecer el nombre seleccionado
       if (estudiante.investigador && typeof estudiante.investigador === 'object') {
         setSelectedInvestigador(estudiante.investigador.nombre || "");
       }
@@ -143,7 +141,6 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         setTiposEstudiante(sortedTiposEstudiante);
         setInvestigadores(sortedInvestigadores);
         
-        // Si estamos editando, buscar el nombre del investigador seleccionado
         if (estudiante && estudiante.investigador) {
           const inv = sortedInvestigadores.find(
             (i) => i.id === normalizeId(estudiante.investigador)
@@ -228,14 +225,12 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
     try {
       const dataToSend = { ...formData };
       
-      // Validar que la fecha de término sea posterior a la fecha de inicio si ambas están presentes
       if (dataToSend.fecha_inicio && dataToSend.fecha_termino) {
         if (new Date(dataToSend.fecha_termino) < new Date(dataToSend.fecha_inicio)) {
           throw new Error("La fecha de término debe ser posterior a la fecha de inicio");
         }
       }
       
-      // Convertir fechas vacías a null para enviar al servidor
       if (dataToSend.fecha_inicio === "") {
         dataToSend.fecha_inicio = null;
       }
@@ -309,7 +304,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Primera fila: Nombre y Correo */}
+            {/* Nombre y Correo */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Nombre
@@ -338,7 +333,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
               />
             </div>
 
-            {/* Segunda fila: Celular y Tipo de Estudiante */}
+            {/* Celular y Tipo de Estudiante */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Celular
@@ -373,13 +368,12 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             </div>
           </div>
 
-          {/* Tercera fila: Asesor (ancho completo) */}
+          {/* Asesor */}
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Asesor
             </label>
             <div ref={searchRef} className="relative">
-              {/* Si hay un investigador seleccionado, mostrar el nombre */}
               {selectedInvestigador ? (
                 <div className="flex items-center justify-between px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
                   <span>{selectedInvestigador}</span>
@@ -403,7 +397,6 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
                   </button>
                 </div>
               ) : (
-                /* Si no hay selección, mostrar campo de búsqueda */
                 <div>
                   <input
                     type="text"
@@ -442,7 +435,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             </div>
           </div>
 
-          {/* Cuarta fila: Área y Carrera */}
+          {/* Área y Carrera */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -485,7 +478,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             </div>
           </div>
           
-          {/* Quinta fila: Escuela (ancho completo) */}
+          {/* Escuela */}
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Escuela
@@ -500,7 +493,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             />
           </div>
           
-          {/* Sexta fila: Fecha de inicio y Fecha de término */}
+          {/* Fecha de inicio y Fecha de término */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -529,7 +522,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             </div>
           </div>
 
-          {/* Estado activo */}
+          {/* Estado */}
           <div className="pt-4 pb-4 flex justify-center text-center">
             <input
               id="estudiante-activo"

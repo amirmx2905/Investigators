@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 function ProyectoCards({ items, onEdit, onDelete }) {
-  const [setVisibleItems] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [visibleItems, setVisibleItems] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,7 +17,6 @@ function ProyectoCards({ items, onEdit, onDelete }) {
     }, 50);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   if (!items || items.length === 0) {
@@ -96,7 +96,6 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
       }}
     >
       <div className="p-4">
-        {/* Cabecera con icono, nombre y estado */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-indigo-600 to-teal-600 flex items-center justify-center text-white font-bold text-xl relative">
             {proyecto.nombre ? proyecto.nombre.charAt(0).toUpperCase() : "P"}
@@ -115,7 +114,7 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
             </span>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -144,7 +143,7 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
           </button>
         </div>
 
-        {/* Badge de ID y duración - Responsive para pantallas pequeñas */}
+        {/* Badge de ID y duración */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 mb-3">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-gray-300 flex items-center">
@@ -168,7 +167,6 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
               </span>
             </div>
 
-            {/* Duración en nueva línea para pantallas pequeñas */}
             <div className="flex items-center mt-1.5 sm:mt-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +191,7 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
           </div>
         </div>
 
-        {/* Tarjetas de info (para versión no expandida) */}
+        {/* Tarjetas de info (No expandido) */}
         <div
           className={`transition-all duration-300 ${
             expanded ? "hidden" : "block"
@@ -215,13 +213,12 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
           </div>
         </div>
 
-        {/* Contenido expandible */}
         <div
           className={`transition-all duration-300 overflow-hidden space-y-3 ${
             expanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          {/* Líder del proyecto - ICONO ACTUALIZADO */}
+          {/* Líder del proyecto */}
           <div
             className="bg-gradient-to-r py-2.5 px-3 rounded-md text-white text-sm flex items-center justify-between"
             style={{
@@ -229,7 +226,7 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
             }}
           >
             <div className="flex items-center">
-              {/* Icono de estrella para representar liderazgo */}
+              {/* Icono de estrella (liderazgo) */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 mr-2 text-yellow-400"
@@ -259,7 +256,6 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
             </div>
           </div>
 
-          {/* Detalles en grid */}
           <div className="space-y-2 text-sm">
             {/* Fechas */}
             <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">

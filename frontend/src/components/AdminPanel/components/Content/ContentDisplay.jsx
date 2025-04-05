@@ -19,10 +19,8 @@ const ContentDisplay = ({
   handlePageChange,
 }) => {
   // Lista de módulos que solo usan tarjetas
-  const cardsOnlyModules = ["carreras","especialidades","unidades"]; // Aquí puedes agregar más módulos en el futuro  
+  const cardsOnlyModules = ["carreras","especialidades","unidades"]; // Alan, aquí puedes agregar más módulos en el futuro  
 
-
-  // Verificar si el módulo actual es de solo tarjetas
   const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
 
   const renderTable = () => {

@@ -13,7 +13,6 @@ function ColumnSelector({
   const [portalContainer, setPortalContainer] = useState(null);
   const menuRef = useRef(null);
 
-  // Orden fijo de columnas por pestaña
   const columnOrders = {
     usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
     investigadores: [
@@ -76,7 +75,6 @@ function ColumnSelector({
     ],
   };
 
-  // Etiquetas para las columnas
   const columnLabels = {
     usuarios: {
       id: "ID",
@@ -145,7 +143,6 @@ function ColumnSelector({
     },
   };
 
-  // Crear el portal para el dropdown
   useEffect(() => {
     if (!document.getElementById("column-menu-portal")) {
       const portalNode = document.createElement("div");
@@ -238,14 +235,13 @@ function ColumnSelector({
               Seleccionar columnas
             </div>
 
-            {/* Lista de columnas disponibles */}
+            {/* Lista de columnas */}
             <div>
               {columnOrders[activeTab]?.map((column) => (
                 <div
                   key={column}
                   className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
                   onMouseDown={(e) => {
-                    // Usamos mouseDown en lugar de click para evitar problemas de orden de eventos
                     e.preventDefault();
                     e.stopPropagation();
                     handleColumnToggle(column);

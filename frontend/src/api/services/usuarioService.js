@@ -13,12 +13,7 @@ const getUsuarios = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando usuarios (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/usuarios/?${params.toString()}`);
-    console.log("Respuesta de usuarios:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getUsuarios:", error);

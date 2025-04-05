@@ -17,7 +17,7 @@ from investigators.serializers import (
     EstudianteSerializer, LineaSerializer, TipoHerramientaSerializer, 
     HerramientaSerializer, ArticuloSerializer, TipoEventoSerializer,
     RolEventoSerializer, EventoSerializer, UnidadSerializer,
-    JefeAreaSerializer
+    JefeAreaSerializer, InvestigadorDetalleSerializer
 )
 from investigators.permissions import (
     IsAdminOrReadOnly, IsInvestigadorOrReadOnly, IsOwnerOrAdmin, 
@@ -64,6 +64,13 @@ class InvestigadorViewSet(OrderedModelViewSet):
         articulos = Articulo.objects.filter(detarticulo__investigador=investigador)
         
         serializer = ArticuloSerializer(articulos, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def detalle(self, request, pk=None):
+        """Obtener información detallada de un investigador"""
+        investigador = self.get_object()
+        serializer = InvestigadorDetalleSerializer(investigador)
         return Response(serializer.data)
 
 class UsuarioViewSet(OrderedModelViewSet):

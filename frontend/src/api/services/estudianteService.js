@@ -13,12 +13,7 @@ const getEstudiantes = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
  
-    console.log(
-      `Solicitando estudiantes (página ${page}, ${pageSize} por página)...`
-    );
- 
     const response = await api.get(`/estudiantes/?${params.toString()}`);
-    console.log("Respuesta de estudiantes:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getEstudiantes:", error);
