@@ -10,25 +10,57 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+const subscribeToTokenRefresh = (callback) => {
+  refreshSubscribers.push(callback);
+};
+
+const onTokenRefreshed = () => {
+  refreshSubscribers.forEach((callback) => callback());
+  refreshSubscribers = [];
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && error.response.status === 401) {
-      try {
-        await axios.post(
-          `${API_URL}/token/refresh/`,
-          {},
-          { withCredentials: true }
-        );
+    const originalRequest = error.config;
 
-        const originalRequest = error.config;
-        originalRequest.withCredentials = true;
-        return axios(originalRequest);
-      } catch (refreshError) {
-        console.log("No se pudo renovar la sesión");
-        window.location.href = "/";
-        return Promise.reject(refreshError);
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        try {
+          await axios.post(
+            `${API_URL}/token/refresh/`,
+            {},
+            { withCredentials: true }
+          );
+
+          isRefreshing = false;
+          onTokenRefreshed();
+
+          return axios(originalRequest);
+        } catch (refreshError) {
+          isRefreshing = false;
+          console.log("Error al refrescar token:", refreshError);
+          window.location.href = "/";
+          return Promise.reject(refreshError);
+        }
       }
+
+      return new Promise((resolve) => {
+        subscribeToTokenRefresh(() => {
+          resolve(axios(originalRequest));
+        });
+      });
     }
 
     return Promise.reject(error);
