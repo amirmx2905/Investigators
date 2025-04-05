@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../../api/apiConfig";
 
-function InvestigadorCards({ items, onEdit, onDelete }) {
+function EstudianteCards({ items, onEdit, onDelete }) {
   const [setVisibleItems] = useState([]);
-  const [investigadoresConUsuario, setInvestigadoresConUsuario] = useState([]);
+  const [estudiantesConUsuario, setEstudiantesConUsuario] = useState([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
 
   useEffect(() => {
@@ -11,19 +11,16 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
       setCargandoUsuarios(true);
       try {
         const response = await api.get(
-          "/usuarios/?page_size=1000&rol=investigador"
+          "/usuarios/?page_size=1000&rol=estudiante"
         );
         const usuarios = response.data.results || response.data || [];
 
         const idsConUsuario = usuarios
-          .filter((usuario) => usuario.investigador !== null)
-          .map((usuario) => usuario.investigador);
-
-        console.log(
-          "Investigadores con usuario asignado (cards):",
-          idsConUsuario
-        );
-        setInvestigadoresConUsuario(idsConUsuario);
+          .filter((usuario) => usuario.estudiante !== null)
+          .map((usuario) => usuario.estudiante);
+        
+        console.log("Estudiantes con usuario asignado (cards):", idsConUsuario);
+        setEstudiantesConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);
       } finally {
@@ -50,19 +47,19 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
-  if (items.length === 0) {
+  if (items.length === 0) { 
     return (
       <div className="col-span-full text-center py-8 text-gray-400">
-        No hay investigadores para mostrar
+        No hay estudiantes para mostrar
       </div>
     );
   }
 
   if (cargandoUsuarios) {
     return (
-      <div className="col-span-full text-center py-8 text-blue-400 flex flex-col items-center">
+      <div className="col-span-full text-center py-8 text-emerald-400 flex flex-col items-center">
         <svg
-          className="animate-spin h-8 w-8 mb-2 text-blue-400"
+          className="animate-spin h-8 w-8 mb-2 text-emerald-400"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -88,98 +85,42 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
 
   return (
     <>
-      {/* Mapear los investigadores */}
-      {items.map((investigador, index) => (
-        <InvestigadorCard
-          key={investigador.id}
-          investigador={investigador}
+      {items.map((estudiante, index) => (
+        <EstudianteCard
+          key={estudiante.id}
+          estudiante={estudiante}
           index={index}
           onEdit={onEdit}
           onDelete={onDelete}
-          tieneUsuario={investigadoresConUsuario.includes(investigador.id)}
+          tieneUsuario={estudiantesConUsuario.includes(estudiante.id)}
         />
       ))}
     </>
   );
 }
 
-function InvestigadorCard({
-  investigador,
-  index,
-  onEdit,
-  onDelete,
-  tieneUsuario,
-}) {
+function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
   const [expanded, setExpanded] = useState(false);
 
-  const getNivelSNII = () => {
-    if (!investigador.nivel_snii || !investigador.nivel_snii_nombre) {
-      return {
-        badge: "Sin SNII",
-        color: "bg-gray-700/50 text-gray-300 border-gray-500/30",
-      };
-    }
+  const formatDate = (dateString) => {
+    if (!dateString) return "Sin fecha";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
 
-    const nivel = investigador.nivel_snii_nombre.toLowerCase();
-
-    if (nivel.includes("candidato")) {
-      return {
-        badge: investigador.nivel_snii_nombre,
-        color: "bg-cyan-900/40 text-cyan-300 border-cyan-500/30",
-      };
-    }
-
-    if (/\bnivel i\b/.test(nivel) || nivel === "nivel i") {
-      return {
-        badge: investigador.nivel_snii_nombre,
-        color: "bg-emerald-900/40 text-emerald-300 border-emerald-500/30",
-      };
-    }
-
-    if (/\bnivel ii\b/.test(nivel) || nivel === "nivel ii") {
-      return {
-        badge: investigador.nivel_snii_nombre,
-        color: "bg-amber-900/40 text-amber-300 border-amber-500/30",
-      };
-    }
-
-    if (/\bnivel iii\b/.test(nivel) || nivel === "nivel iii") {
-      return {
-        badge: investigador.nivel_snii_nombre,
-        color: "bg-violet-900/40 text-violet-300 border-violet-500/30",
-      };
-    }
-
-    if (nivel.includes("emérito")) {
-      return {
-        badge: investigador.nivel_snii_nombre,
-        color: "bg-rose-900/40 text-rose-300 border-rose-500/30",
-      };
-    }
-
-    return {
-      badge: investigador.nivel_snii_nombre,
-      color: "bg-indigo-900/40 text-indigo-300 border-indigo-500/30",
-    };
+    return new Intl.DateTimeFormat("es-MX", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(date);
   };
-
-  const nivelSNII = getNivelSNII();
-  const getLineaInvestigacion = () => {
-    if (investigador.lineas && investigador.lineas.length > 0) {
-      return investigador.lineas[0].nombre;
-    }
-    return "Sin línea asignada";
-  };
-
-  const lineaInvestigacion = getLineaInvestigacion();
 
   return (
     <div
-      className={`bg-gray-800/80 border border-gray-700 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-blue-900/20 ${
+      className={`bg-gray-800/80 border border-gray-700 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-emerald-900/20 ${
         expanded
-          ? "hover:border-blue-500/50 ring-1 ring-blue-500/20"
-          : "hover:border-blue-500/30"
-      } ${tieneUsuario ? "ring-1 ring-blue-500/30" : ""}`}
+          ? "hover:border-emerald-500/50 ring-1 ring-emerald-500/20"
+          : "hover:border-emerald-500/30"
+      } ${tieneUsuario ? "ring-1 ring-emerald-500/30" : ""}`}
       style={{
         animation: "fadeIn 0.5s ease-out forwards",
         animationDelay: `${index * 100}ms`,
@@ -189,31 +130,29 @@ function InvestigadorCard({
       <div className="p-4">
         {/* Cabecera con foto, nombre y badge */}
         <div className="flex items-center mb-2">
-          <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl relative">
-            {investigador.nombre
-              ? investigador.nombre.charAt(0).toUpperCase()
-              : "I"}
+          <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-xl relative">
+            {estudiante.nombre ? estudiante.nombre.charAt(0).toUpperCase() : "E"}
 
             {/* Indicador de estado (activo/inactivo) */}
             <span
               className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-gray-800 ${
-                investigador.activo ? "bg-green-500" : "bg-red-500"
+                estudiante.activo ? "bg-green-500" : "bg-red-500"
               }`}
-              title={investigador.activo ? "Activo" : "Inactivo"}
+              title={estudiante.activo ? "Activo" : "Inactivo"}
             ></span>
           </div>
 
           <div className="ml-3 flex-grow min-w-0">
             <h3 className="font-semibold text-white flex items-center space-x-2">
-              <span className="truncate">{investigador.nombre}</span>
+              <span className="truncate">{estudiante.nombre}</span>
               <span
-                className={`text-xs px-2 py-0.5 rounded-full border ${nivelSNII.color} whitespace-nowrap`}
+                className="text-xs px-2 py-0.5 rounded-full border bg-emerald-900/40 text-emerald-300 border-emerald-500/30 whitespace-nowrap"
               >
-                {nivelSNII.badge}
+                {estudiante.tipo_estudiante_nombre || "Estudiante"}
               </span>
             </h3>
             <p className="text-sm text-gray-400 truncate">
-              {investigador.correo}
+              {estudiante.correo}
             </p>
           </div>
 
@@ -222,7 +161,7 @@ function InvestigadorCard({
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
               expanded
-                ? "bg-blue-900/40 text-blue-300 hover:bg-blue-800/50"
+                ? "bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50"
                 : "text-gray-400 hover:text-white hover:bg-gray-700/50"
             } transition-colors`}
             title={expanded ? "Colapsar" : "Expandir información"}
@@ -265,12 +204,12 @@ function InvestigadorCard({
             </svg>
             <span className="text-gray-400">ID:</span>
             <span className="ml-1.5 font-medium text-gray-200">
-              {investigador.id}
+              {estudiante.id}
             </span>
 
             {tieneUsuario && (
               <span
-                className="ml-2 text-blue-400 text-xs flex items-center"
+                className="ml-2 text-emerald-400 text-xs flex items-center"
                 title="Tiene usuario asignado"
               >
                 <svg
@@ -291,12 +230,12 @@ function InvestigadorCard({
           <div className="flex items-center">
             <span
               className={`px-2 py-0.5 text-xs rounded-full ${
-                investigador.activo
+                estudiante.activo
                   ? "bg-green-900/60 text-green-300"
                   : "bg-red-900/60 text-red-300"
               }`}
             >
-              {investigador.activo ? "Activo" : "Inactivo"}
+              {estudiante.activo ? "Activo" : "Inactivo"}
             </span>
           </div>
         </div>
@@ -309,22 +248,15 @@ function InvestigadorCard({
         >
           <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
             <div className="bg-gray-700/40 p-2 rounded">
-              <span className="text-gray-400">Especialidad:</span>
+              <span className="text-gray-400">Carrera:</span>
               <span className="ml-1.5 text-gray-200 block truncate">
-                {investigador.especialidad_nombre || "Sin especialidad"}
+                {estudiante.carrera_nombre || "Sin carrera"}
               </span>
             </div>
             <div className="bg-gray-700/40 p-2 rounded">
               <span className="text-gray-400">Área:</span>
               <span className="ml-1.5 text-gray-200 block truncate">
-                {investigador.area_nombre || "Sin área"}
-              </span>
-            </div>
-            {/* Línea de investigación en vista compacta */}
-            <div className="bg-gray-700/40 p-2 rounded col-span-2">
-              <span className="text-gray-400">Línea:</span>
-              <span className="ml-1.5 text-gray-200 block truncate">
-                {lineaInvestigacion}
+                {estudiante.area_nombre || "Sin área"}
               </span>
             </div>
           </div>
@@ -346,7 +278,7 @@ function InvestigadorCard({
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-2 text-blue-400"
+                className="h-4 w-4 mr-2 text-emerald-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -358,13 +290,13 @@ function InvestigadorCard({
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              <span className="text-blue-300 max-[435px]:hidden">Usuario:</span>
+              <span className="text-emerald-300 max-[435px]:hidden">Usuario:</span>
             </div>
             <div className="flex items-center max-[435px]:mx-auto">
               <span
                 className={`text-xs px-2 py-1 rounded ${
                   tieneUsuario
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
                     : "bg-gradient-to-r from-gray-600 to-gray-500 text-white"
                 }`}
               >
@@ -380,7 +312,7 @@ function InvestigadorCard({
               <div className="flex items-center flex-shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-blue-400"
+                  className="h-4 w-4 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -395,16 +327,16 @@ function InvestigadorCard({
                 <span className="ml-1.5 text-gray-400">Área:</span>
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
-                {investigador.area_nombre || "Sin área"}
+                {estudiante.area_nombre || "Sin área"}
               </span>
             </div>
 
-            {/* Especialidad */}
+            {/* Carrera */}
             <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
               <div className="flex items-center flex-shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-blue-400"
+                  className="h-4 w-4 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -413,22 +345,48 @@ function InvestigadorCard({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
                   />
                 </svg>
-                <span className="ml-1.5 text-gray-400">Especialidad:</span>
+                <span className="ml-1.5 text-gray-400">Carrera:</span>
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
-                {investigador.especialidad_nombre || "Sin especialidad"}
+                {estudiante.carrera_nombre || "Sin carrera"}
               </span>
             </div>
 
-            {/* Línea de Investigación */}
+            {/* Tipo de estudiante */}
             <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
               <div className="flex items-center flex-shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-blue-400"
+                  className="h-4 w-4 text-emerald-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                  />
+                </svg>
+                <span className="ml-1.5 text-gray-400">Tipo:</span>
+              </div>
+              <span className="text-gray-200 font-medium truncate max-w-[60%]">
+                {estudiante.tipo_estudiante_nombre || "Sin tipo"}
+              </span>
+            </div>
+
+            {/* Asesor */}
+            <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
+              <div className="flex items-center flex-shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -437,14 +395,95 @@ function InvestigadorCard({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                <span className="ml-1.5 text-gray-400">Línea:</span>
+                <span className="ml-1.5 text-gray-400">Asesor:</span>
               </div>
-              <span className={`text-gray-200 font-medium truncate max-w-[60%] ${lineaInvestigacion === "Sin línea asignada" ? "text-gray-400" : ""}`}>
-                {lineaInvestigacion}
+              <span className="text-gray-200 font-medium truncate max-w-[60%]">
+                {estudiante.investigador_nombre || "Sin asesor"}
               </span>
+            </div>
+
+            {/* Escuela */}
+            {estudiante.escuela && (
+              <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
+                <div className="flex items-center flex-shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-emerald-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                  <span className="ml-1.5 text-gray-400">Escuela:</span>
+                </div>
+                <span className="text-gray-200 font-medium truncate max-w-[60%]">
+                  {estudiante.escuela}
+                </span>
+              </div>
+            )}
+
+            {/* Fechas */}
+            <div className="grid grid-cols-2 gap-2">
+              {/* Fecha de inicio */}
+              {estudiante.fecha_inicio && (
+                <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200">
+                  <div className="flex items-center mb-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-emerald-400 mr-1.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-gray-400 text-sm">Inicio:</span>
+                  </div>
+                  <span className="text-gray-200 text-sm">
+                    {formatDate(estudiante.fecha_inicio)}
+                  </span>
+                </div>
+              )}
+
+              {/* Fecha de término */}
+              {estudiante.fecha_termino && (
+                <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200">
+                  <div className="flex items-center mb-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-emerald-400 mr-1.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-gray-400 text-sm">Término:</span>
+                  </div>
+                  <span className="text-gray-200 text-sm">
+                    {formatDate(estudiante.fecha_termino)}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Contacto */}
@@ -452,7 +491,7 @@ function InvestigadorCard({
               <div className="flex items-center flex-shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-blue-400"
+                  className="h-4 w-4 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -467,7 +506,7 @@ function InvestigadorCard({
                 <span className="ml-1.5 text-gray-400">Celular:</span>
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
-                {investigador.celular || "No registrado"}
+                {estudiante.celular || "No registrado"}
               </span>
             </div>
 
@@ -476,7 +515,7 @@ function InvestigadorCard({
               <div className="flex items-center flex-shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-blue-400"
+                  className="h-4 w-4 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -491,7 +530,7 @@ function InvestigadorCard({
                 <span className="ml-1.5 text-gray-400">Correo:</span>
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
-                {investigador.correo}
+                {estudiante.correo}
               </span>
             </div>
           </div>
@@ -501,8 +540,8 @@ function InvestigadorCard({
         <div className="mt-4 flex justify-end space-x-2 border-t border-gray-700 pt-3">
           <button
             className="cursor-pointer p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
-            title="Editar investigador"
-            onClick={() => onEdit(investigador)}
+            title="Editar estudiante"
+            onClick={() => onEdit(estudiante)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -521,8 +560,8 @@ function InvestigadorCard({
           </button>
           <button
             className="cursor-pointer p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
-            title="Eliminar investigador"
-            onClick={() => onDelete(investigador)}
+            title="Eliminar estudiante"
+            onClick={() => onDelete(estudiante)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -545,4 +584,4 @@ function InvestigadorCard({
   );
 }
 
-export default InvestigadorCards;
+export default EstudianteCards;

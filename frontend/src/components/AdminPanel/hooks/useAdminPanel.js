@@ -1,7 +1,14 @@
+// Import necessary services and libraries
 import { useState, useEffect, useCallback } from "react";
 import { investigadorService } from "../../../api/services/investigadorService";
 import { usuarioService } from "../../../api/services/usuarioService";
 import { proyectoService } from "../../../api/services/proyectoService";
+import { estudianteService } from "../../../api/services/estudianteService";
+import { articuloService } from "../../../api/services/articuloService";
+import { eventoService } from "../../../api/services/eventoService";
+import { carreraService } from "../../../api/services/carreraService";
+import { especialidadService } from "../../../api/services/especialidadService";
+import { unidadService } from "../../../api/services/unidadService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -11,9 +18,16 @@ export const useAdminPanel = (initialResource = "usuarios") => {
 
   const [activeTab, setActiveTab] = useState(initialResource);
 
+  // State for each resource, add here for each new resource
   const [usuarios, setUsuarios] = useState([]);
   const [investigadores, setInvestigadores] = useState([]);
   const [proyectos, setProyectos] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [articulos, setArticulos] = useState([]);
+  const [eventos, setEventos] = useState([]);
+  const [carreras, setCarreras] = useState([]);
+  const [especialidades, setEspecialidades] = useState([]);
+  const [unidades, setUnidades] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -39,6 +53,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     };
   }, []);
 
+  // Fetch data based on the resource type
   const fetchData = useCallback(
     async (
       resourceType = resource,
@@ -77,6 +92,54 @@ export const useAdminPanel = (initialResource = "usuarios") => {
             );
             setProyectos(data.results);
             break;
+          case "estudiantes":
+            data = await estudianteService.getEstudiantes(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setEstudiantes(data.results);
+            break;
+          case "articulos":
+            data = await articuloService.getArticulos(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setArticulos(data.results);
+            break;
+          case "eventos":
+            data = await eventoService.getEventos(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setEventos(data.results);
+            break;
+          case "carreras":
+            data = await carreraService.getCarreras(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setCarreras(data.results);
+            break;
+          case "especialidades":
+            data = await especialidadService.getEspecialidades(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setEspecialidades(data.results);
+            break;
+          case "unidades":
+            data = await unidadService.getUnidades(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setUnidades(data.results);
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -92,8 +155,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
         setLoading(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [resource, currentPage, itemsPerPage, filters]
   );
 
   useEffect(() => {
@@ -178,6 +240,12 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
+    articulos,
+    eventos,
+    carreras,
+    especialidades,
+    unidades,
     isMobile,
     currentPage,
     itemsPerPage,

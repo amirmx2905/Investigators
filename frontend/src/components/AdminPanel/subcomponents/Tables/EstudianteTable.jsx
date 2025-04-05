@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "../../../../api/apiConfig";
 
-function InvestigadorTable({
-  investigadores,
-  visibleColumns,
-  onEdit,
-  onDelete,
-}) {
+function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete }) {
   const [showTable, setShowTable] = useState(false);
-  const [investigadoresConUsuario, setInvestigadoresConUsuario] = useState([]);
+  const [estudiantesConUsuario, setEstudiantesConUsuario] = useState([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTable(true);
-    }, 50);
-
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -24,16 +18,16 @@ function InvestigadorTable({
       setCargandoUsuarios(true);
       try {
         const response = await api.get(
-          "/usuarios/?page_size=1000&rol=investigador"
+          "/usuarios/?page_size=1000&rol=estudiante"
         );
         const usuarios = response.data.results || response.data || [];
 
         const idsConUsuario = usuarios
-          .filter((usuario) => usuario.investigador !== null)
-          .map((usuario) => usuario.investigador);
-
-        console.log("Investigadores con usuario asignado:", idsConUsuario);
-        setInvestigadoresConUsuario(idsConUsuario);
+          .filter((usuario) => usuario.estudiante !== null)
+          .map((usuario) => usuario.estudiante);
+        
+        console.log("Estudiantes con usuario asignado:", idsConUsuario);
+        setEstudiantesConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);
       } finally {
@@ -49,55 +43,40 @@ function InvestigadorTable({
     nombre: "Nombre",
     correo: "Correo",
     celular: "Celular",
+    matricula: "Matrícula",
     area: "Área",
-    especialidad: "Especialidad",
-    nivel_snii: "Nivel SNII",
-    linea: "Línea",
+    carrera: "Carrera",
+    tipo_estudiante: "Tipo",
+    investigador: "Asesor",
+    escuela: "Escuela",
+    fecha_inicio: "Fecha de Inicio",
+    fecha_termino: "Fecha de Término",
     activo: "Estado",
   };
 
-  const getNivelSNIIColor = (nivel) => {
-    if (!nivel) return "bg-gray-700/50 text-gray-300 border-gray-500/30";
-
-    const nivelStr =
-      typeof nivel === "string"
-        ? nivel.toLowerCase()
-        : nivel.nivel
-        ? nivel.nivel.toLowerCase()
-        : "";
-
-    if (nivelStr.includes("candidato")) {
-      return "bg-cyan-900/40 text-cyan-300 border-cyan-500/30";
+  const formatColumnValue = (column, value, estudiante) => {
+    if (column === "activo") {
+      return (
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${
+            value
+              ? "bg-green-900/60 text-green-300"
+              : "bg-red-900/60 text-red-300"
+          }`}
+        >
+          {value ? "Activo" : "Inactivo"}
+        </span>
+      );
     }
-
-    if (/\bnivel i\b/.test(nivelStr) || nivelStr === "nivel i") {
-      return "bg-emerald-900/40 text-emerald-300 border-emerald-500/30";
-    }
-
-    if (/\bnivel ii\b/.test(nivelStr) || nivelStr === "nivel ii") {
-      return "bg-amber-900/40 text-amber-300 border-amber-500/30";
-    }
-
-    if (/\bnivel iii\b/.test(nivelStr) || nivelStr === "nivel iii") {
-      return "bg-violet-900/40 text-violet-300 border-violet-500/30";
-    }
-
-    if (nivelStr.includes("emérito")) {
-      return "bg-rose-900/40 text-rose-300 border-rose-500/30";
-    }
-
-    return "bg-indigo-900/40 text-indigo-300 border-indigo-500/30";
-  };
-
-  const formatColumnValue = (column, value, investigador) => {
+    
     if (column === "id") {
-      const tieneUsuario = investigadoresConUsuario.includes(value);
+      const tieneUsuario = estudiantesConUsuario.includes(value);
       return (
         <div className="flex items-center">
           <span
             className={`flex items-center justify-center ${
               tieneUsuario
-                ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white"
+                ? "bg-gradient-to-r from-emerald-600 to-emerald-400 text-white"
                 : "bg-gray-700 text-gray-300"
             } rounded-full h-6 w-6 text-xs font-medium`}
             title={
@@ -107,7 +86,7 @@ function InvestigadorTable({
             {value}
           </span>
           {tieneUsuario && (
-            <span className="ml-2 text-xs text-blue-400">
+            <span className="ml-2 text-xs text-emerald-400">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 inline"
@@ -125,107 +104,69 @@ function InvestigadorTable({
         </div>
       );
     }
-
-    if (column === "linea") {
-      if (investigador.lineas && investigador.lineas.length > 0) {
-        return (
-          <span className="px-2 py-1 text-xs bg-gray-700/60 text-blue-300 rounded-full">
-            {investigador.lineas[0].nombre}
-          </span>
-        );
-      }
-      return (
-        <span className="text-gray-400 text-xs">Sin línea asignada</span>
-      );
-    }
-
+    
     if (column === "nombre") {
       return (
         <div className="flex items-center">
-          <div className="h-8 w-8 rounded-full overflow-hidden bg-blue-900/40 flex items-center justify-center">
-            <span className="text-blue-300 font-medium text-sm">
-              {value?.charAt(0)?.toUpperCase() || "I"}
+          <div className="h-8 w-8 rounded-full overflow-hidden bg-emerald-900/40 flex items-center justify-center">
+            <span className="text-emerald-300 font-medium text-sm">
+              {value?.charAt(0)?.toUpperCase() || "E"}
             </span>
           </div>
           <span className="ml-2 font-medium">{value}</span>
         </div>
       );
     }
-
-    if (column === "activo") {
+    
+    if (column === "area") {
+      return estudiante.area_nombre || "Sin asignar";
+    }
+    
+    if (column === "carrera") {
+      return estudiante.carrera_nombre || "Sin asignar";
+    }
+    
+    if (column === "tipo_estudiante") {
       return (
-        <span
-          className={`px-2 py-1 text-xs rounded-full ${
-            value
-              ? "bg-green-900/60 text-green-300"
-              : "bg-red-900/60 text-red-300"
-          }`}
-        >
-          {value ? "Activo" : "Inactivo"}
+        <span className="text-xs px-2 py-0.5 rounded-full border bg-emerald-900/40 text-emerald-300 border-emerald-500/30">
+          {estudiante.tipo_estudiante_nombre || "Sin tipo"}
         </span>
       );
     }
-
-    if (column === "nivel_snii") {
-      const nivelTexto =
-        investigador.nivel_snii_nombre ||
-        (value && typeof value === "object" ? value.nivel : null) ||
-        "Sin SNII";
-
-      return (
-        <span
-          className={`text-xs px-2 py-0.5 rounded-full border ${getNivelSNIIColor(
-            nivelTexto
-          )}`}
-        >
-          {nivelTexto}
-        </span>
-      );
+    
+    if (column === "investigador") {
+      return estudiante.investigador_nombre || "Sin asesor";
     }
-
-    if (["area", "especialidad"].includes(column)) {
-      if (column === "area" && investigador.area_nombre) {
-        return investigador.area_nombre;
-      }
-
-      if (column === "especialidad" && investigador.especialidad_nombre) {
-        return investigador.especialidad_nombre;
-      }
-
-      if (value && typeof value === "object") {
-        if (column === "area" && value.nombre) {
-          return value.nombre;
-        }
-
-        if (column === "especialidad" && value.nombre_especialidad) {
-          return value.nombre_especialidad;
-        }
-
-        return (
-          value.nombre ||
-          value.nivel ||
-          value.descripcion ||
-          JSON.stringify(value)
-        );
-      }
-
-      if (value === null || value === undefined) {
-        if (column === "especialidad") return "Sin especialidad";
-        return "No asignado";
-      }
-    }
-
+    
     if (column === "celular" && (value === null || value === "")) {
       return "No registrado";
     }
-
+    
+    // Formateo para los nuevos campos
+    if (column === "escuela") {
+      return value || "No registrado";
+    }
+    
+    if (column === "fecha_inicio" || column === "fecha_termino") {
+      if (!value) return column === "fecha_termino" ? "Sin fecha" : "No registrado";
+      
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return value;
+      
+      return new Intl.DateTimeFormat("es-MX", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(date);
+    }
+    
     return value || "—";
   };
 
-  if (investigadores.length === 0) {
+  if (!estudiantes || estudiantes.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400">
-        No hay investigadores para mostrar
+        No hay estudiantes para mostrar
       </div>
     );
   }
@@ -237,9 +178,9 @@ function InvestigadorTable({
       }`}
     >
       {cargandoUsuarios && (
-        <div className="text-xs text-blue-400 mb-2 flex items-center">
+        <div className="text-xs text-emerald-400 mb-2 flex items-center">
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-400"
+            className="animate-spin -ml-1 mr-2 h-4 w-4 text-emerald-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -265,7 +206,7 @@ function InvestigadorTable({
       {/* Leyenda para los indicadores de usuario */}
       <div className="mb-2 flex items-center text-xs text-gray-400">
         <span className="ml-2 py-4 flex items-center mr-4">
-          <span className="bg-gradient-to-r from-blue-600 to-blue-400 rounded-full h-4 w-4 mr-1"></span>
+          <span className="bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full h-4 w-4 mr-1"></span>
           Tiene usuario asignado
         </span>
         <span className="py-4 flex items-center">
@@ -292,12 +233,12 @@ function InvestigadorTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 bg-gray-800/40">
-            {investigadores.map((investigador, index) => (
+            {estudiantes.map((estudiante, index) => (
               <tr
-                key={investigador.id}
+                key={estudiante.id}
                 className={`hover:bg-gray-700/50 transition-colors duration-200 ${
-                  investigadoresConUsuario.includes(investigador.id)
-                    ? "bg-blue-900/10"
+                  estudiantesConUsuario.includes(estudiante.id)
+                    ? "bg-emerald-900/10"
                     : ""
                 }`}
                 style={{ animationDelay: `${index * 50}ms` }}
@@ -309,8 +250,8 @@ function InvestigadorTable({
                   >
                     {formatColumnValue(
                       column,
-                      investigador[column],
-                      investigador
+                      estudiante[column],
+                      estudiante
                     )}
                   </td>
                 ))}
@@ -319,7 +260,7 @@ function InvestigadorTable({
                     <button
                       className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                       title="Editar"
-                      onClick={() => onEdit(investigador)}
+                      onClick={() => onEdit(estudiante)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -339,7 +280,7 @@ function InvestigadorTable({
                     <button
                       className="cursor-pointer p-1 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                       title="Eliminar"
-                      onClick={() => onDelete(investigador)}
+                      onClick={() => onDelete(estudiante)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -367,4 +308,4 @@ function InvestigadorTable({
   );
 }
 
-export default InvestigadorTable;
+export default EstudianteTable;

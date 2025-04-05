@@ -14,29 +14,47 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     nivel_snii: "",
     fecha_asignacion_snii: "",
     activo: true,
+    lineas_ids: [], // Seguiremos usando un array por compatibilidad con el backend
   });
 
   const [areas, setAreas] = useState([]);
   const [nivelesEdu, setNivelesEdu] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [nivelesSNII, setNivelesSNII] = useState([]);
+  const [lineas, setLineas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
 
   const normalizeId = (value) => {
     if (value === null || value === undefined || value === "") return "";
-
     if (typeof value === "object" && value !== null && "id" in value) {
       return parseInt(value.id, 10);
     }
-
     return parseInt(value, 10);
   };
 
   useEffect(() => {
     if (investigador) {
       console.log("Datos del investigador a editar:", investigador);
+
+      // Obtener las líneas asociadas al investigador
+      const fetchInvestigadorLineas = async () => {
+        try {
+          const response = await api.get(`/investigadores/${investigador.id}/`);
+          const lineasData = response.data.lineas || [];
+          // Solo tomamos la primera línea si existe
+          const lineaId = lineasData.length > 0 ? lineasData[0].id : null;
+          
+          setFormData(prev => ({
+            ...prev,
+            lineas_ids: lineaId ? [lineaId] : []
+          }));
+        } catch (error) {
+          console.error("Error al obtener líneas del investigador:", error);
+        }
+      };
+
       setFormData({
         nombre: investigador.nombre || "",
         correo: investigador.correo || "",
@@ -49,7 +67,12 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
           ? formatDateForInput(investigador.fecha_asignacion_snii)
           : "",
         activo: investigador.activo !== undefined ? investigador.activo : true,
+        lineas_ids: [],
       });
+      
+      if (investigador.id) {
+        fetchInvestigadorLineas();
+      }
     } else {
       setFormData({
         nombre: "",
@@ -61,6 +84,7 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         nivel_snii: "",
         fecha_asignacion_snii: "",
         activo: true,
+        lineas_ids: [],
       });
     }
   }, [investigador, isOpen]);
@@ -78,12 +102,13 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       setFetchingData(true);
       setError(null);
       try {
-        const [areasRes, nivelesEduRes, especialidadesRes, nivelesSNIIRes] =
+        const [areasRes, nivelesEduRes, especialidadesRes, nivelesSNIIRes, lineasRes] =
           await Promise.all([
             api.get("/areas/?page_size=1000"),
             api.get("/niveleducacion/?page_size=1000"),
             api.get("/especialidades/?page_size=1000"),
             api.get("/nivelsnii/?page_size=1000"),
+            api.get("/lineas/?page_size=1000"),
           ]);
 
         const areasData = areasRes.data.results || areasRes.data || [];
@@ -93,6 +118,8 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
           especialidadesRes.data.results || especialidadesRes.data || [];
         const nivelesSNIIData =
           nivelesSNIIRes.data.results || nivelesSNIIRes.data || [];
+        const lineasData =
+          lineasRes.data.results || lineasRes.data || [];
 
         const sortedAreas = Array.isArray(areasData)
           ? [...areasData].sort((a, b) => a.id - b.id)
@@ -110,16 +137,22 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
           ? [...nivelesSNIIData].sort((a, b) => a.id - b.id)
           : [];
 
+        const sortedLineas = Array.isArray(lineasData)
+          ? [...lineasData].sort((a, b) => a.nombre.localeCompare(b.nombre))
+          : [];
+
         setAreas(sortedAreas);
         setNivelesEdu(sortedNivelesEdu);
         setEspecialidades(sortedEspecialidades);
         setNivelesSNII(sortedNivelesSNII);
+        setLineas(sortedLineas);
 
         console.log("Catálogos cargados:", {
           areas: sortedAreas,
           nivelesEdu: sortedNivelesEdu,
           especialidades: sortedEspecialidades,
           nivelesSNII: sortedNivelesSNII,
+          lineas: sortedLineas,
         });
       } catch (err) {
         console.error("Error al cargar catálogos:", err);
@@ -160,6 +193,18 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         [name]: type === "checkbox" ? checked : value,
       }));
     }
+  };
+
+  // Manejador específico para el cambio de línea
+  const handleLineaChange = (e) => {
+    const value = e.target.value;
+    
+    // Si selecciona una línea, la guardamos como un array con un solo elemento
+    // Si selecciona la opción vacía, guardamos un array vacío
+    setFormData(prev => ({
+      ...prev,
+      lineas_ids: value ? [parseInt(value, 10)] : []
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -211,6 +256,14 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Obtener el valor de la línea actual (si existe)
+  const getCurrentLineaValue = () => {
+    if (formData.lineas_ids && formData.lineas_ids.length > 0) {
+      return formData.lineas_ids[0].toString();
+    }
+    return "";
   };
 
   return (
@@ -362,6 +415,25 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
                 onChange={handleChange}
                 className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
               />
+            </div>
+
+            {/* Línea de Investigación ocupando todo el ancho */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Línea de Investigación
+              </label>
+              <select
+                value={getCurrentLineaValue()}
+                onChange={handleLineaChange}
+                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">-- Seleccionar Línea --</option>
+                {lineas.map((linea) => (
+                  <option key={linea.id} value={linea.id}>
+                    {linea.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

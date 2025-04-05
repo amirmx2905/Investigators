@@ -106,6 +106,7 @@ class Estudiante(models.Model):
     escuela = models.CharField(max_length=100, null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
+    activo = models.BooleanField(default=True)
     
     def __str__(self):
         return self.nombre
@@ -186,7 +187,6 @@ class Articulo(models.Model):
     nombre_revista = models.CharField(max_length=100)
     abstracto = models.TextField(blank=True, null=True)
     pais_publicacion = models.CharField(max_length=100)
-    ano_publicacion = models.IntegerField()
     fecha_publicacion = models.DateField()
     doi = models.CharField(max_length=100, blank=True, null=True)
     url = models.URLField(max_length=200, blank=True, null=True)
@@ -195,6 +195,12 @@ class Articulo(models.Model):
     
     def __str__(self):
         return self.nombre_articulo
+    
+    @property
+    def ano_publicacion(self):
+        if self.fecha_publicacion:
+            return self.fecha_publicacion.year
+        return None
     
     class Meta:
         verbose_name_plural = "Artículos"

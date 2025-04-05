@@ -1,10 +1,10 @@
-asgiref
+asgiref // compatibilidad entre ASGI y WSGI
 Django
-django-cors-headers
-djangorestframework
-djangorestframework-simplejwt
-PyJWT
-pytz
-sqlparse
-psycopg2-binary
-python-dotenv
+django-cors-headers // para manejar CORS
+djangorestframework // Django REST framework
+djangorestframework-simplejwt // para autenticación JWT
+PyJWT // para manejar JWT
+pytz // para manejo de zonas horarias
+sqlparse // para formatear consultas SQL
+psycopg2-binary // controlador de PostgreSQL
+python-dotenv // para cargar variables de entorno desde un archivo .env

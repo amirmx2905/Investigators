@@ -19,7 +19,7 @@ export const setupAdminPanelStyles = () => {
     .admin-pulse { animation: pulse 2s infinite; }
     .view-transition { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
     
-    #column-dropdown { position: absolute; z-index: 50; }
+    #column-dropdown { position: absolute; z-index: 20; }
     
     .notification {
       position: fixed;

@@ -1,13 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export const columnOrders = {
-  usuarios: [
-    "id",
-    "nombre_usuario",
-    "rol",
-    "vinculado_a",
-    "activo"
-  ],
+  usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
   investigadores: [
     "id",
     "nombre",
@@ -16,6 +10,7 @@ export const columnOrders = {
     "area",
     "especialidad",
     "nivel_snii",
+    "linea",
     "activo",
   ],
   proyectos: [
@@ -26,107 +21,203 @@ export const columnOrders = {
     "fecha_inicio",
     "fecha_fin",
     "explicacion",
+    "herramientas",
+    "investigadores",
+  ],
+  estudiantes: [
+    "id",
+    "nombre",
+    "correo",
+    "celular",
+    "area",
+    "carrera",
+    "tipo_estudiante",
+    "investigador",
+    "escuela",
+    "fecha_inicio",
+    "fecha_termino",
+    "activo",
+  ],
+  articulos: [
+    "id",
+    "nombre_articulo",
+    "nombre_revista",
+    "pais_publicacion",
+    "fecha_publicacion",
+    "doi",
+    "abstracto",
+    "investigadores",
+    "estatus",
+  ],
+  eventos: [
+    "id",
+    "nombre_evento",
+    "tipo_evento_nombre",
+    "fecha_inicio",
+    "fecha_fin",
+    "lugar",
+    "empresa_invita",
+    "descripcion",
+    "investigadores",
   ],
 };
 
 const defaultVisibleColumns = {
   usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
-  investigadores: ["id", "nombre", "correo", "area", "nivel_snii", "activo"],
-  proyectos: ["id", "nombre", "estado", "lider", "fecha_inicio"],
+  investigadores: [
+    "id",
+    "nombre",
+    "correo",
+    "area",
+    "nivel_snii",
+    "linea",
+    "activo",
+  ],
+  proyectos: [
+    "id",
+    "nombre",
+    "estado",
+    "fecha_inicio",
+    "herramientas",
+    "investigadores",
+  ],
+  estudiantes: [
+    "id",
+    "nombre",
+    "correo",
+    "area",
+    "carrera",
+    "tipo_estudiante",
+    "investigador",
+    "escuela",
+    "fecha_inicio",
+    "activo",
+  ],
+  articulos: [
+    "id",
+    "nombre_articulo",
+    "nombre_revista",
+    "fecha_publicacion",
+    "doi",
+    "investigadores",
+    "estatus",
+  ],
+  eventos: [
+    "id",
+    "nombre_evento",
+    "tipo_evento_nombre",
+    "fecha_inicio",
+    "fecha_fin",
+    "lugar",
+    "investigadores",
+  ],
 };
 
-// eslint-disable-next-line no-unused-vars
-export const useTableControls = (initialTab = "usuarios") => {
-  const storageKey = "adminPanel_tableControls";
-  const contentRef = useRef(null);
-
-  const [viewMode, setViewMode] = useState("table");
+const useTableControls = () => {
   const [visibleColumns, setVisibleColumns] = useState(defaultVisibleColumns);
+  const [viewMode, setViewMode] = useState("table");
   const [columnsDropdownOpen, setColumnsDropdownOpen] = useState(false);
+  const contentRef = useRef(null);
+  const columnToggleRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    try {
-      const savedSettings = localStorage.getItem(storageKey);
-      if (savedSettings) {
-        const { viewMode: savedViewMode, visibleColumns: savedVisibleColumns } =
-          JSON.parse(savedSettings);
-
-        if (savedViewMode) setViewMode(savedViewMode);
-        if (savedVisibleColumns) setVisibleColumns(savedVisibleColumns);
-      }
-    } catch (e) {
-      console.error("Error loading table settings:", e);
-    }
-
-    const checkIfMobile = () => {
+    const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768 && viewMode === "table") {
-        setViewMode("cards");
-      }
     };
 
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkIfMobile);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        viewMode,
-        visibleColumns,
-      })
-    );
-  }, [viewMode, visibleColumns]);
-
-  const toggleViewMode = (mode) => {
-    if (mode === "table" && isMobile) return;
-    setViewMode(mode);
-  };
-
-  const toggleColumn = (tab, column) => {
-    setVisibleColumns((prev) => {
-      if (prev[tab].includes(column)) {
-        return {
-          ...prev,
-          [tab]: prev[tab].filter((col) => col !== column),
-        };
+    try {
+      const savedConfig = localStorage.getItem("tableConfig");
+      if (savedConfig) {
+        const parsedConfig = JSON.parse(savedConfig);
+        setVisibleColumns((prevColumns) => ({
+          ...prevColumns,
+          ...parsedConfig.visibleColumns,
+        }));
+        setViewMode(parsedConfig.viewMode || "table");
       }
+    } catch (error) {
+      console.error("Error al cargar la configuración de tabla:", error);
+    }
+  }, []);
 
-      const updatedColumns = [...prev[tab], column];
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "tableConfig",
+        JSON.stringify({
+          visibleColumns,
+          viewMode,
+        })
+      );
+    } catch (error) {
+      console.error("Error al guardar la configuración de tabla:", error);
+    }
+  }, [visibleColumns, viewMode]);
 
-      const sortedColumns = updatedColumns.sort((a, b) => {
-        return columnOrders[tab].indexOf(a) - columnOrders[tab].indexOf(b);
-      });
+  const toggleColumn = (activeTab, column) => {
+    setVisibleColumns((prevColumns) => {
+      const tabColumns = prevColumns[activeTab] || [];
+      const newTabColumns = tabColumns.includes(column)
+        ? tabColumns.filter((col) => col !== column)
+        : [...tabColumns, column];
 
       return {
-        ...prev,
-        [tab]: sortedColumns,
+        ...prevColumns,
+        [activeTab]: newTabColumns,
       };
     });
   };
 
-  const getOrderedVisibleColumns = (tab) => {
-    return visibleColumns[tab].sort((a, b) => {
-      return columnOrders[tab].indexOf(a) - columnOrders[tab].indexOf(b);
-    });
+  const resetColumns = (activeTab) => {
+    setVisibleColumns((prevColumns) => ({
+      ...prevColumns,
+      [activeTab]: defaultVisibleColumns[activeTab] || [],
+    }));
   };
 
+  const toggleViewMode = () => {
+    setViewMode((prev) => (prev === "table" ? "cards" : "table"));
+  };
+
+  const toggleColumnsDropdown = () => {
+    setColumnsDropdownOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        columnToggleRef.current &&
+        !columnToggleRef.current.contains(event.target)
+      ) {
+        setColumnsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return {
+    visibleColumns,
+    toggleColumn,
+    resetColumns,
     viewMode,
     toggleViewMode,
-    visibleColumns,
-    getOrderedVisibleColumns,
-    toggleColumn,
     columnsDropdownOpen,
-    setColumnsDropdownOpen,
+    toggleColumnsDropdown,
+    columnToggleRef,
     contentRef,
     isMobile,
   };
 };
+
+export default useTableControls;

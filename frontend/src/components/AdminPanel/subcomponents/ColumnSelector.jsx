@@ -15,13 +15,7 @@ function ColumnSelector({
 
   // Orden fijo de columnas por pestaña
   const columnOrders = {
-    usuarios: [
-      "id", 
-      "nombre_usuario", 
-      "rol", 
-      "vinculado_a", 
-      "activo"
-    ],
+    usuarios: ["id", "nombre_usuario", "rol", "vinculado_a", "activo"],
     investigadores: [
       "id",
       "nombre",
@@ -30,6 +24,7 @@ function ColumnSelector({
       "area",
       "especialidad",
       "nivel_snii",
+      "linea",
       "activo",
     ],
     proyectos: [
@@ -40,6 +35,44 @@ function ColumnSelector({
       "fecha_inicio",
       "fecha_fin",
       "explicacion",
+      "herramientas",
+      "investigadores",
+    ],
+    estudiantes: [
+      "id",
+      "nombre",
+      "correo",
+      "celular",
+      "area",
+      "carrera",
+      "tipo_estudiante",
+      "investigador",
+      "escuela",
+      "fecha_inicio",
+      "fecha_termino",
+      "activo",
+    ],
+    articulos: [
+      "id",
+      "nombre_articulo",
+      "nombre_revista",
+      "pais_publicacion",
+      "fecha_publicacion",
+      "doi",
+      "abstracto",
+      "investigadores",
+      "estatus",
+    ],
+    eventos: [
+      "id",
+      "nombre_evento",
+      "tipo_evento_nombre",
+      "fecha_inicio",
+      "fecha_fin",
+      "lugar",
+      "empresa_invita",
+      "descripcion",
+      "investigadores",
     ],
   };
 
@@ -60,6 +93,7 @@ function ColumnSelector({
       area: "Área",
       especialidad: "Especialidad",
       nivel_snii: "Nivel SNII",
+      linea: "Línea",
       activo: "Estado",
     },
     proyectos: {
@@ -70,9 +104,48 @@ function ColumnSelector({
       fecha_inicio: "Fecha Inicio",
       fecha_fin: "Fecha Fin",
       explicacion: "Descripción",
+      herramientas: "Herramientas",
+      investigadores: "Investigadores",
+    },
+    estudiantes: {
+      id: "ID",
+      nombre: "Nombre",
+      correo: "Correo",
+      celular: "Celular",
+      area: "Área",
+      carrera: "Carrera",
+      tipo_estudiante: "Tipo",
+      investigador: "Asesor",
+      escuela: "Escuela",
+      fecha_inicio: "Fecha de Inicio",
+      fecha_termino: "Fecha de Término",
+      activo: "Estado",
+    },
+    articulos: {
+      id: "ID",
+      nombre_articulo: "Título",
+      nombre_revista: "Revista",
+      pais_publicacion: "País",
+      fecha_publicacion: "Fecha",
+      doi: "DOI",
+      abstracto: "Resumen",
+      investigadores: "Autores",
+      estatus: "Estado",
+    },
+    eventos: {
+      id: "ID",
+      nombre_evento: "Nombre",
+      tipo_evento_nombre: "Tipo",
+      fecha_inicio: "Fecha Inicio",
+      fecha_fin: "Fecha Fin",
+      lugar: "Lugar",
+      empresa_invita: "Empresa",
+      descripcion: "Descripción",
+      investigadores: "Participantes",
     },
   };
 
+  // Crear el portal para el dropdown
   useEffect(() => {
     if (!document.getElementById("column-menu-portal")) {
       const portalNode = document.createElement("div");
@@ -85,14 +158,14 @@ function ColumnSelector({
 
     return () => {
       const portalNode = document.getElementById("column-menu-portal");
-      if (portalNode) {
-        document.body.removeChild(portalNode);
+      if (portalNode && portalNode.parentNode) {
+        portalNode.parentNode.removeChild(portalNode);
       }
     };
   }, []);
 
   useEffect(() => {
-    if (columnsDropdownOpen && columnToggleRef.current) {
+    if (columnsDropdownOpen && columnToggleRef?.current) {
       const rect = columnToggleRef.current.getBoundingClientRect();
       setMenuPosition({
         top: rect.bottom + window.scrollY,
@@ -167,7 +240,7 @@ function ColumnSelector({
 
             {/* Lista de columnas disponibles */}
             <div>
-              {columnOrders[activeTab].map((column) => (
+              {columnOrders[activeTab]?.map((column) => (
                 <div
                   key={column}
                   className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer transition-colors duration-200"
@@ -185,17 +258,17 @@ function ColumnSelector({
                     <div
                       className="w-4 h-4 mr-2 flex items-center justify-center rounded-sm transition-all duration-200"
                       style={{
-                        backgroundColor: visibleColumns[activeTab].includes(
+                        backgroundColor: visibleColumns[activeTab]?.includes(
                           column
                         )
                           ? "#3b82f6"
                           : "transparent",
-                        border: visibleColumns[activeTab].includes(column)
+                        border: visibleColumns[activeTab]?.includes(column)
                           ? "1px solid rgba(96, 165, 250, 0.7)"
                           : "1px solid rgba(59, 130, 246, 0.3)",
                       }}
                     >
-                      {visibleColumns[activeTab].includes(column) && (
+                      {visibleColumns[activeTab]?.includes(column) && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="10"
@@ -208,7 +281,7 @@ function ColumnSelector({
                       )}
                     </div>
                     <span className="text-sm text-gray-300">
-                      {columnLabels[activeTab][column]}
+                      {columnLabels[activeTab]?.[column]}
                     </span>
                   </div>
                 </div>

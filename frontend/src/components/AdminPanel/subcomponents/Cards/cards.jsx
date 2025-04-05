@@ -1,3 +1,9 @@
 export { default as UsuarioCards } from './UsuarioCards';
 export { default as InvestigadorCards } from './InvestigadorCards';
 export { default as ProyectoCards } from './ProyectoCards';
+export { default as EstudianteCards } from './EstudianteCards';
+export { default as ArticuloCards } from './ArticuloCards';
+export { default as EventoCards } from './EventoCards';
+export { default as CarreraCards } from './CarreraCards';
+export { default as EspecialidadCards } from './EspecialidadCards';
+export { default as UnidadCards } from './UnidadCards';

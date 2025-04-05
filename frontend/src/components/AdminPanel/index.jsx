@@ -1,11 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import TabNavigation from "./subcomponents/TabNavigation";
 import { useAdminPanel } from "./hooks/useAdminPanel";
-import { useTableControls } from "./hooks/useTableControls";
+import useTableControls from "./hooks/useTableControls";
 import { usuarioService } from "../../api/services/usuarioService";
 import { investigadorService } from "../../api/services/investigadorService";
 import { proyectoService } from "../../api/services/proyectoService";
+import { estudianteService } from "../../api/services/estudianteService";
+import { articuloService } from "../../api/services/articuloService";
+import { eventoService } from "../../api/services/eventoService"; 
+import { carreraService } from "../../api/services/carreraService";
+import { especialidadService } from "../../api/services/especialidadService";
+import { unidadService } from "../../api/services/unidadService";
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -18,6 +24,12 @@ import {
   UsuarioForm,
   InvestigadorForm,
   ProyectoForm,
+  EstudianteForm, 
+  ArticuloForm,
+  EventoForm,
+  CarreraForm,
+  EspecialidadForm,
+  UnidadForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -43,6 +55,12 @@ function AdminPanel() {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
+    articulos,
+    eventos,
+    carreras,
+    especialidades,
+    unidades,
     activeTab,
     changeTab,
     refreshData,
@@ -59,12 +77,11 @@ function AdminPanel() {
     visibleColumns,
     toggleColumn,
     columnsDropdownOpen,
-    setColumnsDropdownOpen,
+    toggleColumnsDropdown,
     contentRef,
     isMobile,
+    columnToggleRef,
   } = useTableControls();
-
-  const columnToggleRef = useRef(null);
 
   useEffect(() => {
     let timer;
@@ -123,6 +140,18 @@ function AdminPanel() {
         await investigadorService.deleteInvestigador(item.id);
       } else if (type === "proyecto") {
         await proyectoService.deleteProyecto(item.id);
+      } else if (type === "estudiante") {
+        await estudianteService.deleteEstudiante(item.id);
+      } else if (type === "articulo") {
+        await articuloService.deleteArticulo(item.id);
+      } else if (type === "evento") {
+        await eventoService.deleteEvento(item.id);
+      } else if (type === "carrera") {
+        await carreraService.deleteCarrera(item.id);
+      } else if (type === "especialidad") {
+        await especialidadService.deleteEspecialidad(item.id);
+      } else if (type === "unidad") {
+        await unidadService.deleteUnidad(item.id);
       }
 
       refreshData();
@@ -138,7 +167,7 @@ function AdminPanel() {
       });
     } catch (error) {
       console.error(`Error al eliminar ${type}:`, error);
-      showNotification(`Error al eliminar: ${error.message}`);
+      showNotification(`Error al eliminar: ${error.message || "Error desconocido"}`);
     } finally {
       setIsDeleting(false);
     }
@@ -198,6 +227,60 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "estudiante":
+        return (
+          <EstudianteForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            estudiante={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "articulo":
+        return (
+          <ArticuloForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            articulo={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "evento":
+        return (
+          <EventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            evento={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "carrera":
+        return (
+          <CarreraForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            carrera={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "especialidad":
+        return (
+          <EspecialidadForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            especialidad={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "unidad":
+        return (
+          <UnidadForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            unidad={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -217,6 +300,12 @@ function AdminPanel() {
     usuarios,
     investigadores,
     proyectos,
+    estudiantes,
+    articulos,
+    eventos,
+    carreras,
+    especialidades,
+    unidades,
     handleEdit,
     handleDeleteClick
   );
@@ -257,7 +346,7 @@ function AdminPanel() {
               toggleViewMode={toggleViewMode}
               isMobile={isMobile}
               columnsDropdownOpen={columnsDropdownOpen}
-              setColumnsDropdownOpen={setColumnsDropdownOpen}
+              setColumnsDropdownOpen={toggleColumnsDropdown}
               activeTab={activeTab}
               visibleColumns={visibleColumns}
               toggleColumn={toggleColumn}
@@ -297,7 +386,12 @@ function AdminPanel() {
         }
         onConfirm={handleConfirmDelete}
         itemName={
-          deleteModal.item?.nombre || deleteModal.item?.nombre_usuario || ""
+          deleteModal.item?.nombre || 
+          deleteModal.item?.nombre_usuario || 
+          deleteModal.item?.nombre_articulo ||
+          deleteModal.item?.nombre_evento ||
+          deleteModal.item?.nombre_carrera ||
+          ""
         }
         itemType={
           deleteModal.type

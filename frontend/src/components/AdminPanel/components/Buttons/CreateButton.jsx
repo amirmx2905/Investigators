@@ -17,9 +17,33 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "proyecto";
       label = "Proyecto";
       break;
+    case "estudiantes":
+      type = "estudiante";
+      label = "Estudiante";
+      break;
+    case "articulos":
+      type = "articulo";
+      label = "Artículo";
+      break;
+    case "eventos":
+      type = "evento";
+      label = "Evento";
+      break;
+    case "carreras":
+      type = "carrera";
+      label = "Carrera";
+      break;
+    case "especialidades":
+      type = "especialidad";
+      label = "Especialidad";
+      break;
+    case "unidades":
+      type = "unidad";
+      label = "Unidad";
+      break;
     default:
-      type = "usuario";
-      label = "Usuario";
+      type = "";
+      label = "";
   }
 
   return (

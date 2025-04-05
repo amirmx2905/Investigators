@@ -14,14 +14,17 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         const response = await api.get('/usuarios/me/');
+        
         setCurrentUser({
           id: response.data.id,
           username: response.data.nombre_usuario,
           role: response.data.rol
         });
       } catch (error) {
-        console.log('Error: ' + error)
-        console.log('No hay sesión activa');
+        if (error.response && error.response.status !== 404) {
+          console.error('Error al verificar sesión:', error.message);
+        }
+        setCurrentUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -32,22 +35,27 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (nombre_usuario, contrasena) => {
     try {
-      const response = await api.post('/token/', {
+      await api.post('/token/', {
         nombre_usuario,
         contrasena
       });
       
-      setCurrentUser({
-        username: response.data.username,
-        role: response.data.role
-      });
-      
-      const userResponse = await api.get('/usuarios/me/');
-      setCurrentUser({
-        id: userResponse.data.id,
-        username: userResponse.data.nombre_usuario,
-        role: userResponse.data.rol
-      });
+      try {
+        const userResponse = await api.get('/usuarios/me/');
+        setCurrentUser({
+          id: userResponse.data.id,
+          username: userResponse.data.nombre_usuario,
+          role: userResponse.data.rol
+        });
+      } catch (userError) {
+        console.log('Error al obtener información del usuario:', userError.message);
+        console.warn('No se pudo obtener la información del usuario');
+        
+        setCurrentUser({
+          username: nombre_usuario,
+          role: 'user'
+        });
+      }
       
       return { success: true };
     } catch (error) {

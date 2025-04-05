@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-function Home() {
+function Home() { //sirve como landing page
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useAuth();

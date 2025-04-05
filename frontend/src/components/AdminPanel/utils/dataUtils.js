@@ -1,13 +1,23 @@
-import { columnOrders } from "../hooks/useTableControls";
+// Import necessary services and libraries
+import { columnOrders } from "../hooks/useTableControls"; //order of columns
 import {
   UsuarioTable,
   InvestigadorTable,
   ProyectoTable,
-} from "../subcomponents/Tables/tables";
+  EstudianteTable, 
+  ArticuloTable,
+  EventoTable,
+} from "../subcomponents/Tables/tables"; 
 import {
   UsuarioCards,
   InvestigadorCards,
   ProyectoCards,
+  EstudianteCards,
+  ArticuloCards,
+  EventoCards,
+  CarreraCards,
+  EspecialidadCards,
+  UnidadCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -22,12 +32,18 @@ export const sortColumnsByOrder = (columns, tabName) => {
   });
 };
 
-export const getTabData = (
+export const getTabData = ( 
   activeTab,
   visibleColumns,
   usuarios,
   investigadores,
   proyectos,
+  estudiantes,
+  articulos,
+  eventos,
+  carreras,
+  especialidades,
+  unidades,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -43,6 +59,24 @@ export const getTabData = (
     case "proyectos":
       type = "proyecto";
       break;
+    case "estudiantes":
+      type = "estudiante";
+      break;
+    case "articulos":
+      type = "articulo";
+      break;
+    case "eventos":
+      type = "evento";
+      break;
+    case "carreras":
+      type = "carrera";
+      break;
+    case "especialidades":
+      type = "especialidad";
+      break;
+    case "unidades":
+      type = "unidad";
+      break;
     default:
       type = "usuario";
   }
@@ -50,11 +84,14 @@ export const getTabData = (
   // Obtener columnas visibles ordenadas según el orden definido
   const orderedColumns = {
     usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
-    investigadores: sortColumnsByOrder(
-      visibleColumns.investigadores || [],
-      "investigadores"
-    ),
+    investigadores: sortColumnsByOrder(visibleColumns.investigadores || [],"investigadores"),
     proyectos: sortColumnsByOrder(visibleColumns.proyectos || [], "proyectos"),
+    estudiantes: sortColumnsByOrder(visibleColumns.estudiantes || [],"estudiantes"),
+    articulos: sortColumnsByOrder(visibleColumns.articulos || [], "articulos"),
+    eventos: sortColumnsByOrder(visibleColumns.eventos || [], "eventos"),
+    carreras: sortColumnsByOrder(visibleColumns.carreras || [], "carreras"),
+    especialidades: sortColumnsByOrder(visibleColumns.especialidades || [],"especialidades"),
+    unidades: sortColumnsByOrder(visibleColumns.unidades || [], "unidades"),
   };
 
   const tabConfig = {
@@ -82,6 +119,60 @@ export const getTabData = (
       TableComponent: ProyectoTable,
       CardComponent: ProyectoCards,
       columns: orderedColumns.proyectos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    estudiantes: {
+      title: "Lista de Estudiantes",
+      items: estudiantes || [],
+      TableComponent: EstudianteTable,
+      CardComponent: EstudianteCards,
+      columns: orderedColumns.estudiantes,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    articulos: {
+      title: "Lista de Artículos",
+      items: articulos || [],
+      TableComponent: ArticuloTable,
+      CardComponent: ArticuloCards,
+      columns: orderedColumns.articulos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    eventos: {
+      title: "Lista de Eventos",
+      items: eventos || [],
+      TableComponent: EventoTable,
+      CardComponent: EventoCards,
+      columns: orderedColumns.eventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    carreras: {
+      title: "Lista de Carreras",
+      items: carreras || [],
+      TableComponent: null,
+      CardComponent: CarreraCards,
+      columns: orderedColumns.carreras,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    especialidades: {
+      title: "Lista de Especialidades",
+      items: especialidades || [],
+      TableComponent: null,
+      CardComponent: EspecialidadCards,
+      columns: orderedColumns.especialidades,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    unidades: {
+      title: "Lista de Unidades",
+      items: unidades || [],
+      TableComponent: null,
+      CardComponent: UnidadCards,
+      columns: orderedColumns.unidades,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

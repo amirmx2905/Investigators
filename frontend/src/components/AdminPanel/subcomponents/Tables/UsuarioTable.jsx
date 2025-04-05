@@ -34,6 +34,16 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
   };
 
   const formatColumnValue = (column, value, usuario) => {
+    if (column === "id") {
+      return (
+        <div className="flex items-center">
+          <span className="flex items-center justify-center bg-gray-700 text-gray-300 rounded-full h-6 w-6 text-xs font-medium">
+            {value}
+          </span>
+        </div>
+      );
+    }
+
     if (column === "activo") {
       return (
         <span
@@ -123,7 +133,7 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
                   <div className="flex space-x-2">
                     <button
-                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 rounded transition-colors duration-200"
                       title="Editar"
                       onClick={() => onEdit(usuario)}
                     >
@@ -143,7 +153,7 @@ function UsuarioTable({ usuarios = [], visibleColumns, onEdit, onDelete }) {
                       </svg>
                     </button>
                     <button
-                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 transition-colors duration-200"
+                      className="cursor-pointer p-1 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors duration-200"
                       title="Eliminar"
                       onClick={() => onDelete(usuario)}
                     >
