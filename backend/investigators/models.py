@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import datetime
 
 class Unidad(models.Model):
@@ -279,48 +280,29 @@ class Usuario(models.Model):
         verbose_name_plural = "Usuarios"
     
     def check_password(self, raw_password):
-        """
-        Verifica si la contraseña ingresada coincide con la almacenada
-        """
         from django.contrib.auth.hashers import check_password
         return check_password(raw_password, self.contrasena)
     
     def set_password(self, raw_password):
-        """
-        Establece una nueva contraseña hasheada
-        """
         from django.contrib.auth.hashers import make_password
         self.contrasena = make_password(raw_password)
     
     def actualizar_ultimo_acceso(self):
-        """
-        Actualiza la fecha del último acceso al momento actual
-        """
-        self.ultimo_acceso = datetime.datetime.now()
+        self.ultimo_acceso = timezone.now()
         self.save(update_fields=['ultimo_acceso'])
     
     def incrementar_intentos_login(self):
-        """
-        Incrementa el contador de intentos de login fallidos
-        y desactiva la cuenta si supera el límite
-        """
         self.intentos_login += 1
         if self.intentos_login >= 5:
             self.activo = False
         self.save(update_fields=['intentos_login', 'activo'])
     
     def resetear_intentos_login(self):
-        """
-        Resetea el contador de intentos de login fallidos
-        """
         if self.intentos_login > 0:
             self.intentos_login = 0
             self.save(update_fields=['intentos_login'])
     
     def get_nombre(self):
-        """
-        Obtiene el nombre del perfil relacionado con el usuario
-        """
         if self.rol == 'investigador' and self.investigador:
             return self.investigador.nombre
         elif self.rol == 'estudiante' and self.estudiante:
@@ -328,63 +310,42 @@ class Usuario(models.Model):
         return self.nombre_usuario
     
     def get_correo(self):
-        """
-        Obtiene el correo del perfil relacionado con el usuario
-        """
         if self.rol == 'investigador' and self.investigador:
             return self.investigador.correo
         elif self.rol == 'estudiante' and self.estudiante:
             return self.estudiante.correo
         return None
     
-    # Métodos para compatibilidad con DRF y JWT
     @property
     def is_anonymous(self):
-        """Para compatibilidad con DRF"""
         return False
     
     @property
     def is_authenticated(self):
-        """Para compatibilidad con DRF"""
         return True
         
     @property
     def is_staff(self):
-        """Para verificar permisos de administrador en DRF"""
         return self.rol == 'admin'
     
     @property
     def is_active(self):
-        """Para compatibilidad con DRF"""
         return self.activo
     
     def get_username(self):
-        """Para compatibilidad con DRF"""
         return self.nombre_usuario
     
     @property
     def username(self):
-        """Propiedad alternativa para compatibilidad"""
         return self.nombre_usuario
     
     def has_perm(self, perm, obj=None):
-        """
-        Para compatibilidad con el sistema de permisos de Django
-        Devuelve True si el usuario tiene el permiso especificado
-        """
         return self.is_staff
     
     def has_module_perms(self, app_label):
-        """
-        Para compatibilidad con el sistema de permisos de Django
-        Devuelve True si el usuario tiene permisos para el módulo
-        """
         return self.is_staff
     
     def get_all_permissions(self, obj=None):
-        """
-        Devuelve todos los permisos que tiene este usuario
-        """
         if self.is_staff:
             return {'*'}
         return set()

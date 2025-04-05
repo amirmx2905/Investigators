@@ -99,6 +99,7 @@ print("\n" + "SECRET_KEY = " + get_random_secret_key() + "\n")
 
 #### 6. Make the migrations
 ```bash
+#Make sure to be in the backend Directory
 python manage.py makemigrations
 ```
 
