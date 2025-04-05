@@ -15,11 +15,21 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
     if (expandedId === id) {
       setExpandedId(null);
       setInvestigadorDetalle(null);
+      document.dispatchEvent(
+        new CustomEvent("investigator-pagination-control", {
+          detail: { show: true },
+        })
+      );
       return;
     }
 
     setExpandedId(id);
     setCargandoDetalle(true);
+    document.dispatchEvent(
+      new CustomEvent("investigator-pagination-control", {
+        detail: { show: false },
+      })
+    );
 
     try {
       const response = await api.get(`/investigadores/${id}/detalle/`);
@@ -49,6 +59,11 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
   const handleClose = () => {
     setExpandedId(null);
     setInvestigadorDetalle(null);
+    document.dispatchEvent(
+      new CustomEvent("investigator-pagination-control", {
+        detail: { show: true },
+      })
+    );
   };
 
   useEffect(() => {
@@ -359,7 +374,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
           </div>
         </div>
       </div>
-      
+
       {/* Contenedor de secciones con scroll */}
       <div className="p-6 grid grid-cols-1 gap-8">
         {/* Sección 1: Información General */}
