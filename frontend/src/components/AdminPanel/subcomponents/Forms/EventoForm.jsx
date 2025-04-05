@@ -496,7 +496,7 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
                             type="button"
                             className="w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-700 text-gray-200 flex items-center justify-between"
                             onClick={() => handleSelectInvestigador(investigador)}
-                            onMouseDown={(e) => e.preventDefault()} // Evita que el input pierda el foco antes del clic
+                            onMouseDown={(e) => e.preventDefault()}
                           >
                             <div>
                               <span className="block">{investigador.nombre}</span>

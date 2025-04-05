@@ -17,18 +17,11 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
     ordenes_autores: [],
   });
 
-  // Estado para los investigadores seleccionados con su orden
   const [autoresSeleccionados, setAutoresSeleccionados] = useState([]);
-  
-  // Estado para la lista de investigadores disponibles
   const [investigadores, setInvestigadores] = useState([]);
-  
-  // Estados para búsqueda y selección de investigadores
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const searchRef = useRef(null);
-  
-  // Estados de control
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
@@ -60,7 +53,6 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
         ordenes_autores: [],
       });
 
-      // Si el artículo tiene autores, los ordenamos por orden_autor
       if (articulo.autores && articulo.autores.length > 0) {
         const autoresOrdenados = [...articulo.autores].sort(
           (a, b) => a.orden_autor - b.orden_autor
@@ -156,17 +148,13 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
     }));
   };
 
-  // Función para agregar un investigador a la lista de autores
   const handleAddAutor = (investigador) => {
-    // Verificar si ya está en la lista
     if (autoresSeleccionados.some(autor => autor.id === investigador.id)) {
       return;
     }
 
-    // Asignar orden automáticamente (siguiente número disponible)
     const nuevoOrden = autoresSeleccionados.length + 1;
 
-    // Agregar el investigador a la lista de autores seleccionados
     setAutoresSeleccionados([
       ...autoresSeleccionados,
       {
@@ -176,16 +164,13 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
       },
     ]);
 
-    // Limpiar búsqueda y cerrar dropdown
     setSearchTerm("");
     setShowDropdown(false);
   };
 
-  // Función para eliminar un autor de la lista
   const handleRemoveAutor = (id) => {
     const nuevosAutores = autoresSeleccionados.filter(autor => autor.id !== id);
     
-    // Reordenar los autores restantes
     const autoresReordenados = nuevosAutores.map((autor, index) => ({
       ...autor,
       orden: index + 1,
@@ -194,33 +179,25 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
     setAutoresSeleccionados(autoresReordenados);
   };
 
-  // Función para cambiar el orden de un autor
   const handleOrderChange = (id, newOrder) => {
-    // Validar que el orden sea un número positivo
     if (newOrder < 1 || isNaN(newOrder)) return;
     
-    // Clonar la lista de autores
     const autoresModificados = [...autoresSeleccionados];
     
-    // Encontrar el autor a modificar
     const autorIndex = autoresModificados.findIndex(autor => autor.id === id);
     if (autorIndex === -1) return;
     
-    // Modificar el orden del autor
     autoresModificados[autorIndex] = {
       ...autoresModificados[autorIndex],
       orden: newOrder,
     };
     
-    // Ordenar por el nuevo orden
     autoresModificados.sort((a, b) => a.orden - b.orden);
     
     setAutoresSeleccionados(autoresModificados);
   };
 
-  // Filtrar investigadores para la búsqueda
   const getFilteredInvestigadores = () => {
-    // Filtrar por término de búsqueda y excluir los ya seleccionados
     return investigadores.filter(
       (inv) => 
         inv.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -234,19 +211,15 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
     setError(null);
 
     try {
-      // Preparar los datos para enviar al servidor
       const dataToSend = { ...formData };
       
-      // Obtener los IDs y órdenes de los autores seleccionados
       dataToSend.investigadores_ids = autoresSeleccionados.map(autor => autor.id);
       dataToSend.ordenes_autores = autoresSeleccionados.map(autor => autor.orden);
       
-      // Validar que los arrays tengan la misma longitud
       if (dataToSend.investigadores_ids.length !== dataToSend.ordenes_autores.length) {
         throw new Error("Error en la asignación de autores y órdenes");
       }
       
-      // Validar fecha de publicación
       if (dataToSend.fecha_publicacion === "") {
         dataToSend.fecha_publicacion = null;
       }

@@ -2,14 +2,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from "react";
 
-// Importar componentes
 import Header from "./subcomponents/Header";
 import Footer from "./subcomponents/Footer";
 import MobileMenu from "./subcomponents/MobileMenu";
 import Backdrop from "./subcomponents/Backdrop";
 import MenuOverlay from "./subcomponents/MenuOverlay";
 
-// Importar hooks
 import useLayoutStyles from "./hooks/useLayoutStyles";
 
 function Layout({ children }) {
@@ -19,14 +17,11 @@ function Layout({ children }) {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Páginas actuales
   const isAdminPanel = location.pathname === "/admin";
   const isHomePage = location.pathname === "/home";
 
-  // Hook para los estilos globales
   useLayoutStyles();
 
-  // Detectar si es dispositivo móvil
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -44,7 +39,6 @@ function Layout({ children }) {
     };
   }, [isMobile, menuOpen]);
 
-  // Manejadores de navegación
   const handleLogout = () => {
     logout();
     navigate("/");

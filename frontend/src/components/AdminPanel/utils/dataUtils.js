@@ -1,5 +1,4 @@
-// Import necessary services and libraries
-import { columnOrders } from "../hooks/useTableControls"; //order of columns
+import { columnOrders } from "../hooks/useTableControls";
 import {
   UsuarioTable,
   InvestigadorTable,
@@ -81,7 +80,6 @@ export const getTabData = (
       type = "usuario";
   }
 
-  // Obtener columnas visibles ordenadas según el orden definido
   const orderedColumns = {
     usuarios: sortColumnsByOrder(visibleColumns.usuarios || [], "usuarios"),
     investigadores: sortColumnsByOrder(visibleColumns.investigadores || [],"investigadores"),
