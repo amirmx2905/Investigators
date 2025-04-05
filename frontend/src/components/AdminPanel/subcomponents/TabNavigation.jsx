@@ -181,7 +181,7 @@ function TabNavigation({ activeTab, changeTab }) {
       </div>
       
       {/* Estilos globales para asegurar que los modales estén por encima */}
-      <style jsx global>{`
+      <style jsx global = "true">{`
         /* Asegurar que los modales siempre estén por encima de todo */
         .modal-container, 
         div[role="dialog"],

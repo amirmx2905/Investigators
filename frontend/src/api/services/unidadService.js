@@ -13,12 +13,7 @@ const getUnidades = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando unidades (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/unidades/?${params.toString()}`);
-    console.log("Respuesta de unidades:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getUnidades:", error);

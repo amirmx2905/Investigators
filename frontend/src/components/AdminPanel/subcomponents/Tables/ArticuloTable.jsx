@@ -15,7 +15,6 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
   }, []);
 
   useEffect(() => {
-    // Cerrar el modal si se presiona ESC
     const handleEsc = (event) => {
       if (event.keyCode === 27) {
         closeModal();
@@ -27,37 +26,26 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
     };
   }, []);
 
-  // Efecto para bloquear el scroll cuando el modal está abierto
   useEffect(() => {
     if (showAutoresModal) {
-      // Guardar la posición actual del scroll
       const scrollY = window.scrollY;
-      
-      // Bloquear el scroll del body
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
-      
-      // Asegurarse que ningún elemento del tab navigation aparezca por encima del modal
       const tabNavigation = document.querySelector('.admin-fadeIn');
       if (tabNavigation) {
         tabNavigation.style.zIndex = '20';
       }
-      
-      // Enfocar en el modal (asegurarse de que es visible)
       if (modalRef.current) {
         setTimeout(() => {
           modalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
       }
     } else {
-      // Restaurar el scroll cuando se cierra el modal
       const scrollY = document.body.style.top;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      
-      // Restaurar la posición del scroll
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
       }
@@ -124,7 +112,6 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
     }
 
     if (column === "fecha_publicacion") {
-      // Formatear la fecha YYYY-MM-DD a DD/MM/YYYY
       if (!value) return "—";
       try {
         const fecha = new Date(value);
@@ -152,7 +139,6 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
     if (column === "abstracto") {
       if (!value) return "—";
       
-      // Mostrar una versión recortada con tooltip para el texto completo
       return (
         <div className="max-w-md">
           <span 
@@ -170,7 +156,6 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
         return <span className="text-gray-400">Sin autores</span>;
       }
 
-      // Botón de autores con estilo similar a los botones de acción
       return (
         <button
           onClick={() => openModal(articulo)}
@@ -479,7 +464,7 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx = "true">{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }

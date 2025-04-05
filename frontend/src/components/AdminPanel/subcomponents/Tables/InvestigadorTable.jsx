@@ -31,8 +31,6 @@ function InvestigadorTable({
         const idsConUsuario = usuarios
           .filter((usuario) => usuario.investigador !== null)
           .map((usuario) => usuario.investigador);
-
-        console.log("Investigadores con usuario asignado:", idsConUsuario);
         setInvestigadoresConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);

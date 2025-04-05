@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
 
 function UnidadCards({ items, onEdit, onDelete }) {
-  console.log("UnidadCards recibió:", items);
-  
+  const prevItemsRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [visibleItems, setVisibleItems] = useState([]);
 
-  // Asegurarse de que items sea un array y manejar su carga
+  useEffect(() => {
+    if (JSON.stringify(prevItemsRef.current) !== JSON.stringify(items)) {
+      prevItemsRef.current = items;
+    }
+  }, [items]);
+
   useEffect(() => {
     if (Array.isArray(items)) {
       const timer = setTimeout(() => {
@@ -24,12 +29,26 @@ function UnidadCards({ items, onEdit, onDelete }) {
     }
   }, [items]);
 
-  // Si items no es un array o está vacío
+  const handleEdit = useCallback(
+    (unidad) => {
+      onEdit(unidad);
+    },
+    [onEdit]
+  );
+
+  const handleDelete = useCallback(
+    (unidad) => {
+      onDelete(unidad);
+    },
+    [onDelete]
+  );
+
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <div className="w-full flex justify-center items-center p-8 bg-gray-800/60 rounded-lg border border-gray-700">
         <p className="text-gray-400 text-lg">
-          No hay unidades registradas. Crea una nueva unidad usando el botón "Nueva Unidad".
+          No hay unidades registradas. Crea una nueva unidad usando el botón
+          "Nueva Unidad".
         </p>
       </div>
     );
@@ -38,12 +57,12 @@ function UnidadCards({ items, onEdit, onDelete }) {
   return (
     <>
       {items.map((unidad, index) => (
-        <UnidadCard
+        <MemoizedUnidadCard
           key={unidad.id}
           unidad={unidad}
           index={index}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       ))}
     </>
@@ -85,12 +104,14 @@ function UnidadCard({ unidad, index, onEdit, onDelete }) {
                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                   />
                 </svg>
-                <span className="text-sm text-gray-400 ml-1.5">Unidad académica</span>
+                <span className="text-sm text-gray-400 ml-1.5">
+                  Unidad académica
+                </span>
               </div>
             </div>
           </div>
         </div>
-        
+
         {/* Badge de ID */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 my-3 flex items-center">
           <svg
@@ -160,5 +181,7 @@ function UnidadCard({ unidad, index, onEdit, onDelete }) {
     </div>
   );
 }
+
+const MemoizedUnidadCard = memo(UnidadCard);
 
 export default UnidadCards;

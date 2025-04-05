@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function CarreraCards({ items, onEdit, onDelete }) {
-  console.log("CarreraCards recibió:", items);
-  
+  const prevItemsRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [visibleItems, setVisibleItems] = useState([]);
 
-  // Asegurarse de que items sea un array y manejar su carga
+  useEffect(() => {
+    if (JSON.stringify(prevItemsRef.current) !== JSON.stringify(items)) {
+      prevItemsRef.current = items;
+    }
+  }, [items]);
+
   useEffect(() => {
     if (Array.isArray(items)) {
       const timer = setTimeout(() => {
@@ -24,12 +29,12 @@ function CarreraCards({ items, onEdit, onDelete }) {
     }
   }, [items]);
 
-  // Si items no es un array o está vacío
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <div className="w-full flex justify-center items-center p-8 bg-gray-800/60 rounded-lg border border-gray-700">
         <p className="text-gray-400 text-lg">
-          No hay carreras registradas. Crea una nueva carrera usando el botón "Nueva Carrera".
+          No hay carreras registradas. Crea una nueva carrera usando el botón
+          "Nueva Carrera".
         </p>
       </div>
     );
@@ -85,12 +90,14 @@ function CarreraCard({ carrera, index, onEdit, onDelete }) {
                     d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                   />
                 </svg>
-                <span className="text-sm text-gray-400 ml-1.5">Carrera académica</span>
+                <span className="text-sm text-gray-400 ml-1.5">
+                  Carrera académica
+                </span>
               </div>
             </div>
           </div>
         </div>
-        
+
         {/* Badge de ID */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 my-3 flex items-center">
           <svg

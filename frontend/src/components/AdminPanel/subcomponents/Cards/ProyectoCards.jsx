@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 function ProyectoCards({ items, onEdit, onDelete }) {
-  const [setVisibleItems] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [visibleItems, setVisibleItems] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,7 +17,6 @@ function ProyectoCards({ items, onEdit, onDelete }) {
     }, 50);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   if (!items || items.length === 0) {

@@ -4,7 +4,6 @@ function EventoCards({ items, onEdit, onDelete }) {
   // eslint-disable-next-line no-unused-vars
   const [visibleItems, setVisibleItems] = useState([]);
   
-  // Ordenar eventos por ID de forma ascendente
   const eventosOrdenados = [...items].sort((a, b) => a.id - b.id);
 
   useEffect(() => {
@@ -50,7 +49,6 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
   const [showParticipantes, setShowParticipantes] = useState(false);
 
   useEffect(() => {
-    // Cuando se contrae la tarjeta, también ocultar la sección de participantes
     if (!expanded) {
       setShowParticipantes(false);
     }
@@ -68,12 +66,10 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
     }).format(date);
   };
 
-  // Obtener la primera letra del nombre del evento para el avatar
   const getEventInitial = () => {
     return evento.nombre_evento ? evento.nombre_evento.charAt(0).toUpperCase() : "E";
   };
 
-  // Obtener el color de fondo para el tipo de evento
   const getTipoEventoStyles = (tipo) => {
     if (!tipo) return "bg-gray-900/60 text-gray-300";
     

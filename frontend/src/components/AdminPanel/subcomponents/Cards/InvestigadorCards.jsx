@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import api from "../../../../api/apiConfig";
 
 function InvestigadorCards({ items, onEdit, onDelete }) {
@@ -9,6 +9,7 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
   const [expandedId, setExpandedId] = useState(null);
   const [investigadorDetalle, setInvestigadorDetalle] = useState(null);
   const [cargandoDetalle, setCargandoDetalle] = useState(false);
+  const detalleRef = useRef(null);
 
   const handleExpand = async (id) => {
     if (expandedId === id) {
@@ -29,6 +30,21 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
       setCargandoDetalle(false);
     }
   };
+
+  useEffect(() => {
+    if (expandedId !== null && detalleRef.current) {
+      setTimeout(() => {
+        const rect = detalleRef.current.getBoundingClientRect();
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const absoluteTop = rect.top + scrollTop - 16;
+        window.scrollTo({
+          top: absoluteTop,
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  }, [expandedId, cargandoDetalle]);
 
   const handleClose = () => {
     setExpandedId(null);
@@ -117,11 +133,11 @@ function InvestigadorCards({ items, onEdit, onDelete }) {
     }
 
     return (
-      <div className="col-span-full">
+      <div className="col-span-full" ref={detalleRef}>
         <div className="mb-4 flex justify-between items-center">
           <button
             onClick={handleClose}
-            className="cursor-pointer bg-gray-700 transition-all duration-200 ease-in-out hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center"
+            className="cursor-pointer bg-gray-700 transition-all duration-200 ease-in-out hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center w-full sm:w-auto"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -363,7 +379,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
               value={investigador.unidad_nombre || "No asignada"}
             />
             <InfoCard
-              icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              icon="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
               label="Especialidad"
               value={investigador.especialidad_nombre || "No asignada"}
             />
@@ -394,9 +410,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
                   <div
                     key={idx}
                     className={`rounded-lg overflow-hidden bg-gray-800/50 border ${
-                      jefatura.activo
-                        ? "border-blue-500/30"
-                        : "border-gray-700"
+                      jefatura.activo ? "border-blue-500/30" : "border-gray-700"
                     }`}
                   >
                     <div
@@ -715,7 +729,6 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
   );
 }
 
-// Componente para cada sección con título y contenido
 function Section({
   title,
   icon,
@@ -872,32 +885,6 @@ function InvestigadorCard({
               {investigador.correo}
             </p>
           </div>
-
-          {!isFullWidth && (
-            <div
-              className={`ml-2 flex items-center justify-center p-1.5 rounded-full text-gray-400 hover:text-white hover:bg-gray-700/50 transition-colors`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onExpand();
-              }}
-              title="Ver detalles"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          )}
         </div>
 
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 mb-3 flex items-center justify-between">
@@ -1201,7 +1188,6 @@ function InvestigadorCard({
   );
 }
 
-// Función utilitaria para obtener el nivel SNII con estilo de color
 function getNivelSNII(investigador) {
   if (!investigador.nivel_snii || !investigador.nivel_snii_nombre) {
     return {
@@ -1253,7 +1239,6 @@ function getNivelSNII(investigador) {
   };
 }
 
-// Función utilitaria para obtener la línea de investigación
 function getLineaInvestigacion(investigador) {
   if (investigador.lineas && investigador.lineas.length > 0) {
     return investigador.lineas[0].nombre;
@@ -1261,7 +1246,6 @@ function getLineaInvestigacion(investigador) {
   return "Sin línea asignada";
 }
 
-// Función para obtener estilo según estado del proyecto
 function getStatusStyles(status) {
   if (!status) return "bg-gray-700 text-gray-300";
 

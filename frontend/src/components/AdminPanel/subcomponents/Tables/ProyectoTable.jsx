@@ -17,7 +17,6 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
   }, []);
 
   useEffect(() => {
-    // Cerrar el modal si se presiona ESC
     const handleEsc = (event) => {
       if (event.keyCode === 27) {
         closeModals();
@@ -29,24 +28,16 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
     };
   }, []);
 
-  // Efecto para bloquear el scroll cuando algún modal está abierto
   useEffect(() => {
     if (showTechModal || showTeamModal) {
-      // Guardar la posición actual del scroll
       const scrollY = window.scrollY;
-      
-      // Bloquear el scroll del body
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      
-      // Asegurarse que ningún elemento del tab navigation aparezca por encima del modal
+      document.body.style.width = '100%';      
       const tabNavigation = document.querySelector('.admin-fadeIn');
       if (tabNavigation) {
         tabNavigation.style.zIndex = '20';
       }
-      
-      // Enfocar en el modal correspondiente
       if (showTechModal && techModalRef.current) {
         setTimeout(() => {
           techModalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -57,13 +48,10 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         }, 100);
       }
     } else {
-      // Restaurar el scroll cuando se cierra el modal
       const scrollY = document.body.style.top;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      
-      // Restaurar la posición del scroll
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
       }
@@ -168,7 +156,6 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         return <span className="text-gray-400">Sin herramientas</span>;
       }
 
-      // Botón de tecnologías con estilo similar a los botones de acción de artículos
       return (
         <button
           onClick={() => openTechModal(proyecto)}
@@ -209,7 +196,6 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         return <span className="text-gray-400">Solo líder</span>;
       }
 
-      // Botón de equipo con estilo similar a los botones de acción de artículos
       return (
         <button
           onClick={() => openTeamModal(proyecto)}
@@ -679,7 +665,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx = "true">{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }

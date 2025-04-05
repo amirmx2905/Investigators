@@ -160,7 +160,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
       typeof value === "object" &&
       !React.isValidElement(value)
     ) {
-      console.warn(`Valor de columna '${column}' es un objeto:`, value);
       return JSON.stringify(value);
     }
 
@@ -183,15 +182,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
     }
 
     if (column === "tipo_evento_nombre") {
-      // Añadir log para depuración
-      console.log("Renderizando tipo_evento_nombre:", {
-        value,
-        tipoEventoNombre: evento.tipo_evento_nombre,
-        tipoEvento: evento.tipo_evento,
-        tipoEventoObj: evento.tipo_evento_obj
-      });
-      
-      // 1. Si tenemos el nombre directamente en tipo_evento_nombre
       if (evento.tipo_evento_nombre) {
         return (
           <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
@@ -200,7 +190,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         );
       }
       
-      // 2. Si tenemos el valor directamente en value (parámetro)
       if (value) {
         return (
           <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
@@ -209,7 +198,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         );
       }
 
-      // 3. Si tenemos un objeto tipo_evento con propiedad nombre
       if (
         evento.tipo_evento &&
         typeof evento.tipo_evento === "object" &&
@@ -222,7 +210,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         );
       }
 
-      // 4. Si tenemos tipo_evento_obj (del serializador)
       if (evento.tipo_evento_obj && evento.tipo_evento_obj.nombre) {
         return (
           <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
@@ -231,13 +218,11 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         );
       }
 
-      // 5. Si solo tenemos el ID numérico del tipo de evento
       if (
         evento.tipo_evento &&
         (typeof evento.tipo_evento === "number" ||
           !isNaN(parseInt(evento.tipo_evento)))
       ) {
-        // Primero buscar en el estado local
         const tipoEncontrado = tiposEvento.find(
           (tipo) => tipo.id === parseInt(evento.tipo_evento)
         );
@@ -250,7 +235,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
           );
         }
         
-        // Luego buscar en la caché global
         if (window.tiposEventoCache && window.tiposEventoCache.length > 0) {
           const tipoEncontradoCache = window.tiposEventoCache.find(
             (tipo) => tipo.id === parseInt(evento.tipo_evento)
@@ -265,7 +249,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
           }
         }
 
-        // Si no encontramos nada, mostrar con mejor formato
         return (
           <span className="px-2 py-1 text-xs rounded-full bg-indigo-900/40 text-indigo-300">
             Tipo {evento.tipo_evento}
@@ -273,7 +256,6 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         );
       }
 
-      // 6. Si no tenemos información del tipo de evento
       return (
         <span className="px-2 py-1 text-xs rounded-full bg-gray-700/40 text-gray-300">
           Sin tipo
@@ -656,7 +638,7 @@ function EventoTable({ eventos, visibleColumns, onEdit, onDelete }) {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx = "true">{`
         @keyframes fadeIn {
           from {
             opacity: 0;

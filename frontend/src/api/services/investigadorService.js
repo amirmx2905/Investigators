@@ -13,12 +13,7 @@ const getInvestigadores = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando investigadores (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/investigadores/?${params.toString()}`);
-    console.log("Respuesta de investigadores:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getInvestigadores:", error);

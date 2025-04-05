@@ -56,7 +56,6 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
     }
   };
 
-  // Ordenar autores por orden_autor si existen
   const autoresOrdenados = articulo.autores
     ? [...articulo.autores].sort((a, b) => a.orden_autor - b.orden_autor)
     : [];

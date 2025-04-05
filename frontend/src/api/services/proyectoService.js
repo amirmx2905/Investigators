@@ -13,12 +13,7 @@ const getProyectos = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    console.log(
-      `Solicitando proyectos (página ${page}, ${pageSize} por página)...`
-    );
-
     const response = await api.get(`/proyectos/?${params.toString()}`);
-    console.log("Respuesta de proyectos:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error en getProyectos:", error);
