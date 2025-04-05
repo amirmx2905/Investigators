@@ -12,14 +12,12 @@ function CarreraForm({ isOpen, onClose, carrera = null, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Cargar datos cuando se edita una carrera existente
   useEffect(() => {
     if (isOpen && carrera) {
       setFormData({
         nombre: carrera.nombre || "",
       });
     } else if (isOpen) {
-      // Resetear formulario al abrir para crear una nueva carrera
       setFormData({
         nombre: "",
       });

@@ -235,7 +235,7 @@ function ColumnSelector({
               Seleccionar columnas
             </div>
 
-            {/* Lista de columnas disponibles */}
+            {/* Lista de columnas */}
             <div>
               {columnOrders[activeTab]?.map((column) => (
                 <div

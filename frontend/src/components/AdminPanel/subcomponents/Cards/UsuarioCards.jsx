@@ -89,14 +89,13 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
     >
       {/* Contenido de la tarjeta */}
       <div className="p-4">
-        {/* Cabecera con foto, nombre y banner de status/rol */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl relative">
             {usuario.nombre_usuario
               ? usuario.nombre_usuario.charAt(0).toUpperCase()
               : "U"}
 
-            {/* Indicador de estado (activo/inactivo) */}
+            {/* Indicador de estado */}
             <span
               className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-gray-800 ${
                 usuario.activo ? "bg-green-500" : "bg-red-500"
@@ -117,7 +116,7 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
             <p className="text-sm text-gray-400 truncate">{usuario.correo}</p>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -181,13 +180,12 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
           </div>
         </div>
 
-        {/* Contenido expandible */}
         <div
           className={`transition-all duration-300 overflow-hidden space-y-3 ${
             expanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          {/* Tarjeta de vinculación - Responsive */}
+          {/* Tarjeta de vinculación */}
           <div
             className="bg-gradient-to-r py-2.5 px-3 rounded-md text-white text-sm flex items-center justify-between"
             style={{
@@ -227,9 +225,8 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
             </div>
           </div>
 
-          {/* Detalles en grid */}
           <div className="space-y-2 text-sm">
-            {/* Nombre de usuario (si existe) */}
+            {/* Nombre de usuario */}
             <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
               <div className="flex items-center flex-shrink-0">
                 <svg
@@ -253,7 +250,7 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
               </span>
             </div>
 
-            {/* Rol - Ahora a ancho completo */}
+            {/* Rol */}
             <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
               <div className="flex items-center flex-shrink-0">
                 <svg
@@ -277,7 +274,7 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
               </span>
             </div>
 
-            {/* Fecha de creación (si existe) - Ancho completo */}
+            {/* Fecha de creación */}
             {usuario.fecha_creacion && (
               <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
                 <div className="flex items-center flex-shrink-0">
@@ -310,7 +307,7 @@ function UserCard({ usuario, index, onEdit, onDelete }) {
               </div>
             )}
 
-            {/* Última actividad (si existe) */}
+            {/* Última actividad */}
             {usuario.ultima_actividad && (
               <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
                 <div className="flex items-center flex-shrink-0">

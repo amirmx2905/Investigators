@@ -15,26 +15,22 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     tipo_evento: "",
   });
   
-  // Estados para listas de datos
   const [tiposEvento, setTiposEvento] = useState([]);
   const [rolesEvento, setRolesEvento] = useState([]);
   const [investigadores, setInvestigadores] = useState([]);
   const [participantes, setParticipantes] = useState([]);
   
-  // Estados para UI
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(true);
   const [error, setError] = useState(null);
   const [participantesError, setParticipantesError] = useState(null);
   
-  // Para gestionar la búsqueda y selección de investigadores
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedRol, setSelectedRol] = useState("");
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Formatear fecha para input
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -43,7 +39,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     return date.toISOString().split("T")[0];
   };
 
-  // Efecto para cerrar el dropdown cuando se hace clic fuera
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -56,7 +51,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     };
   }, []);
 
-  // Cargar datos iniciales
   useEffect(() => {
     async function fetchData() {
       setFetchingData(true);
@@ -64,7 +58,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
       setParticipantesError(null);
       
       try {
-        // Intentar cargar todos los catálogos de manera independiente
         let tiposRes = [];
         let rolesRes = [];
         let investigadoresRes = { results: [] };
@@ -87,12 +80,10 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
           console.error("Error al cargar investigadores:", err);
         }
 
-        // Asignar datos a estados (incluso si algunos fallan)
         setTiposEvento(tiposRes || []);
         setRolesEvento(rolesRes || []);
         setInvestigadores(investigadoresRes?.results || investigadoresRes || []);
 
-        // Si es edición, cargar datos del evento
         if (isEdit && evento?.id) {
           try {
             const eventoCompleto = await eventoService.getEvento(evento.id);
@@ -106,8 +97,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
               empresa_invita: eventoCompleto.empresa_invita || "",
               tipo_evento: eventoCompleto.tipo_evento?.id || eventoCompleto.tipo_evento || "",
             });
-            
-            // Cargar participantes del evento
             if (eventoCompleto.investigadores) {
               setParticipantes(eventoCompleto.investigadores.map(inv => ({
                 investigador_id: inv.investigador_id,
@@ -119,10 +108,8 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
             }
           } catch (err) {
             console.error(`Error al cargar evento ${evento.id}:`, err);
-            // No establecemos el error aquí para permitir que el formulario siga funcionando
           }
         } else {
-          // Para un nuevo evento, inicializar con fecha actual
           const today = new Date().toISOString().split('T')[0];
           setFormData(prev => ({
             ...prev,
@@ -131,7 +118,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
         }
       } catch (err) {
         console.error("Error al cargar datos:", err);
-        // Mostrar un mensaje más detallado para depuración
         setError(`Error al cargar los datos necesarios: ${err.message || "Error desconocido"}. Por favor, intente más tarde.`);
       } finally {
         setFetchingData(false);
@@ -141,7 +127,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     if (isOpen) {
       fetchData();
     } else {
-      // Limpiar estado al cerrar
       setFormData({
         nombre_evento: "",
         descripcion: "",
@@ -166,35 +151,24 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
       [name]: value
     }));
   };
-
-  // Filtrar investigadores según el término de búsqueda
   const getFilteredInvestigadores = () => {
     if (!searchTerm.trim()) return [];
     
-    // Excluir los investigadores que ya están añadidos como participantes
     const investigadoresDisponibles = investigadores.filter(
       inv => !participantes.some(p => p.investigador_id === inv.id)
     );
-    
-    // Filtrar por término de búsqueda
     return investigadoresDisponibles.filter(
       inv => inv.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    ).slice(0, 10); // Limitamos a 10 resultados para mejor rendimiento
+    ).slice(0, 10);
   };
 
   const handleSelectInvestigador = (investigador) => {
-    // Si no hay rol seleccionado, mostrar error específico de participantes
     if (!selectedRol) {
       setParticipantesError("Por favor seleccione un rol antes de agregar un participante");
       return;
     }
-
-    // Limpiar el error de participantes si existe
     setParticipantesError(null);
-
-    const rol = rolesEvento.find(r => r.id === parseInt(selectedRol));
-    
-    // Agregar el investigador a la lista de participantes
+    const rol = rolesEvento.find(r => r.id === parseInt(selectedRol));    
     setParticipantes(prev => [
       ...prev,
       {
@@ -204,9 +178,7 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
         correo: investigador.correo || "",
         rol_nombre: rol ? rol.nombre : "Rol desconocido"
       }
-    ]);
-    
-    // Limpiar búsqueda pero mantener rol seleccionado
+    ]); 
     setSearchTerm("");
     setShowDropdown(false);
   };
@@ -216,17 +188,12 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
       prev.filter(p => p.investigador_id !== investigadorId)
     );
   };
-
-  // Función para asegurar formato YYYY-MM-DD para las fechas
   const formatDateForServer = (dateString) => {
     if (!dateString) return null;
     
     try {
-      // Convertir a formato ISO sin la parte de tiempo
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return null;
-      
-      // Tomar solo la parte YYYY-MM-DD del formato ISO
       return date.toISOString().split('T')[0];
     } catch (e) {
       console.error("Error al formatear fecha:", e);
@@ -242,7 +209,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
       return;
     }
 
-    // Verificar que la fecha de fin sea posterior a la fecha de inicio
     if (formData.fecha_inicio && formData.fecha_fin) {
       const inicio = new Date(formData.fecha_inicio);
       const fin = new Date(formData.fecha_fin);
@@ -258,7 +224,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     setParticipantesError(null);
 
     try {
-      // Preparar datos para enviar al servidor asegurando el formato correcto de fechas
       const datosEvento = {
         ...formData,
         fecha_inicio: formatDateForServer(formData.fecha_inicio),
@@ -278,8 +243,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
         result = await eventoService.createEvento(datosEvento);
         console.log("Evento creado exitosamente:", result);
       }
-
-      // Asegurarnos de llamar a onSuccess con la acción correcta
       if (typeof onSuccess === 'function') {
         onSuccess({
           ...result,
@@ -287,8 +250,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
           message: isEdit ? 'Evento actualizado con éxito' : 'Evento creado con éxito'
         });
       }
-      
-      // Cerrar el modal solo si la operación tuvo éxito
       onClose();
     } catch (err) {
       console.error("Error al guardar el evento:", err);
@@ -321,7 +282,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
     }
   };
 
-  // Lista filtrada de investigadores para el dropdown
   const filteredInvestigadores = getFilteredInvestigadores();
 
   return (
@@ -456,7 +416,7 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
             )}
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-              {/* Selección de rol - primera */}
+              {/* Selección de rol */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
                   Rol del participante
@@ -465,7 +425,6 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
                   value={selectedRol}
                   onChange={(e) => {
                     setSelectedRol(e.target.value);
-                    // Limpiar error de participantes si el usuario selecciona un rol
                     if (e.target.value) {
                       setParticipantesError(null);
                     }
@@ -483,7 +442,7 @@ function EventoForm({ isOpen, onClose, evento = null, onSuccess }) {
                 </select>
               </div>
 
-              {/* Campo de búsqueda interactiva - más grande */}
+              {/* Campo de búsqueda interactiva */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-300 mb-1">
                   Buscar investigador

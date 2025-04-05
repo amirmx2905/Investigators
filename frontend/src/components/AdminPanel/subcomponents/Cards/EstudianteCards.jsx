@@ -126,7 +126,6 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
       }}
     >
       <div className="p-4">
-        {/* Cabecera con foto, nombre y badge */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-xl relative">
             {estudiante.nombre
@@ -154,7 +153,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
             </p>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -183,7 +182,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           </button>
         </div>
 
-        {/* Badge de ID con indicador si tiene usuario */}
+        {/* Badge de ID */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 mb-3 flex items-center justify-between">
           <div className="text-sm text-gray-300 flex items-center">
             <svg
@@ -238,7 +237,7 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           </div>
         </div>
 
-        {/* Tarjetas de info (para versión no expandida) */}
+        {/* Tarjetas de info */}
         <div
           className={`transition-all duration-300 ${
             expanded ? "hidden" : "block"

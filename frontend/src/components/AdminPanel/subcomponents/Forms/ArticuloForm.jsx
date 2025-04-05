@@ -327,7 +327,7 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
             />
           </div>
 
-          {/* Revista y País (en fila) */}
+          {/* Revista y País */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -358,7 +358,7 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
             </div>
           </div>
 
-          {/* DOI y Fecha (en fila) */}
+          {/* DOI y Fecha */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -389,7 +389,7 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
             </div>
           </div>
 
-          {/* URL (ancho completo) */}
+          {/* URL */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               URL

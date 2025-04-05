@@ -314,7 +314,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
             )}
           </div>
 
-          {/* Botones - siempre en la parte inferior en todas las resoluciones */}
+          {/* Botones */}
           <div className="flex justify-center sm:justify-end space-x-3 border-t border-gray-700/50 pt-4">
             <button
               className="cursor-pointer px-3 py-1.5 md:px-4 md:py-2 bg-blue-900/30 text-blue-300 hover:bg-blue-800/40 rounded-md transition-colors duration-200 flex items-center text-sm"
@@ -359,6 +359,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
           </div>
         </div>
       </div>
+      
       {/* Contenedor de secciones con scroll */}
       <div className="p-6 grid grid-cols-1 gap-8">
         {/* Sección 1: Información General */}

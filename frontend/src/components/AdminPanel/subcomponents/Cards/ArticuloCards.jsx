@@ -74,7 +74,6 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
       }}
     >
       <div className="p-4">
-        {/* Cabecera con título y badge */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
             {articulo.id}
@@ -89,7 +88,7 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
             </p>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -152,7 +151,7 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
           </div>
         </div>
 
-        {/* Tarjetas de info (para versión no expandida) */}
+        {/* Tarjetas de info (No expandida) */}
         <div
           className={`transition-all duration-300 ${
             expanded ? "hidden" : "block"
@@ -172,7 +171,7 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
               </span>
             </div>
 
-            {/* DOI en vista compacta */}
+            {/* DOI */}
             {articulo.doi && (
               <div className="bg-gray-700/40 p-2 rounded col-span-2">
                 <span className="text-gray-400">DOI:</span>
@@ -187,7 +186,7 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
               </div>
             )}
 
-            {/* Abstracto en vista compacta */}
+            {/* Abstracto */}
             {articulo.abstracto && (
               <div className="bg-gray-700/40 p-2 rounded col-span-2">
                 <span className="text-gray-400">Resumen:</span>

@@ -14,7 +14,7 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     nivel_snii: "",
     fecha_asignacion_snii: "",
     activo: true,
-    lineas_ids: [], // Seguiremos usando un array por compatibilidad con el backend
+    lineas_ids: [],
   });
 
   const [areas, setAreas] = useState([]);
@@ -38,12 +38,10 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     if (investigador) {
       console.log("Datos del investigador a editar:", investigador);
 
-      // Obtener las líneas asociadas al investigador
       const fetchInvestigadorLineas = async () => {
         try {
           const response = await api.get(`/investigadores/${investigador.id}/`);
           const lineasData = response.data.lineas || [];
-          // Solo tomamos la primera línea si existe
           const lineaId = lineasData.length > 0 ? lineasData[0].id : null;
           
           setFormData(prev => ({
@@ -195,12 +193,8 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     }
   };
 
-  // Manejador específico para el cambio de línea
   const handleLineaChange = (e) => {
     const value = e.target.value;
-    
-    // Si selecciona una línea, la guardamos como un array con un solo elemento
-    // Si selecciona la opción vacía, guardamos un array vacío
     setFormData(prev => ({
       ...prev,
       lineas_ids: value ? [parseInt(value, 10)] : []
@@ -258,7 +252,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     }
   };
 
-  // Obtener el valor de la línea actual (si existe)
   const getCurrentLineaValue = () => {
     if (formData.lineas_ids && formData.lineas_ids.length > 0) {
       return formData.lineas_ids[0].toString();
@@ -417,7 +410,7 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
               />
             </div>
 
-            {/* Línea de Investigación ocupando todo el ancho */}
+            {/* Línea de Investigación */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Línea de Investigación

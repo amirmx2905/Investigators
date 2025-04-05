@@ -389,7 +389,6 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
                     </div>
                   </div>
                   <ul className="space-y-2">
-                    {/* Ordenar autores por orden_autor */}
                     {[...selectedArticulo.autores]
                       .sort((a, b) => a.orden_autor - b.orden_autor)
                       .map((autor, index) => (

@@ -109,7 +109,6 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
       }}
     >
       <div className="p-4">
-        {/* Cabecera con icono, nombre y tipo */}
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl relative">
             {getEventInitial()}
@@ -128,7 +127,7 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
             </span>
           </div>
 
-          {/* Botón de expandir/colapsar */}
+          {/* Botón de expandir */}
           <button
             onClick={() => setExpanded(!expanded)}
             className={`cursor-pointer ml-2 flex items-center justify-center p-1.5 rounded-full ${
@@ -157,7 +156,7 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
           </button>
         </div>
 
-        {/* Badge de ID y fechas - Vista no expandida */}
+        {/* Badge de ID y fechas (No expandida) */}
         <div className="bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-lg p-2 mb-3">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-gray-300 flex items-center">
@@ -181,7 +180,7 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
               </span>
             </div>
 
-            {/* Fechas en nueva línea para pantallas pequeñas */}
+            {/* Fechas */}
             <div className="flex items-center mt-1.5 sm:mt-0">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +205,7 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
           </div>
         </div>
 
-        {/* Tarjetas de info (para versión no expandida) */}
+        {/* Tarjetas de info (No expandida) */}
         <div
           className={`transition-all duration-300 ${
             expanded ? "hidden" : "block"
@@ -371,7 +370,7 @@ function EventoCard({ evento, index, onEdit, onDelete }) {
             </span>
           </div>
 
-          {/* Participantes - Con diseño similar a autores en ArticuloCards */}
+          {/* Participantes */}
           <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex flex-col w-full">
             <div 
               className="flex items-center flex-shrink-0 mb-1 cursor-pointer"
