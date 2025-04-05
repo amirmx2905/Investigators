@@ -1,4 +1,4 @@
-from .investigador_serializer import InvestigadorSerializer
+from .investigador_serializer import InvestigadorSerializer, InvestigadorDetalleSerializer
 from .proyecto_serializer import ProyectoSerializer
 from .token_serializer import CustomTokenObtainSerializer
 from .usuario_serializer import UsuarioSerializer
