@@ -24,7 +24,6 @@ from investigators.permissions import (
     CanCreateArticuloPermission, CanManageEventosPermission
 )
 
-# ViewSet base con ordenamiento
 class OrderedModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     
@@ -41,7 +40,6 @@ class InvestigadorViewSet(OrderedModelViewSet):
     
     @action(detail=True, methods=['get'])
     def eventos(self, request, pk=None):
-        """Obtener eventos en los que participa un investigador"""
         investigador = self.get_object()
         eventos = Evento.objects.filter(detevento__investigador=investigador)
         
@@ -59,7 +57,6 @@ class InvestigadorViewSet(OrderedModelViewSet):
     
     @action(detail=True, methods=['get'])
     def articulos(self, request, pk=None):
-        """Obtener artículos en los que participa un investigador"""
         investigador = self.get_object()
         articulos = Articulo.objects.filter(detarticulo__investigador=investigador)
         
@@ -68,7 +65,6 @@ class InvestigadorViewSet(OrderedModelViewSet):
     
     @action(detail=True, methods=['get'])
     def detalle(self, request, pk=None):
-        """Obtener información detallada de un investigador"""
         investigador = self.get_object()
         serializer = InvestigadorDetalleSerializer(investigador)
         return Response(serializer.data)
@@ -169,7 +165,6 @@ class TipoEventoViewSet(OrderedModelViewSet):
     
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        """Estadísticas por tipo de evento"""
         tipos = TipoEvento.objects.all()
         result = []
         for tipo in tipos:
@@ -187,7 +182,6 @@ class RolEventoViewSet(OrderedModelViewSet):
     
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        """Estadísticas por rol de evento"""
         roles = RolEvento.objects.all()
         result = []
         for rol in roles:
@@ -243,7 +237,6 @@ class EventoViewSet(OrderedModelViewSet):
     
     @action(detail=True, methods=['get'])
     def investigadores(self, request, pk=None):
-        """Obtener los investigadores de un evento con sus roles"""
         evento = self.get_object()
         detalle_eventos = DetEvento.objects.filter(evento=evento).select_related('investigador', 'rol_evento')
         
@@ -261,7 +254,6 @@ class EventoViewSet(OrderedModelViewSet):
     
     @action(detail=False, methods=['get'])
     def stats(self, request):
-        """Estadísticas sobre eventos"""
         total_eventos = Evento.objects.count()
         eventos_por_tipo = Evento.objects.values('tipo_evento__nombre').annotate(
             count=models.Count('id')
@@ -286,7 +278,6 @@ class EventoViewSet(OrderedModelViewSet):
     
     @action(detail=False, methods=['get'])
     def años_disponibles(self, request):
-        """Obtener los años disponibles para filtrado"""
         años = Evento.objects.dates('fecha_inicio', 'year').values_list('fecha_inicio__year', flat=True)
         return Response(sorted(list(set(años)), reverse=True))
 

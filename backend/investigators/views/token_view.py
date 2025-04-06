@@ -47,7 +47,7 @@ class CustomTokenObtainView(APIView):
             value=value,
             expires=expires,
             httponly=httponly,
-            secure=False,  # Cambiar a True en producción (solo HTTPS)
+            secure=False,  # Cambir a True en producción
             samesite=samesite 
         )
 

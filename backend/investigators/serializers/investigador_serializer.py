@@ -175,7 +175,7 @@ class InvestigadorDetalleSerializer(serializers.ModelSerializer):
         participaciones = DetProyecto.objects.filter(investigador=obj)
         
         for part in participaciones:
-            if part.proyecto.lider_id != obj.id:  # No incluir proyectos donde es líder
+            if part.proyecto.lider_id != obj.id:
                 results.append({
                     'id': part.proyecto.id,
                     'nombre': part.proyecto.nombre,
