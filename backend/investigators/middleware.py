@@ -14,7 +14,10 @@ class UsuarioMiddleware:
             if auth_result:
                 usuario, token = auth_result
                 request.usuario = usuario
-        except Exception:
+                
+                if hasattr(usuario, 'actualizar_ultimo_acceso'):
+                    usuario.actualizar_ultimo_acceso()
+        except Exception as e:
             pass
         
         response = self.get_response(request)

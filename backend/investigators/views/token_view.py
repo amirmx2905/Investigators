@@ -9,47 +9,38 @@ from rest_framework_simplejwt.exceptions import TokenError
 from datetime import datetime, timedelta
 
 class CustomTokenObtainView(APIView):
-    permission_classes = [AllowAny] 
+    permission_classes = []
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = CustomTokenObtainSerializer(data=request.data)
         if serializer.is_valid():
-            response = Response(
-                {"username": serializer.validated_data['username'], "role": serializer.validated_data['role']},
-                status=status.HTTP_200_OK
+            usuario = serializer.validated_data
+            refresh = UsuarioRefreshToken.for_usuario(usuario)
+            
+            response = Response({'detail': 'Login exitoso'})
+            
+            response.set_cookie(
+                'refresh_token',
+                str(refresh),
+                httponly=True,
+                samesite='Lax',
+                expires=datetime.fromtimestamp(refresh['exp'])
             )
             
-            self._set_cookie(
-                response=response,
-                key='access_token',
-                value=serializer.validated_data['access'],
-                expires=datetime.now() + timedelta(minutes=30),
+            response.set_cookie(
+                'access_token',
+                str(refresh['access_token']),
                 httponly=True,
-                samesite='Lax'
+                samesite='Lax',
+                expires=datetime.fromtimestamp(refresh['exp'])
             )
             
-            self._set_cookie(
-                response=response,
-                key='refresh_token',
-                value=serializer.validated_data['refresh'],
-                expires=datetime.now() + timedelta(days=1),
-                httponly=True,
-                samesite='Lax'
-            )
+            if hasattr(usuario, 'actualizar_ultimo_acceso'):
+                usuario.actualizar_ultimo_acceso()
             
             return response
         
-        return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
-    
-    def _set_cookie(self, response, key, value, expires, httponly=True, samesite='Lax'):
-        response.set_cookie(
-            key=key,
-            value=value,
-            expires=expires,
-            httponly=httponly,
-            secure=False,  # Cambir a True en producción
-            samesite=samesite 
-        )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TokenRefreshView(APIView):
     permission_classes = [AllowAny]

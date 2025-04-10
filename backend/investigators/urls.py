@@ -11,8 +11,7 @@ from .views.api_crud import (
     JefeAreaViewSet
 )
 
-# Router para las vistas del api_crud
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=True)
 router.register(r'investigadores', InvestigadorViewSet)
 router.register(r'usuarios', UsuarioViewSet)
 router.register(r'proyectos', ProyectoViewSet)
@@ -35,7 +34,7 @@ router.register(r'jefesareas', JefeAreaViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('api/token/', CustomTokenObtainView.as_view(), name='custom_token_obtain'),
+    path('api/token/', CustomTokenObtainView.as_view(), name='token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/logout/', TokenLogoutView.as_view(), name='token_logout'),
 ]
