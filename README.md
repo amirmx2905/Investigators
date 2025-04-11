@@ -77,7 +77,7 @@ TIME_ZONE=UTC
 docker run --rm python:3.9-slim bash -c "pip install django && python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'"
 ```
 
-Note: In the .env file you should only change the DB_PASSWORD field and the SECRET_KEY field.
+`Note`: In the .env file you should only change the DB_PASSWORD field (for database security) and the SECRET_KEY field (for Django security). The other variables are configured to work with the Docker setup and should remain as provided.
 
 <br>
 
@@ -94,8 +94,6 @@ This command will:
 - Set up networking between containers
 - Load initial test data into the database
 - Start all services
-
-`Note`: In the .env file you should only change the DB_PASSWORD field (for database security) and the SECRET_KEY field (for Django security). The other variables are configured to work with the Docker setup and should remain as provided.
 
 <br>
 
