@@ -100,8 +100,9 @@ This command will:
 ### 4. Access the Application
 
 Once all containers are running, you can access:
-- Frontend: http://localhost
-- API: http://localhost/api
+- Frontend: http://localhost/
+- API: http://localhost/api/
+- API Documentation: http://localhost/api/docs/
 
 <br>
 
