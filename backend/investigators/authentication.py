@@ -3,9 +3,9 @@ from rest_framework_simplejwt.tokens import Token
 from rest_framework_simplejwt.exceptions import InvalidToken, AuthenticationFailed
 from django.utils.translation import gettext_lazy as _
 from investigators.models import Usuario
-import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.conf import settings
+import jwt
 
 class UsuarioToken(Token):
     token_type = 'access'
@@ -53,7 +53,16 @@ class UsuarioRefreshToken(UsuarioToken):
 
 class UsuarioJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get('access_token')
+        token = request.COOKIES.get('access_token')        
+        if not token and 'refresh_token' in request.COOKIES:
+            refresh_token = request.COOKIES.get('refresh_token')
+            decoded_refresh = jwt.decode(
+                refresh_token, 
+                settings.SECRET_KEY, 
+                algorithms=['HS256']
+            )
+            if 'access_token' in decoded_refresh:
+                token = decoded_refresh['access_token']
         if not token:
             header = self.get_header(request)
             if header is None:
@@ -62,14 +71,13 @@ class UsuarioJWTAuthentication(JWTAuthentication):
             raw_token = self.get_raw_token(header)
             if raw_token is None:
                 return None
-            
-            token = raw_token.decode()
+            token = raw_token.decode() 
         try:
             validated_token = self.get_validated_token(token)
             user = self.get_user(validated_token)
             return user, validated_token
         except Exception as e:
-            raise AuthenticationFailed(str(e))
+            return None
     
     def get_user(self, validated_token):
         try:
@@ -79,7 +87,6 @@ class UsuarioJWTAuthentication(JWTAuthentication):
 
         try:
             usuario = Usuario.objects.get(id=usuario_id, activo=True)
+            return usuario
         except Usuario.DoesNotExist:
             raise AuthenticationFailed(_('Usuario no encontrado o inactivo'), code='user_not_found')
-
-        return usuario

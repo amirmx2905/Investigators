@@ -77,7 +77,7 @@ class UsuarioViewSet(OrderedModelViewSet):
         queryset = Usuario.objects.all()
         return queryset.prefetch_related('investigador', 'estudiante').order_by('id')
     
-    @action(detail=False, methods=['get'], permission_classes=[])
+    @action(detail=False, methods=['get'], permission_classes=[], url_path='me', url_name='me')
     def me(self, request):
         if hasattr(request, 'usuario') and request.usuario:
             serializer = self.get_serializer(request.usuario)
