@@ -53,7 +53,7 @@ Create a `.env` file in the `Investigators` directory with the following content
 ```bash
 # Django settings
 DEBUG=True
-SECRET_KEY=your_secret_key_here
+SECRET_KEY=[|/Ur0JeBDBvuE=?%60p.I9]?V9~rKj{ASSb](O-kzVA\zM>FU #Change this secret key to a random value in production
 ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:80,http://localhost
 
@@ -61,7 +61,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:80,http://localhost
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=investigators
 DB_USER=postgres
-DB_PASSWORD=your_password
+DB_PASSWORD=your_password # Make sure to use a strong password
 DB_HOST=db
 DB_PORT=5432
 
@@ -71,13 +71,7 @@ VITE_API_URL=http://localhost/api
 TIME_ZONE=UTC
 ```
 
-### `Important`
-
-```bash
-docker run --rm python:3.9-slim python -c "import random; import string; print('SECRET_KEY=' + ''.join(random.SystemRandom().choice([c for c in string.ascii_letters + string.digits + string.punctuation if c != '$']) for _ in range(50)))"
-```
-
-`Note`: In the .env file you should only change the DB_PASSWORD field (for database security) and the SECRET_KEY field (for Django security). The other variables are configured to work with the Docker setup and should remain as provided.
+`Note`: In the .env file you should only change the DB_PASSWORD field (for database security). The other variables are configured to work with the Docker setup and should remain as provided.
 
 <br>
 
