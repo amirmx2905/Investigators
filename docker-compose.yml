@@ -57,5 +57,26 @@ services:
       - backend
       - frontend
 
+  links-helper:
+    image: alpine:latest
+    depends_on:
+      - backend
+      - frontend
+      - nginx
+    command: >
+      sh -c "
+        sleep 10 &&
+        echo '' &&
+        echo '+-----------------------------------------------+' &&
+        echo '|              ENLACES DISPONIBLES              |' &&
+        echo '+-----------------------------------------------+' &&
+        echo '| Frontend:          http://localhost/          |' &&
+        echo '| API:               http://localhost/api/      |' &&
+        echo '| API Documentation: http://localhost/api/docs/ |' &&
+        echo '+-----------------------------------------------+' &&
+        echo '' &&
+        tail -f /dev/null
+      "
+
 volumes: # Definición de volúmenes
   postgres_data: # Base de datos de Postgres
