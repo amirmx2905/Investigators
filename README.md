@@ -74,7 +74,7 @@ TIME_ZONE=UTC
 ### `Important`
 
 ```bash
-docker run --rm python:3.9-slim python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+docker run --rm python:3.9-slim bash -c "pip install django && python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'"
 ```
 
 Note: In the .env file you should only change the DB_PASSWORD field and the SECRET_KEY field.
