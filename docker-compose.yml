@@ -1,0 +1,55 @@
+services:
+  # Servicio de la base de datos
+  db: # Base de datos Postgres
+    image: postgres:16 # Imagen de Postgres
+    volumes: # Se montan los volúmenes para la base de datos
+      - postgres_data:/var/lib/postgresql/data/
+    env_file: # Archivo de variables de entorno
+      - ./.env
+    environment: # Variables de entorno para la base de datos
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports: # Se exponen los puertos para la base de datos
+      - "5433:5432"
+
+  # Servicio del backend (Django)
+  backend: # Aplicación Django
+    build: ./backend # Se construye la imagen en el directorio /backend
+    volumes: # Se montan los volúmenes para el desarrollo
+      - ./backend:/app
+    env_file: # Archivo de variables de entorno
+      - ./.env
+    depends_on: # Se espera a que la base de datos esté lista
+      - db
+    command: > # Ejecuta el contenedor de Django
+      sh -c "python manage.py migrate &&
+             python manage.py loaddata test_data.json &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  # Servicio del frontend (React/Vite)
+  frontend:
+    build: ./frontend # Se construye la imagen en el directorio /frontend
+    volumes: # Se montan los volúmenes para el desarrollo
+      - ./frontend:/app
+      - /app/node_modules
+    env_file: # Archivo de variables de entorno
+      - ./.env
+    depends_on: # Se espera a que el backend esté listo
+      - backend
+    command: npm run dev -- --host 0.0.0.0
+
+  # Servicio de Nginx
+  nginx: # Servidor web
+    build: ./nginx # Se construye la imagen en el directorio /nginx
+    ports: # Puertos expuestos
+      - "80:8080"
+      - "443:8443"
+    volumes: # Montaje de volúmenes
+      - ./frontend/dist:/usr/share/nginx/html
+    depends_on: # Esperar a que el backend y el frontend estén listos
+      - backend
+      - frontend
+
+volumes: # Definición de volúmenes
+  postgres_data: # Base de datos de Postgres

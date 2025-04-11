@@ -36,13 +36,22 @@ staticfiles/
 # Environments
 .env
 .venv
+.env.bak
+.env.*.bak
+.env.local
+.env.development
+.env.test
+.env.production
 
 # IDE files
 .idea/
 .vscode/
 *.swp
 *.swo
-.DS_Store
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
 
 # Database migrations (opcional)
 investigators/migrations/*.py
@@ -51,9 +60,16 @@ investigators/migrations/*.py
 # Archivos específicos
 settings_local.py
 
-# Otros
+# Testing & Coverage
 .coverage
 htmlcov/
+.pytest_cache/
+.tox/
+coverage.xml
+*.cover
+.hypothesis/
+nosetests.xml
+coverage/
 
 # Frontend
 node_modules/
@@ -63,13 +79,67 @@ frontend/.env.local
 frontend/.env.development
 frontend/.env.production
 frontend/.cache/
-
-# Logs
+.pnp/
+.pnp.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.eslintcache
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Compiled Python files
 investigators/__pycache__/
 investigators/views/__pycache__/
 project/__pycache__/
+
+# Sistema operativo
+# Mac
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Docker
+.docker/
+docker-compose.override.yml
+*.env.docker
+
+# SSL Certificates
+*.pem
+*.cert
+*.key
+*.crt
+
+# Swagger/OpenAPI
+swagger-ui-dist/
+schema.yml
+schema.json
+api-docs/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+*.lock
+!package-lock.json
+!yarn.lock
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# Logs
+logs/
+*.log.*
