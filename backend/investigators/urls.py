@@ -1,14 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views.token_view import CustomTokenObtainView, TokenRefreshView, TokenLogoutView
-from .views.api_crud import (
+from .views import (
     InvestigadorViewSet, UsuarioViewSet, ProyectoViewSet,
     AreaViewSet, EspecialidadViewSet, NivelEducacionViewSet,
     NivelSNIIViewSet, CarreraViewSet,
     TipoEstudianteViewSet, EstudianteViewSet, LineaViewSet,
     TipoHerramientaViewSet, HerramientaViewSet, ArticuloViewSet,
     TipoEventoViewSet, RolEventoViewSet, EventoViewSet, UnidadViewSet,
-    JefeAreaViewSet
+    JefeAreaViewSet, CustomTokenObtainView, TokenRefreshView, TokenLogoutView
 )
 
 router = DefaultRouter(trailing_slash=True)
