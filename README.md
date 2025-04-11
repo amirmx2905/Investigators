@@ -74,7 +74,7 @@ TIME_ZONE=UTC
 ### `Important`
 
 ```bash
-docker run --rm python:3.9-slim bash -c "python -c \"import random; import string; print('SECRET_KEY=' + ''.join(random.SystemRandom().choice([c for c in string.ascii_letters + string.digits + string.punctuation if c != '$']) for _ in range(50)))\""
+docker run --rm python:3.9-slim python -c "import random; import string; print('SECRET_KEY=' + ''.join(random.SystemRandom().choice([c for c in string.ascii_letters + string.digits + string.punctuation if c != '$']) for _ in range(50)))"
 ```
 
 `Note`: In the .env file you should only change the DB_PASSWORD field (for database security) and the SECRET_KEY field (for Django security). The other variables are configured to work with the Docker setup and should remain as provided.
