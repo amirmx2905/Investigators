@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'investigators',
     'rest_framework',
     'corsheaders',
-    
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +61,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'investigators.pagination.CustomPageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -82,6 +83,19 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'usuario_id',
     'TOKEN_TYPE_CLAIM': 'token_type',
     'JTI_CLAIM': 'jti',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Investigators API',
+    'DESCRIPTION': 'API para conectar investigadores y facilitar la colaboración en proyectos',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
+    },
 }
 
 ROOT_URLCONF = 'project.urls'
