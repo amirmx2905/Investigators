@@ -47,7 +47,7 @@ function Home() { //sirve como landing page
           className=" p-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 
                         hover:bg-gradient-to-l hover:scale-105 inline-block transition-all duration-300"
         >
-          Bienvenido a Investigators
+          Bienvenido, {currentUser?.name || "Usuario"}!
         </span>
       </h1>
 
