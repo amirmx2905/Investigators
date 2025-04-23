@@ -8,6 +8,12 @@ import { eventoService } from "./services/eventoService";
 import { carreraService } from "./services/carreraService";
 import { especialidadService } from "./services/especialidadService";
 import { unidadService } from "./services/unidadService";
+import { jefesareaService } from "./services/jefeareaService";
+import { lineaService } from "./services/lineaService";
+import { niveleduService } from "./services/niveleduService";
+import { tipoespecialidadService } from "./services/tipoespecialidadService";
+import { tipoeventoService } from "./services/tipoeventoService";
+import { tipoherramientaService } from "./services/tipoherramientaService";
 
 export {
   api,
@@ -19,5 +25,11 @@ export {
   eventoService,
   carreraService,
   especialidadService,
-  unidadService
+  unidadService,
+  jefesareaService,
+  lineaService,
+  niveleduService,
+  tipoespecialidadService,
+  tipoeventoService,
+  tipoherramientaService,
 };

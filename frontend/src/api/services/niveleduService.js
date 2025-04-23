@@ -61,7 +61,7 @@ const deleteNivelEducacion = async (id) => {
   }
 };
 
-export const niveleseducacionService = {
+export const niveleduService = {
   getNivelesEducacion,
   getNivelEducacion,
   createNivelEducacion,
@@ -69,4 +69,4 @@ export const niveleseducacionService = {
   deleteNivelEducacion,
 };
 
-export default niveleseducacionService;
+export default niveleduService;
