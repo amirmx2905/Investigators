@@ -71,3 +71,5 @@ export const especialidadService = {
   updateEspecialidad,
   deleteEspecialidad,
 };
+
+export default especialidadService;

@@ -6,7 +6,6 @@ import { estudianteService } from "./services/estudianteService";
 import { articuloService } from "./services/articuloService";
 import { eventoService } from "./services/eventoService";
 import { carreraService } from "./services/carreraService";
-import { especialidadService } from "./services/especialidadService";
 import { unidadService } from "./services/unidadService";
 import { jefeareaService } from "./services/jefeareaService";
 import { lineaService } from "./services/lineaService";
@@ -29,7 +28,6 @@ export {
   jefeareaService,
   lineaService,
   niveleduService,
-  especialidadService,
   tipoeventoService,
   tipoherramientaService,
 };
