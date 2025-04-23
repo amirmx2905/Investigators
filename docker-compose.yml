@@ -65,7 +65,7 @@ services:
       - nginx
     command: >
       sh -c "
-        sleep 10 &&
+        sleep 2 &&
         echo '' &&
         echo '+-----------------------------------------------+' &&
         echo '|              ENLACES DISPONIBLES              |' &&
