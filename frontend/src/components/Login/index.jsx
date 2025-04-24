@@ -4,6 +4,7 @@ import LoginForm from './subcomponents/LoginForm.jsx';
 import Backdrop from './subcomponents/Backdrop.jsx';
 import Particles from './subcomponents/Particles.jsx';
 import LoginToast from './subcomponents/LoginToast.jsx';
+import JsonImport from './subcomponents/JsonImport.jsx';
 
 function Login() {
   useLoginAnimations();
@@ -33,6 +34,9 @@ function Login() {
           isLoading={isLoading}
           handleLogin={handleLogin}
         />
+        
+        {/* Componente de importación JSON */}
+        <JsonImport />
       </div>
       
       <LoginToast />

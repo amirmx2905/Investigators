@@ -14,6 +14,7 @@ import { tipoeventoService } from "./services/tipoeventoService";
 import { tipoherramientaService } from "./services/tipoherramientaService";
 import { nivelService } from "./services/nivelService";
 
+
 export {
   api,
   usuarioService,
