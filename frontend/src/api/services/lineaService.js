@@ -13,7 +13,8 @@ const getLineas = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get(`/lineas-investigacion/?${params.toString()}`);
+    // Intenta con esta URL en lugar de "lineas-investigacion"
+    const response = await api.get(`/lineas/?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error("Error en getLineas:", error);
@@ -21,9 +22,10 @@ const getLineas = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
+// También cambia las demás URLs del servicio
 const getLinea = async (id) => {
   try {
-    const response = await api.get(`/lineas-investigacion/${id}/`);
+    const response = await api.get(`/lineas/${id}/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener línea de investigación con ID ${id}:`, error);
@@ -33,7 +35,7 @@ const getLinea = async (id) => {
 
 const createLinea = async (data) => {
   try {
-    const response = await api.post("/lineas-investigacion/", data);
+    const response = await api.post("/lineas/", data);
     return response.data;
   } catch (error) {
     console.error("Error al crear línea de investigación:", error);
@@ -43,7 +45,7 @@ const createLinea = async (data) => {
 
 const updateLinea = async (id, data) => {
   try {
-    const response = await api.put(`/lineas-investigacion/${id}/`, data);
+    const response = await api.put(`/lineas/${id}/`, data);
     return response.data;
   } catch (error) {
     console.error(`Error al actualizar línea de investigación con ID ${id}:`, error);
@@ -53,7 +55,7 @@ const updateLinea = async (id, data) => {
 
 const deleteLinea = async (id) => {
   try {
-    await api.delete(`/lineas-investigacion/${id}/`);
+    await api.delete(`/lineas/${id}/`);
     return { success: true };
   } catch (error) {
     console.error(`Error al eliminar línea de investigación con ID ${id}:`, error);
@@ -63,7 +65,7 @@ const deleteLinea = async (id) => {
 
 const getInvestigadoresLinea = async (id) => {
   try {
-    const response = await api.get(`/lineas-investigacion/${id}/investigadores/`);
+    const response = await api.get(`/lineas/${id}/investigadores/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener investigadores de la línea ${id}:`, error);
@@ -73,7 +75,7 @@ const getInvestigadoresLinea = async (id) => {
 
 const getEstadisticasLinea = async (id) => {
   try {
-    const response = await api.get(`/lineas-investigacion/${id}/estadisticas/`);
+    const response = await api.get(`/lineas/${id}/estadisticas/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener estadísticas de la línea ${id}:`, error);

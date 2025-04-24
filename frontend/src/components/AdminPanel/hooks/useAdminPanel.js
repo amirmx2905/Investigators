@@ -8,6 +8,7 @@ import { eventoService } from "../../../api/services/eventoService";
 import { carreraService } from "../../../api/services/carreraService";
 import { especialidadService } from "../../../api/services/especialidadService";
 import { unidadService } from "../../../api/services/unidadService";
+import { lineaService } from "../../../api/services/lineaService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -26,6 +27,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [carreras, setCarreras] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [unidades, setUnidades] = useState([]);
+  const [lineas, setLineas] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -137,6 +139,14 @@ export const useAdminPanel = (initialResource = "usuarios") => {
             );
             setUnidades(data.results);
             break;
+          case "lineas":
+            data = await lineaService.getLineas(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setLineas(data.results);
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -243,6 +253,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     carreras,
     especialidades,
     unidades,
+    lineas,
     isMobile,
     currentPage,
     itemsPerPage,

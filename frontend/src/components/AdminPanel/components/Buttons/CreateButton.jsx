@@ -41,6 +41,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "unidad";
       label = "Unidad";
       break;
+    case "lineas":
+      type = "linea";
+      label = "Línea";
+      break;
     default:
       type = "";
       label = "";
