@@ -7,5 +7,7 @@ export { default as EventoForm } from './EventoForm';
 export { default as CarreraForm } from './CarreraForm';
 export { default as EspecialidadForm } from './EspecialidadForm';
 export { default as UnidadForm } from './UnidadForm';
+export { default as LineaForm } from './LineaForm';
+export { default as NivelForm } from './NivelForm';
 
 export { default as DeleteConfirmation } from './DeleteConfirmation';

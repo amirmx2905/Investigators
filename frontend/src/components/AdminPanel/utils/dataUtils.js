@@ -17,6 +17,8 @@ import {
   CarreraCards,
   EspecialidadCards,
   UnidadCards,
+  LineaCards,
+  NivelCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -43,6 +45,8 @@ export const getTabData = (
   carreras,
   especialidades,
   unidades,
+  lineas,
+  niveles,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -76,6 +80,12 @@ export const getTabData = (
     case "unidades":
       type = "unidad";
       break;
+    case "lineas":
+      type = "linea";
+      break;
+    case "niveles":
+      type = "nivel";
+      break;
     default:
       type = "usuario";
   }
@@ -90,6 +100,8 @@ export const getTabData = (
     carreras: sortColumnsByOrder(visibleColumns.carreras || [], "carreras"),
     especialidades: sortColumnsByOrder(visibleColumns.especialidades || [],"especialidades"),
     unidades: sortColumnsByOrder(visibleColumns.unidades || [], "unidades"),
+    lineas: sortColumnsByOrder(visibleColumns.lineas || [], "lineas"),
+    niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
   };
 
   const tabConfig = {
@@ -171,6 +183,24 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: UnidadCards,
       columns: orderedColumns.unidades,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    lineas: {
+      title: "Lista de Líneas",
+      items: lineas || [],
+      TableComponent: null,
+      CardComponent: LineaCards,
+      columns: orderedColumns.lineas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    niveles: {
+      title: "Lista de Niveles",
+      items: niveles || [],
+      TableComponent: null,
+      CardComponent: NivelCards,
+      columns: orderedColumns.niveles,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

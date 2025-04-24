@@ -9,6 +9,7 @@ from .views import (
     TipoEventoViewSet, RolEventoViewSet, EventoViewSet, UnidadViewSet,
     JefeAreaViewSet, CustomTokenObtainView, TokenRefreshView, TokenLogoutView
 )
+from .views.import_view import JSONImportView
 
 router = DefaultRouter(trailing_slash=True)
 router.register(r'investigadores', InvestigadorViewSet)
@@ -36,4 +37,5 @@ urlpatterns = [
     path('api/token/', CustomTokenObtainView.as_view(), name='token_obtain'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/logout/', TokenLogoutView.as_view(), name='token_logout'),
+    path('api/import-json/', JSONImportView.as_view(), name='import-json'),
 ]

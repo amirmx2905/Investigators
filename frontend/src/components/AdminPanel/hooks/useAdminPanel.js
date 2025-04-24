@@ -8,6 +8,8 @@ import { eventoService } from "../../../api/services/eventoService";
 import { carreraService } from "../../../api/services/carreraService";
 import { especialidadService } from "../../../api/services/especialidadService";
 import { unidadService } from "../../../api/services/unidadService";
+import { lineaService } from "../../../api/services/lineaService";
+import { nivelService } from "../../../api/services/nivelService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -26,6 +28,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [carreras, setCarreras] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [unidades, setUnidades] = useState([]);
+  const [lineas, setLineas] = useState([]);
+  const [niveles, setNiveles] = useState([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -137,6 +141,29 @@ export const useAdminPanel = (initialResource = "usuarios") => {
             );
             setUnidades(data.results);
             break;
+          case "lineas":
+            data = await lineaService.getLineas(
+              page,
+              pageSize,
+              filterOptions
+            );
+            setLineas(data.results);
+            break;
+          case "niveles":
+            try {
+              data = await nivelService.getNiveles(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setNiveles(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar niveles: ${err.message}`);
+              // Proporcionar datos vacíos para evitar errores en la UI
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setNiveles([]);
+            }
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -243,6 +270,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     carreras,
     especialidades,
     unidades,
+    lineas,
+    niveles,
     isMobile,
     currentPage,
     itemsPerPage,

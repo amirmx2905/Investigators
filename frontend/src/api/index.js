@@ -6,8 +6,14 @@ import { estudianteService } from "./services/estudianteService";
 import { articuloService } from "./services/articuloService";
 import { eventoService } from "./services/eventoService";
 import { carreraService } from "./services/carreraService";
-import { especialidadService } from "./services/especialidadService";
 import { unidadService } from "./services/unidadService";
+import { jefeareaService } from "./services/jefeareaService";
+import { lineaService } from "./services/lineaService";
+import { especialidadService } from "./services/especialidadService";
+import { tipoeventoService } from "./services/tipoeventoService";
+import { tipoherramientaService } from "./services/tipoherramientaService";
+import { nivelService } from "./services/nivelService";
+
 
 export {
   api,
@@ -19,5 +25,10 @@ export {
   eventoService,
   carreraService,
   especialidadService,
-  unidadService
+  unidadService,
+  jefeareaService,
+  lineaService,
+  nivelService,
+  tipoeventoService,
+  tipoherramientaService,
 };
