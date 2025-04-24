@@ -12,6 +12,7 @@ import { eventoService } from "../../api/services/eventoService";
 import { carreraService } from "../../api/services/carreraService";
 import { especialidadService } from "../../api/services/especialidadService";
 import { lineaService } from "../../api/services/lineaService";
+import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
@@ -32,6 +33,7 @@ import {
   EspecialidadForm,
   UnidadForm,
   LineaForm,
+  NivelForm,
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -64,6 +66,7 @@ function AdminPanel() {
     especialidades,
     unidades,
     lineas,
+    niveles,
     activeTab,
     changeTab,
     refreshData,
@@ -157,6 +160,8 @@ function AdminPanel() {
         await unidadService.deleteUnidad(item.id);
       } else if (type === "linea") {
         await lineaService.deleteLinea(item.id);
+      } else if (type === "nivel") {
+        await nivelService.deleteNivel(item.id);
       }
 
       refreshData();
@@ -295,6 +300,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "nivel":
+        return (
+          <NivelForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            nivel={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -321,6 +335,7 @@ function AdminPanel() {
     especialidades,
     unidades,
     lineas,
+    niveles,
     handleEdit,
     handleDeleteClick
   );
