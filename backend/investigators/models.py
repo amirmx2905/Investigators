@@ -365,3 +365,20 @@ class Usuario(models.Model):
         if self.is_staff:
             return {'*'}
         return set()
+
+class PuntajeInvestigador(models.Model):
+    investigador = models.OneToOneField(Investigador, on_delete=models.CASCADE, related_name='puntaje')
+    puntos_estudiantes_maestria = models.IntegerField(default=0)
+    puntos_estudiantes_doctorado = models.IntegerField(default=0)
+    puntos_lineas_investigacion = models.IntegerField(default=0)
+    puntos_proyectos = models.IntegerField(default=0)
+    puntos_articulos = models.IntegerField(default=0)
+    puntos_eventos = models.IntegerField(default=0)
+    puntos_totales = models.IntegerField(default=0)
+    ultima_actualizacion = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Puntaje de {self.investigador.nombre}"
+    
+    class Meta:
+        verbose_name_plural = "Puntajes de Investigadores"
