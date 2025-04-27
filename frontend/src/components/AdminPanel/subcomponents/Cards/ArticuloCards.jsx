@@ -138,16 +138,23 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
               {articulo.ano_publicacion}
             </span>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            {/* Estado del artículo */}
             <span
               className={`px-2 py-0.5 text-xs rounded-full ${
-                articulo.estatus
+                articulo.estado === "En Proceso"
+                  ? "bg-blue-900/60 text-blue-300"
+                  : articulo.estado === "Terminado"
+                  ? "bg-yellow-900/60 text-yellow-300"
+                  : articulo.estado === "En Revista"
+                  ? "bg-purple-900/60 text-purple-300"
+                  : articulo.estado === "Publicado"
                   ? "bg-green-900/60 text-green-300"
-                  : "bg-red-900/60 text-red-300"
+                  : "bg-gray-900/60 text-gray-300"
               }`}
             >
-              {articulo.estatus ? "Publicado" : "No Publicado"}
-            </span>
+              {articulo.estado}
+            </span>            
           </div>
         </div>
 
@@ -198,7 +205,10 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
 
             {/* Botón para expandir y ver autores */}
             {autoresOrdenados.length > 0 && (
-              <div className="bg-gray-700/40 p-2 rounded col-span-2 hover:bg-gray-700/60 transition-colors cursor-pointer" onClick={() => setExpanded(true)}>
+              <div
+                className="bg-gray-700/40 p-2 rounded col-span-2 hover:bg-gray-700/60 transition-colors cursor-pointer"
+                onClick={() => setExpanded(true)}
+              >
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Autores:</span>
                   <span className="text-amber-400 text-xs font-medium bg-amber-900/30 px-2 py-0.5 rounded-full flex items-center">
@@ -213,7 +223,7 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M13 16h-1v-4h-1m-1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
                     {autoresOrdenados.length}
@@ -354,30 +364,6 @@ function ArticuloCard({ articulo, index, onEdit, onDelete }) {
               </div>
               <span className="text-gray-200 font-medium truncate max-w-[60%]">
                 {formatDate(articulo.fecha_publicacion)}
-              </span>
-            </div>
-
-            {/* Año */}
-            <div className="bg-gray-700/40 hover:bg-gray-700/50 rounded-md p-2.5 transition-colors duration-200 flex items-center justify-between w-full">
-              <div className="flex items-center flex-shrink-0">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-indigo-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span className="ml-1.5 text-gray-400">Año:</span>
-              </div>
-              <span className="text-amber-300 font-medium truncate max-w-[60%]">
-                {articulo.ano_publicacion || "No especificado"}
               </span>
             </div>
 

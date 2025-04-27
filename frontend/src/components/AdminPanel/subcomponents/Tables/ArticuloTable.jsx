@@ -20,34 +20,37 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
         closeModal();
       }
     };
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
     return () => {
-      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener("keydown", handleEsc);
     };
   }, []);
 
   useEffect(() => {
     if (showAutoresModal) {
       const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      const tabNavigation = document.querySelector('.admin-fadeIn');
+      document.body.style.width = "100%";
+      const tabNavigation = document.querySelector(".admin-fadeIn");
       if (tabNavigation) {
-        tabNavigation.style.zIndex = '20';
+        tabNavigation.style.zIndex = "20";
       }
       if (modalRef.current) {
         setTimeout(() => {
-          modalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          modalRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }, 100);
       }
     } else {
       const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+        window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
       }
     }
   }, [showAutoresModal]);
@@ -71,7 +74,8 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
     doi: "DOI",
     abstracto: "Resumen",
     investigadores: "Autores",
-    estatus: "Estado",
+    estatus: "Activo",
+    estado: "Estado",
   };
 
   const formatColumnValue = (column, value, articulo) => {
@@ -92,7 +96,7 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
         </div>
       );
     }
-    
+
     if (column === "estatus") {
       return (
         <span
@@ -102,7 +106,8 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
               : "bg-red-900/60 text-red-300"
           }`}
         >
-          {value ? "Publicado" : "No Publicado"}
+          {value ? "Activo" : "Inactivo"}{" "}
+          {/* Cambiado de "Publicado/No Publicado" a "Activo/Inactivo" */}
         </span>
       );
     }
@@ -138,13 +143,10 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
 
     if (column === "abstracto") {
       if (!value) return "—";
-      
+
       return (
         <div className="max-w-md">
-          <span 
-            className="text-sm text-gray-200 cursor-help"
-            title={value}
-          >
+          <span className="text-sm text-gray-200 cursor-help" title={value}>
             {value.length > 100 ? `${value.substring(0, 100)}...` : value}
           </span>
         </div>
@@ -182,6 +184,40 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
             </span>
           </div>
         </button>
+      );
+    }
+
+    if (column === "estado") {
+      let bgColor, textColor;
+
+      switch (value) {
+        case "En Proceso":
+          bgColor = "bg-blue-900/60";
+          textColor = "text-blue-300";
+          break;
+        case "Terminado":
+          bgColor = "bg-yellow-900/60";
+          textColor = "text-yellow-300";
+          break;
+        case "En Revista":
+          bgColor = "bg-purple-900/60";
+          textColor = "text-purple-300";
+          break;
+        case "Publicado":
+          bgColor = "bg-green-900/60";
+          textColor = "text-green-300";
+          break;
+        default:
+          bgColor = "bg-gray-900/60";
+          textColor = "text-gray-300";
+      }
+
+      return (
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${bgColor} ${textColor}`}
+        >
+          {value}
+        </span>
       );
     }
 
@@ -232,11 +268,7 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
                       key={column}
                       className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                     >
-                      {formatColumnValue(
-                        column,
-                        articulo[column],
-                        articulo
-                      )}
+                      {formatColumnValue(column, articulo[column], articulo)}
                     </td>
                   ))}
                   <td className="px-4 py-2 whitespace-nowrap text-sm">
@@ -292,18 +324,18 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
 
       {/* Modal de Autores */}
       {showAutoresModal && selectedArticulo && (
-        <div 
+        <div
           className="fixed inset-0 z-[99999] overflow-auto bg-gray-900/80 flex items-center justify-center"
           style={{
-            animation: "fadeIn 0.2s ease-out forwards"
+            animation: "fadeIn 0.2s ease-out forwards",
           }}
           onClick={closeModal}
         >
-          <div 
+          <div
             ref={modalRef}
             className="relative bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] border border-gray-700 my-8"
             style={{
-              animation: "scaleIn 0.3s ease-out forwards"
+              animation: "scaleIn 0.3s ease-out forwards",
             }}
             onClick={(e) => e.stopPropagation()}
             tabIndex={-1}
@@ -347,52 +379,80 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
                 </svg>
               </button>
             </div>
-            
+
             {/* Información del artículo */}
             <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div className="flex-grow">
-                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">Artículo</h4>
-                  <p className="text-blue-300 font-medium text-lg">{selectedArticulo.nombre_articulo}</p>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">
+                    Artículo
+                  </h4>
+                  <p className="text-blue-300 font-medium text-lg">
+                    {selectedArticulo.nombre_articulo}
+                  </p>
                 </div>
                 <div className="mt-2 md:mt-0 flex items-center">
                   <div className="flex flex-col text-right">
                     <span className="text-xs text-gray-400">Revista</span>
-                    <span className="text-gray-300">{selectedArticulo.nombre_revista}</span>
+                    <span className="text-gray-300">
+                      {selectedArticulo.nombre_revista}
+                    </span>
                   </div>
                   <div className="flex flex-col ml-6 text-right">
                     <span className="text-xs text-gray-400">Año</span>
-                    <span className="text-amber-300">{selectedArticulo.ano_publicacion || 
-                      (selectedArticulo.fecha_publicacion ? new Date(selectedArticulo.fecha_publicacion).getFullYear() : "—")}</span>
+                    <span className="text-amber-300">
+                      {selectedArticulo.ano_publicacion ||
+                        (selectedArticulo.fecha_publicacion
+                          ? new Date(
+                              selectedArticulo.fecha_publicacion
+                            ).getFullYear()
+                          : "—")}
+                    </span>
                   </div>
                 </div>
               </div>
               <div className="mt-3 flex items-center">
                 <div className="h-1 flex-grow bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-500/50 rounded-full" style={{ width: '100%' }}></div>
+                  <div
+                    className="h-full bg-indigo-500/50 rounded-full"
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
             </div>
-            
+
             {/* Contenido del modal */}
             <div className="p-6 overflow-auto max-h-[50vh]">
-              {selectedArticulo.autores && selectedArticulo.autores.length > 0 ? (
+              {selectedArticulo.autores &&
+              selectedArticulo.autores.length > 0 ? (
                 <>
                   <div className="text-sm text-gray-400 bg-gray-800/80 border border-gray-700/50 p-3 mb-4 rounded">
                     <div className="flex">
                       <div className="mr-2 text-indigo-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 16h-1v-4h-1m-1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                       </div>
-                      El orden indica la posición del autor en la publicación. El autor con orden 1 es el autor principal.
+                      El orden indica la posición del autor en la publicación.
+                      El autor con orden 1 es el autor principal.
                     </div>
                   </div>
                   <ul className="space-y-2">
                     {[...selectedArticulo.autores]
                       .sort((a, b) => a.orden_autor - b.orden_autor)
                       .map((autor, index) => (
-                        <li 
+                        <li
                           key={`${autor.investigador}-${index}`}
                           className="flex items-center p-3 rounded-lg border border-gray-700 bg-gray-800/30 hover:bg-gray-700/50 transition-colors"
                         >
@@ -400,19 +460,43 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
                             {autor.orden_autor}
                           </div>
                           <div className="flex-grow">
-                            <p className="text-white font-medium">{autor.investigador_nombre}</p>
+                            <p className="text-white font-medium">
+                              {autor.investigador_nombre}
+                            </p>
                             <p className="text-xs text-gray-400 mt-0.5">
                               {autor.orden_autor === 1 ? (
                                 <span className="inline-flex items-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2 2m0 0l2 2m-2-2l-2 2m-2 2l2 2m0 0l2 2m-2-2l-2 2" />
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-3 w-3 mr-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2 2m0 0l2 2m-2-2l-2 2m-2 2l2 2m0 0l2 2m-2-2l-2 2"
+                                    />
                                   </svg>
                                   Autor principal
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-3 w-3 mr-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                                    />
                                   </svg>
                                   Coautor
                                 </span>
@@ -444,12 +528,16 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-300">Sin autores</h3>
-                  <p className="mt-1 text-sm text-gray-500">Este artículo no tiene autores registrados</p>
+                  <h3 className="mt-2 text-sm font-medium text-gray-300">
+                    Sin autores
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Este artículo no tiene autores registrados
+                  </p>
                 </div>
               )}
             </div>
-            
+
             {/* Pie del modal */}
             <div className="bg-gray-800 px-6 py-4 border-t border-gray-700 flex justify-end">
               <button
@@ -463,15 +551,25 @@ function ArticuloTable({ articulos, visibleColumns, onEdit, onDelete }) {
         </div>
       )}
 
-      <style jsx = "true">{`
+      <style jsx="true">{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
         @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
         }
       `}</style>
     </>

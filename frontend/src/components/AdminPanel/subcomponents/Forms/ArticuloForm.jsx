@@ -13,9 +13,18 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
     doi: "",
     url: "",
     estatus: true,
+    estado: "En Proceso",
     investigadores_ids: [],
     ordenes_autores: [],
   });
+
+  // Definimos las opciones de estados
+  const ESTADO_OPTIONS = [
+    { value: "En Proceso", label: "En Proceso" },
+    { value: "Terminado", label: "Terminado" },
+    { value: "En Revista", label: "En Revista" },
+    { value: "Publicado", label: "Publicado" },
+  ];
 
   const [autoresSeleccionados, setAutoresSeleccionados] = useState([]);
   const [investigadores, setInvestigadores] = useState([]);
@@ -37,18 +46,19 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
   useEffect(() => {
     if (articulo) {
       console.log("Datos del artículo a editar:", articulo);
-      
+
       setFormData({
         nombre_articulo: articulo.nombre_articulo || "",
         nombre_revista: articulo.nombre_revista || "",
         abstracto: articulo.abstracto || "",
         pais_publicacion: articulo.pais_publicacion || "",
-        fecha_publicacion: articulo.fecha_publicacion 
+        fecha_publicacion: articulo.fecha_publicacion
           ? formatDateForInput(articulo.fecha_publicacion)
           : "",
         doi: articulo.doi || "",
         url: articulo.url || "",
         estatus: articulo.estatus !== undefined ? articulo.estatus : true,
+        estado: articulo.estado || "En Proceso",
         investigadores_ids: [],
         ordenes_autores: [],
       });
@@ -57,7 +67,7 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
         const autoresOrdenados = [...articulo.autores].sort(
           (a, b) => a.orden_autor - b.orden_autor
         );
-        
+
         setAutoresSeleccionados(
           autoresOrdenados.map((autor) => ({
             id: autor.investigador,
@@ -78,6 +88,7 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
         doi: "",
         url: "",
         estatus: true,
+        estado: "En Proceso",
         investigadores_ids: [],
         ordenes_autores: [],
       });
@@ -102,7 +113,9 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
       setFetchingData(true);
       setError(null);
       try {
-        const response = await api.get("/investigadores/?page_size=1000&activo=true");
+        const response = await api.get(
+          "/investigadores/?page_size=1000&activo=true"
+        );
 
         let data = response.data.results || response.data || [];
 
@@ -111,7 +124,9 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
           data = [];
         }
 
-        const sortedData = [...data].sort((a, b) => a.nombre.localeCompare(b.nombre));
+        const sortedData = [...data].sort((a, b) =>
+          a.nombre.localeCompare(b.nombre)
+        );
 
         console.log("Investigadores cargados:", sortedData);
         setInvestigadores(sortedData);
@@ -142,14 +157,34 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (name === "estado") {
+      // Actualización automática del estado activo según el estado seleccionado
+      // Si es "Publicado", activo=true, en otros casos también activo
+      // Solo en caso de que se agregue un estado "Inactivo" o similar en el futuro, cambiaría a false
+      const estadosActivos = [
+        "En Proceso",
+        "Terminado",
+        "En Revista",
+        "Publicado",
+      ];
+      const isActive = estadosActivos.includes(value);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        estatus: isActive,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleAddAutor = (investigador) => {
-    if (autoresSeleccionados.some(autor => autor.id === investigador.id)) {
+    if (autoresSeleccionados.some((autor) => autor.id === investigador.id)) {
       return;
     }
 
@@ -169,39 +204,41 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
   };
 
   const handleRemoveAutor = (id) => {
-    const nuevosAutores = autoresSeleccionados.filter(autor => autor.id !== id);
-    
+    const nuevosAutores = autoresSeleccionados.filter(
+      (autor) => autor.id !== id
+    );
+
     const autoresReordenados = nuevosAutores.map((autor, index) => ({
       ...autor,
       orden: index + 1,
     }));
-    
+
     setAutoresSeleccionados(autoresReordenados);
   };
 
   const handleOrderChange = (id, newOrder) => {
     if (newOrder < 1 || isNaN(newOrder)) return;
-    
+
     const autoresModificados = [...autoresSeleccionados];
-    
-    const autorIndex = autoresModificados.findIndex(autor => autor.id === id);
+
+    const autorIndex = autoresModificados.findIndex((autor) => autor.id === id);
     if (autorIndex === -1) return;
-    
+
     autoresModificados[autorIndex] = {
       ...autoresModificados[autorIndex],
       orden: newOrder,
     };
-    
+
     autoresModificados.sort((a, b) => a.orden - b.orden);
-    
+
     setAutoresSeleccionados(autoresModificados);
   };
 
   const getFilteredInvestigadores = () => {
     return investigadores.filter(
-      (inv) => 
+      (inv) =>
         inv.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !autoresSeleccionados.some(autor => autor.id === inv.id)
+        !autoresSeleccionados.some((autor) => autor.id === inv.id)
     );
   };
 
@@ -212,14 +249,21 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
 
     try {
       const dataToSend = { ...formData };
-      
-      dataToSend.investigadores_ids = autoresSeleccionados.map(autor => autor.id);
-      dataToSend.ordenes_autores = autoresSeleccionados.map(autor => autor.orden);
-      
-      if (dataToSend.investigadores_ids.length !== dataToSend.ordenes_autores.length) {
+
+      dataToSend.investigadores_ids = autoresSeleccionados.map(
+        (autor) => autor.id
+      );
+      dataToSend.ordenes_autores = autoresSeleccionados.map(
+        (autor) => autor.orden
+      );
+
+      if (
+        dataToSend.investigadores_ids.length !==
+        dataToSend.ordenes_autores.length
+      ) {
         throw new Error("Error en la asignación de autores y órdenes");
       }
-      
+
       if (dataToSend.fecha_publicacion === "") {
         dataToSend.fecha_publicacion = null;
       }
@@ -311,8 +355,8 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
                 name="nombre_revista"
                 value={formData.nombre_revista}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Nombre de la revista (opcional)"
               />
             </div>
 
@@ -398,8 +442,9 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
                 Autores
               </label>
               <span className="text-xs text-gray-400">
-                {autoresSeleccionados.length} 
-                {autoresSeleccionados.length === 1 ? " autor" : " autores"} seleccionado(s)
+                {autoresSeleccionados.length}
+                {autoresSeleccionados.length === 1 ? " autor" : " autores"}{" "}
+                seleccionado(s)
               </span>
             </div>
 
@@ -445,7 +490,8 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
             {autoresSeleccionados.length > 0 && (
               <div className="mt-2 border border-gray-700 rounded-md bg-gray-800/50 p-2">
                 <div className="text-xs text-gray-400 mb-2 italic">
-                  El orden indica la posición del autor en la publicación (1 = autor principal)
+                  El orden indica la posición del autor en la publicación (1 =
+                  autor principal)
                 </div>
                 <ul className="space-y-2">
                   {autoresSeleccionados.map((autor) => (
@@ -455,13 +501,18 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
                     >
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1">
-                          <label className="text-xs text-gray-400">Orden:</label>
+                          <label className="text-xs text-gray-400">
+                            Orden:
+                          </label>
                           <input
                             type="number"
                             value={autor.orden}
                             min="1"
-                            onChange={(e) => 
-                              handleOrderChange(autor.id, parseInt(e.target.value, 10))
+                            onChange={(e) =>
+                              handleOrderChange(
+                                autor.id,
+                                parseInt(e.target.value, 10)
+                              )
                             }
                             className="w-12 px-1 py-0.5 bg-gray-800 border border-gray-600 rounded text-white text-center text-sm"
                           />
@@ -495,22 +546,48 @@ function ArticuloForm({ isOpen, onClose, articulo = null, onSuccess }) {
             )}
           </div>
 
-          {/* Estado activo */}
-          <div className="pt-4 pb-4 flex justify-center text-center">
-            <input
-              id="articulo-estatus"
-              type="checkbox"
-              name="estatus"
-              checked={formData.estatus}
-              onChange={handleChange}
-              className="cursor-pointer h-4 w-4 text-indigo-600 bg-gray-700 border-gray-600 rounded focus:ring-indigo-600"
-            />
-            <label
-              htmlFor="articulo-estatus"
-              className="ml-2 text-sm text-gray-300 cursor-pointer"
-            >
-              Publicado
+          {/* Estado del artículo */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Estado del Artículo
             </label>
+            <select
+              name="estado"
+              value={formData.estado}
+              onChange={handleChange}
+              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              {ESTADO_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-sm text-gray-400">
+              Seleccione el estado actual del artículo en el proceso de
+              publicación
+            </p>
+          </div>
+
+          {/* Estado Activo - Solo informativo */}
+          <div className="pt-4 pb-4 flex justify-center text-center">
+            <div className="flex items-center bg-gray-800/50 px-4 py-2 rounded-md">
+              <span className="text-sm text-gray-400 mr-2">
+                Estado activo:{" "}
+              </span>
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${
+                  formData.estatus
+                    ? "bg-green-900/50 text-green-300"
+                    : "bg-red-900/50 text-red-300"
+                }`}
+              >
+                {formData.estatus ? "Activo" : "Inactivo"}
+              </span>
+              <span className="ml-2 text-xs text-gray-500">
+                (Determinado por el estado del artículo)
+              </span>
+            </div>
           </div>
 
           {/* Botones de acción */}
