@@ -6,53 +6,79 @@ import { proyectoService } from "../../../../api/services/proyectoService";
 function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
   const [formData, setFormData] = useState({
     nombre: "",
-    estado: "En Progreso",
+    estado: "En Proceso",
     explicacion: "",
     fecha_inicio: "",
     fecha_fin: "",
+    fecha_fin_indefinida: false, // Nueva propiedad
     lider: "",
     activo: true,
     herramientas_ids: [],
     investigadores_ids: [],
   });
-  
+
+  // Definimos las opciones de estado del proyecto
+  const ESTADO_OPTIONS = [
+    { value: "En Proceso", label: "En Proceso" },
+    { value: "Terminado", label: "Terminado" },
+    { value: "Instalado en Sitio", label: "Instalado en Sitio" },
+    { value: "Suspendido", label: "Suspendido" },
+    { value: "Cancelado", label: "Cancelado" },
+  ];
+
   const [selectedLeaderName, setSelectedLeaderName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const searchRef = useRef(null);
-  
+
   const herramientasRef = useRef(null);
   const investigadoresRef = useRef(null);
-  
+
   const [herramientaSearch, setHerramientaSearch] = useState("");
   const [investigadorSearch, setInvestigadorSearch] = useState("");
-  
-  const [showHerramientasDropdown, setShowHerramientasDropdown] = useState(false);
-  const [showInvestigadoresDropdown, setShowInvestigadoresDropdown] = useState(false);
-  
+
+  const [showHerramientasDropdown, setShowHerramientasDropdown] =
+    useState(false);
+  const [showInvestigadoresDropdown, setShowInvestigadoresDropdown] =
+    useState(false);
+
   const [investigadores, setInvestigadores] = useState([]);
   const [herramientas, setHerramientas] = useState([]);
-  
+
   const [selectedHerramientas, setSelectedHerramientas] = useState([]);
   const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const formatDateForAPI = (dateString) => {
     if (!dateString) return "";
-    
+
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
       return dateString;
     }
-    
+
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return "";
-      
-      return date.toISOString().split('T')[0];
+
+      return date.toISOString().split("T")[0];
     } catch (error) {
       console.error("Error al formatear fecha:", error);
+      return "";
+    }
+  };
+
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return "";
+
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "";
+
+      return date.toISOString().split("T")[0];
+    } catch (error) {
+      console.error("Error al formatear fecha para input:", error);
       return "";
     }
   };
@@ -61,12 +87,14 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const investigadoresRes = await api.get("/investigadores/?page_size=1000");
+        const investigadoresRes = await api.get(
+          "/investigadores/?page_size=1000"
+        );
         setInvestigadores(investigadoresRes.data.results || []);
-        
+
         const herramientasRes = await api.get("/herramientas/?page_size=1000");
         setHerramientas(herramientasRes.data.results || []);
-        
+
         setLoading(false);
       } catch (err) {
         console.error("Error al cargar datos:", err);
@@ -74,7 +102,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
         setLoading(false);
       }
     };
-    
+
     if (isOpen) {
       fetchData();
     }
@@ -82,85 +110,106 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
 
   useEffect(() => {
     if (proyecto) {
-      const leaderName = 
-        typeof proyecto.lider === 'object' && proyecto.lider ? 
-          proyecto.lider.nombre : 
-          investigadores.find(inv => inv.id === proyecto.lider)?.nombre || "";
-      
-      let estadoActualizado = proyecto.estado || "En Progreso";
-      if (estadoActualizado === "Activo") {
-        estadoActualizado = "En Progreso";
+      const leaderName =
+        typeof proyecto.lider === "object" && proyecto.lider
+          ? proyecto.lider.nombre
+          : investigadores.find((inv) => inv.id === proyecto.lider)?.nombre ||
+            "";
+
+      let estadoActualizado = proyecto.estado || "En Proceso";
+      // Verificar si el estado es válido según las nuevas opciones
+      if (!ESTADO_OPTIONS.some((opt) => opt.value === estadoActualizado)) {
+        estadoActualizado = "En Proceso";
       }
-      
+
+      // Actualiza esta línea para determinar el estado activo basado en el estado
+      const estadosActivos = ["En Proceso", "Terminado", "Instalado en Sitio"];
+      const isActive = estadosActivos.includes(estadoActualizado);
+
       setFormData({
         nombre: proyecto.nombre || "",
         estado: estadoActualizado,
         explicacion: proyecto.explicacion || "",
-        fecha_inicio: proyecto.fecha_inicio || "",
-        fecha_fin: proyecto.fecha_fin || "",
-        lider: typeof proyecto.lider === 'object' ? proyecto.lider.id : proyecto.lider,
-        activo: proyecto.activo !== undefined ? proyecto.activo : true,
+        fecha_inicio: proyecto.fecha_inicio
+          ? formatDateForInput(proyecto.fecha_inicio)
+          : "",
+        fecha_fin: proyecto.fecha_fin
+          ? formatDateForInput(proyecto.fecha_fin)
+          : "",
+        fecha_fin_indefinida: !proyecto.fecha_fin,
+        lider:
+          typeof proyecto.lider === "object"
+            ? proyecto.lider.id
+            : proyecto.lider,
+        activo: isActive,
         herramientas_ids: [],
         investigadores_ids: [],
       });
-      
+
       setSelectedLeaderName(leaderName);
-      
+
       const loadProjectDetails = async () => {
         try {
           const response = await api.get(`/proyectos/${proyecto.id}/`);
           const projectData = response.data;
-          
-          if (projectData.herramientas && Array.isArray(projectData.herramientas)) {
-            const herramientasIds = projectData.herramientas.map(h => 
-              typeof h === 'object' ? h.id : h
+
+          if (
+            projectData.herramientas &&
+            Array.isArray(projectData.herramientas)
+          ) {
+            const herramientasIds = projectData.herramientas.map((h) =>
+              typeof h === "object" ? h.id : h
             );
-            
-            setFormData(prev => ({
+
+            setFormData((prev) => ({
               ...prev,
-              herramientas_ids: herramientasIds
+              herramientas_ids: herramientasIds,
             }));
-            
-            const selectedTools = herramientasIds.map(id => {
-              const herramienta = herramientas.find(h => h.id === id);
+
+            const selectedTools = herramientasIds.map((id) => {
+              const herramienta = herramientas.find((h) => h.id === id);
               return herramienta || { id };
             });
-            
+
             setSelectedHerramientas(selectedTools);
           }
-          
-          if (projectData.investigadores && Array.isArray(projectData.investigadores)) {
-            const investigadoresIds = projectData.investigadores.map(i => 
-              typeof i === 'object' ? i.id : i
+
+          if (
+            projectData.investigadores &&
+            Array.isArray(projectData.investigadores)
+          ) {
+            const investigadoresIds = projectData.investigadores.map((i) =>
+              typeof i === "object" ? i.id : i
             );
-            
-            setFormData(prev => ({
+
+            setFormData((prev) => ({
               ...prev,
-              investigadores_ids: investigadoresIds
+              investigadores_ids: investigadoresIds,
             }));
-            
-            const selectedInvs = investigadoresIds.map(id => {
-              const investigador = investigadores.find(i => i.id === id);
+
+            const selectedInvs = investigadoresIds.map((id) => {
+              const investigador = investigadores.find((i) => i.id === id);
               return investigador || { id };
             });
-            
+
             setSelectedInvestigadores(selectedInvs);
           }
         } catch (err) {
           console.error("Error al cargar detalles del proyecto:", err);
         }
       };
-      
+
       if (proyecto.id) {
         loadProjectDetails();
       }
     } else {
       setFormData({
         nombre: "",
-        estado: "En Progreso",
+        estado: "En Proceso",
         explicacion: "",
         fecha_inicio: "",
         fecha_fin: "",
+        fecha_fin_indefinida: false,
         lider: "",
         activo: true,
         herramientas_ids: [],
@@ -178,10 +227,16 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
-      if (herramientasRef.current && !herramientasRef.current.contains(event.target)) {
+      if (
+        herramientasRef.current &&
+        !herramientasRef.current.contains(event.target)
+      ) {
         setShowHerramientasDropdown(false);
       }
-      if (investigadoresRef.current && !investigadoresRef.current.contains(event.target)) {
+      if (
+        investigadoresRef.current &&
+        !investigadoresRef.current.contains(event.target)
+      ) {
         setShowInvestigadoresDropdown(false);
       }
     }
@@ -210,10 +265,25 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (name === "estado") {
+      // Actualización automática del estado activo según el estado seleccionado
+      // Si es "En Proceso", "Terminado" o "Instalado en Sitio", activo=true
+      // Si es "Suspendido" o "Cancelado", activo=false
+      const estadosActivos = ["En Proceso", "Terminado", "Instalado en Sitio"];
+      const isActive = estadosActivos.includes(value);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        activo: isActive,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSelectLeader = (investigador) => {
@@ -243,64 +313,69 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
       inv.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
-  
+
   const getFilteredHerramientas = () => {
-    return herramientas.filter(h => 
-      h.nombre.toLowerCase().includes(herramientaSearch.toLowerCase()) &&
-      !formData.herramientas_ids.includes(h.id)
+    return herramientas.filter(
+      (h) =>
+        h.nombre.toLowerCase().includes(herramientaSearch.toLowerCase()) &&
+        !formData.herramientas_ids.includes(h.id)
     );
   };
-  
+
   const getFilteredInvestigadores = () => {
-    return investigadores.filter(i => 
-      i.nombre.toLowerCase().includes(investigadorSearch.toLowerCase()) &&
-      !formData.investigadores_ids.includes(i.id) &&
-      i.id !== formData.lider 
+    return investigadores.filter(
+      (i) =>
+        i.nombre.toLowerCase().includes(investigadorSearch.toLowerCase()) &&
+        !formData.investigadores_ids.includes(i.id) &&
+        i.id !== formData.lider
     );
   };
-  
+
   const handleSelectHerramienta = (herramienta) => {
     if (!formData.herramientas_ids.includes(herramienta.id)) {
       const updatedIds = [...formData.herramientas_ids, herramienta.id];
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        herramientas_ids: updatedIds
+        herramientas_ids: updatedIds,
       }));
-      setSelectedHerramientas(prev => [...prev, herramienta]);
+      setSelectedHerramientas((prev) => [...prev, herramienta]);
     }
     setHerramientaSearch("");
     setShowHerramientasDropdown(false);
   };
-  
+
   const handleSelectInvestigador = (investigador) => {
-    if (!formData.investigadores_ids.includes(investigador.id) && investigador.id !== formData.lider) {
+    if (
+      !formData.investigadores_ids.includes(investigador.id) &&
+      investigador.id !== formData.lider
+    ) {
       const updatedIds = [...formData.investigadores_ids, investigador.id];
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        investigadores_ids: updatedIds
+        investigadores_ids: updatedIds,
       }));
-      setSelectedInvestigadores(prev => [...prev, investigador]);
+      setSelectedInvestigadores((prev) => [...prev, investigador]);
     }
     setInvestigadorSearch("");
     setShowInvestigadoresDropdown(false);
   };
-  
+
   const handleRemoveHerramienta = (id) => {
-    const updatedIds = formData.herramientas_ids.filter(hId => hId !== id);
-    setFormData(prev => ({
+    const updatedIds = formData.herramientas_ids.filter((hId) => hId !== id);
+    setFormData((prev) => ({
       ...prev,
-      herramientas_ids: updatedIds
+      herramientas_ids: updatedIds,
     }));
-    setSelectedHerramientas(prev => prev.filter(h => h.id !== id));
+    setSelectedHerramientas((prev) => prev.filter((h) => h.id !== id));
   };
-  
+
   const handleRemoveInvestigador = (id) => {
-    const updatedIds = formData.investigadores_ids.filter(iId => iId !== id);
-    setFormData(prev => ({
+    const updatedIds = formData.investigadores_ids.filter((iId) => iId !== id);
+    setFormData((prev) => ({
       ...prev,
-      investigadores_ids: updatedIds
+      investigadores_ids: updatedIds,
     }));
-    setSelectedInvestigadores(prev => prev.filter(i => i.id !== id));
+    setSelectedInvestigadores((prev) => prev.filter((i) => i.id !== id));
   };
 
   const handleSubmit = async (e) => {
@@ -312,10 +387,14 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
       const dataToSend = {
         ...formData,
         fecha_inicio: formatDateForAPI(formData.fecha_inicio),
-        fecha_fin: formData.fecha_fin ? formatDateForAPI(formData.fecha_fin) : null
+        fecha_fin: formData.fecha_fin_indefinida
+          ? null
+          : formatDateForAPI(formData.fecha_fin),
       };
-      
+
+      // Solo validar fechas si no es indefinida
       if (
+        !formData.fecha_fin_indefinida &&
         dataToSend.fecha_fin &&
         dataToSend.fecha_inicio &&
         new Date(dataToSend.fecha_fin) < new Date(dataToSend.fecha_inicio)
@@ -378,6 +457,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
           </div>
         )}
 
+        {/* Nombre y Estado */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -403,11 +483,17 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               onChange={handleChange}
               className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="En Progreso">En Progreso</option>
-              <option value="Concluido">Concluido</option>
-              <option value="Suspendido">Suspendido</option>
-              <option value="Cancelado">Cancelado</option>
+              {ESTADO_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
+            <p className="mt-1 text-xs text-gray-400">
+              {["Suspendido", "Cancelado"].includes(formData.estado)
+                ? "Este estado marcará el proyecto como inactivo."
+                : "Este estado mantiene el proyecto como activo."}
+            </p>
           </div>
         </div>
 
@@ -428,15 +514,45 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Fecha de Finalización (opcional)
+              Fecha de Finalización
             </label>
-            <input
-              type="date"
-              name="fecha_fin"
-              value={formData.fecha_fin}
-              onChange={handleChange}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
-            />
+            <div className="space-y-2">
+              <input
+                type="date"
+                name="fecha_fin"
+                value={formData.fecha_fin}
+                onChange={handleChange}
+                disabled={formData.fecha_fin_indefinida}
+                className={`w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500 ${
+                  formData.fecha_fin_indefinida
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+              />
+              <div className="flex items-center mt-1">
+                <input
+                  id="fecha-indefinida"
+                  type="checkbox"
+                  name="fecha_fin_indefinida"
+                  checked={formData.fecha_fin_indefinida}
+                  onChange={(e) => {
+                    const { checked } = e.target;
+                    setFormData((prev) => ({
+                      ...prev,
+                      fecha_fin_indefinida: checked,
+                      fecha_fin: checked ? "" : prev.fecha_fin,
+                    }));
+                  }}
+                  className="cursor-pointer h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-600"
+                />
+                <label
+                  htmlFor="fecha-indefinida"
+                  className="ml-2 cursor-pointer text-xs text-gray-300"
+                >
+                  Sin fecha de finalización definida
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -473,7 +589,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
                   type="text"
                   placeholder="Buscar investigador..."
                   value={searchTerm}
-                  onChange={(e) => { 
+                  onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setShowDropdown(true);
                   }}
@@ -548,7 +664,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               onFocus={() => setShowHerramientasDropdown(true)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             />
-            
+
             {showHerramientasDropdown && (
               <div
                 ref={herramientasRef}
@@ -580,25 +696,38 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               </div>
             )}
           </div>
-          
+
           {/* Lista de herramientas seleccionadas */}
           {selectedHerramientas.length > 0 && (
             <div className="mt-2 bg-gray-800/50 rounded-md p-2">
-              <div className="text-sm text-gray-300 mb-2">Herramientas seleccionadas:</div>
+              <div className="text-sm text-gray-300 mb-2">
+                Herramientas seleccionadas:
+              </div>
               <div className="flex flex-wrap gap-2">
                 {selectedHerramientas.map((herramienta) => (
-                  <div 
-                    key={herramienta.id} 
+                  <div
+                    key={herramienta.id}
                     className="bg-blue-900/40 text-blue-200 px-2 py-1 rounded-md text-xs flex items-center"
                   >
-                    <span>{herramienta.nombre || `Herramienta #${herramienta.id}`}</span>
+                    <span>
+                      {herramienta.nombre || `Herramienta #${herramienta.id}`}
+                    </span>
                     <button
                       type="button"
                       onClick={() => handleRemoveHerramienta(herramienta.id)}
                       className="ml-2 text-blue-300 hover:text-blue-100"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -607,7 +736,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
             </div>
           )}
         </div>
-        
+
         {/* Sección de Investigadores (colaboradores) */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -625,7 +754,7 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               onFocus={() => setShowInvestigadoresDropdown(true)}
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
             />
-            
+
             {showInvestigadoresDropdown && (
               <div
                 ref={investigadoresRef}
@@ -657,25 +786,39 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
               </div>
             )}
           </div>
-          
+
           {/* Lista de investigadores seleccionados */}
           {selectedInvestigadores.length > 0 && (
             <div className="mt-2 bg-gray-800/50 rounded-md p-2">
-              <div className="text-sm text-gray-300 mb-2">Investigadores participantes:</div>
+              <div className="text-sm text-gray-300 mb-2">
+                Investigadores participantes:
+              </div>
               <div className="flex flex-wrap gap-2">
                 {selectedInvestigadores.map((investigador) => (
-                  <div 
-                    key={investigador.id} 
+                  <div
+                    key={investigador.id}
                     className="bg-green-900/40 text-green-200 px-2 py-1 rounded-md text-xs flex items-center"
                   >
-                    <span>{investigador.nombre || `Investigador #${investigador.id}`}</span>
+                    <span>
+                      {investigador.nombre ||
+                        `Investigador #${investigador.id}`}
+                    </span>
                     <button
                       type="button"
                       onClick={() => handleRemoveInvestigador(investigador.id)}
                       className="ml-2 text-green-300 hover:text-green-100"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -685,21 +828,23 @@ function ProyectoForm({ isOpen, onClose, proyecto = null, onSuccess }) {
           )}
         </div>
 
+        {/* Estado Activo */}
         <div className="pt-4 pb-4 flex justify-center text-center">
-          <input
-            id="proyecto-activo"
-            type="checkbox"
-            name="activo"
-            checked={formData.activo}
-            onChange={handleChange}
-            className="cursor-pointer h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-600"
-          />
-          <label
-            htmlFor="proyecto-activo"
-            className="ml-2 text-sm text-gray-300 cursor-pointer"
-          >
-            Activo
-          </label>
+          <div className="flex items-center bg-gray-800/50 px-4 py-2 rounded-md">
+            <span className="text-sm text-gray-400 mr-2">Estado activo: </span>
+            <span
+              className={`px-2 py-1 text-xs rounded-full ${
+                formData.activo
+                  ? "bg-green-900/50 text-green-300"
+                  : "bg-red-900/50 text-red-300"
+              }`}
+            >
+              {formData.activo ? "Activo" : "Inactivo"}
+            </span>
+            <span className="ml-2 text-xs text-gray-500">
+              (Determinado por el estado del proyecto)
+            </span>
+          </div>
         </div>
 
         <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
