@@ -1166,7 +1166,7 @@
     "pk": 3,
     "fields": {
         "nombre": "Energías Renovables y Sustentabilidad",
-        "reconocimiento_institucional": false
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1182,7 +1182,7 @@
     "pk": 5,
     "fields": {
         "nombre": "Salud y Ciencias Biomédicas",
-        "reconocimiento_institucional": false
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1198,7 +1198,7 @@
     "pk": 7,
     "fields": {
         "nombre": "Ciencias Sociales y Humanidades",
-        "reconocimiento_institucional": false
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1214,7 +1214,7 @@
     "pk": 9,
     "fields": {
         "nombre": "Educación y Pedagogía",
-        "reconocimiento_institucional": false
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1222,7 +1222,7 @@
     "pk": 10,
     "fields": {
         "nombre": "Economía y Desarrollo Sostenible",
-        "reconocimiento_institucional": false
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1798,7 +1798,8 @@
         "fecha_publicacion": "2025-01-15",
         "doi": "10.1234/ia.2025.001",
         "url": "https://example.com/ia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1812,7 +1813,8 @@
         "fecha_publicacion": "2025-02-10",
         "doi": "10.1234/energia.2025.002",
         "url": "https://example.com/energia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1826,7 +1828,8 @@
         "fecha_publicacion": "2024-03-05",
         "doi": "10.1234/robotica.2024.003",
         "url": "https://example.com/robotica",
-        "estatus": true
+        "estatus": true,
+        "estado": "Terminado"
     }
 },
 {
@@ -1840,7 +1843,8 @@
         "fecha_publicacion": "2025-04-01",
         "doi": "10.1234/ciberseguridad.2025.004",
         "url": "https://example.com/ciberseguridad",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1854,7 +1858,8 @@
         "fecha_publicacion": "2025-05-10",
         "doi": "10.1234/biotecnologia.2025.005",
         "url": "https://example.com/biotecnologia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1868,7 +1873,8 @@
         "fecha_publicacion": "2025-06-15",
         "doi": "10.1234/educacion.2025.006",
         "url": "https://example.com/educacion",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1882,7 +1888,8 @@
         "fecha_publicacion": "2025-07-20",
         "doi": "10.1234/medioambiente.2025.007",
         "url": "https://example.com/medioambiente",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1896,7 +1903,8 @@
         "fecha_publicacion": "2025-08-05",
         "doi": "10.1234/ml.2025.008",
         "url": "https://example.com/ml",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1910,7 +1918,8 @@
         "fecha_publicacion": "2025-09-15",
         "doi": "10.1234/diseno.2025.009",
         "url": "https://example.com/diseno",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1924,7 +1933,8 @@
         "fecha_publicacion": "2025-10-01",
         "doi": "10.1234/innovacion.2025.010",
         "url": "https://example.com/innovacion",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -2513,7 +2523,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-24T09:13:49.338Z",
-        "ultimo_acceso": "2025-04-27T08:46:09.819Z",
+        "ultimo_acceso": "2025-04-27T09:21:11.804Z",
         "intentos_login": 0,
         "activo": true
     }

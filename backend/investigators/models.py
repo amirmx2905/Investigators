@@ -192,14 +192,22 @@ class DetHerramienta(models.Model):
         unique_together = ('proyecto', 'herramienta')
 
 class Articulo(models.Model):
+    ESTADO_CHOICES = [
+        ('En Proceso', 'En Proceso'),
+        ('Terminado', 'Terminado'),
+        ('En Revista', 'En Revista'),
+        ('Publicado', 'Publicado'),
+    ]
+    
     nombre_articulo = models.CharField(max_length=200)
-    nombre_revista = models.CharField(max_length=100)
+    nombre_revista = models.CharField(max_length=100, blank=True, null=True)  # Modificado aquí
     abstracto = models.TextField(blank=True, null=True)
     pais_publicacion = models.CharField(max_length=100)
     fecha_publicacion = models.DateField()
     doi = models.CharField(max_length=100, blank=True, null=True)
     url = models.URLField(max_length=200, blank=True, null=True)
     estatus = models.BooleanField(default=True)
+    estado = models.CharField(max_length=50, choices=ESTADO_CHOICES, default='En Proceso')
     investigadores = models.ManyToManyField(Investigador, through='DetArticulo')
     
     def __str__(self):
