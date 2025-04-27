@@ -1,0 +1,223 @@
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ArrowPathIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+
+import { puntajeService } from "../../api/services/puntajeService";
+import DashboardHeader from "./subcomponents/DashboardHeader";
+import InvestigadorSelector from "./subcomponents/InvestigadorSelector";
+import PuntajeGeneral from "./subcomponents/PuntajeGeneral";
+import PuntajePorArea from "./subcomponents/PuntajePorArea";
+import PuntajePorCategoria from "./subcomponents/PuntajePorCategoria";
+
+function Dashboard() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [puntajes, setPuntajes] = useState([]);
+  const [resumenPorArea, setResumenPorArea] = useState([]);
+  const [investigadorSeleccionado, setInvestigadorSeleccionado] =
+    useState(null);
+  // Cambiar la categoría seleccionada por defecto de "total" a "estudiantes_maestria"
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(
+    "estudiantes_maestria"
+  );
+  // eslint-disable-next-line no-unused-vars
+  const [actualizando, setActualizando] = useState(false);
+
+  const categorias = [
+    { id: "estudiantes_maestria", nombre: "Estudiantes Maestría" },
+    { id: "estudiantes_doctorado", nombre: "Estudiantes Doctorado" },
+    { id: "lineas", nombre: "Líneas de Investigación" },
+    { id: "proyectos", nombre: "Proyectos" },
+    { id: "articulos", nombre: "Artículos" },
+    { id: "eventos", nombre: "Eventos" },
+  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        // Cargar todos los puntajes
+        const puntajesData = await puntajeService.getAll();
+        console.log("Datos recibidos de la API:", puntajesData);
+
+        // Asegurar que puntajes sea un array
+        if (Array.isArray(puntajesData)) {
+          setPuntajes(puntajesData);
+        } else if (
+          puntajesData &&
+          puntajesData.results &&
+          Array.isArray(puntajesData.results)
+        ) {
+          // Si la API devuelve {results: [...]}
+          setPuntajes(puntajesData.results);
+        } else {
+          // Si no es un array ni tiene results, inicializar como array vacío
+          console.error("Formato de respuesta inesperado:", puntajesData);
+          setPuntajes([]);
+        }
+
+        // Cargar resumen por área
+        const resumenData = await puntajeService.getResumenPorArea();
+        // Asegurar que resumenPorArea sea un array
+        if (Array.isArray(resumenData)) {
+          setResumenPorArea(resumenData);
+        } else if (
+          resumenData &&
+          resumenData.results &&
+          Array.isArray(resumenData.results)
+        ) {
+          setResumenPorArea(resumenData.results);
+        } else {
+          console.error(
+            "Formato de respuesta inesperado para resumen por área:",
+            resumenData
+          );
+          setResumenPorArea([]);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        setError("Error al cargar los datos estadísticos");
+        setLoading(false);
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // eslint-disable-next-line no-unused-vars
+  const recalcularPuntajes = async () => {
+    try {
+      setActualizando(true);
+      await puntajeService.recalcularTodos();
+
+      // Recargar datos
+      const puntajesData = await puntajeService.getAll();
+      // Mismo tratamiento que arriba
+      if (Array.isArray(puntajesData)) {
+        setPuntajes(puntajesData);
+      } else if (
+        puntajesData &&
+        puntajesData.results &&
+        Array.isArray(puntajesData.results)
+      ) {
+        setPuntajes(puntajesData.results);
+      } else {
+        setPuntajes([]);
+      }
+
+      const resumenData = await puntajeService.getResumenPorArea();
+      if (Array.isArray(resumenData)) {
+        setResumenPorArea(resumenData);
+      } else if (
+        resumenData &&
+        resumenData.results &&
+        Array.isArray(resumenData.results)
+      ) {
+        setResumenPorArea(resumenData.results);
+      } else {
+        setResumenPorArea([]);
+      }
+
+      toast.success("Puntajes actualizados correctamente");
+      setActualizando(false);
+    } catch (err) {
+      toast.error("Error al actualizar los puntajes");
+      setActualizando(false);
+      console.error(err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="text-red-500 text-xl mb-4">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="py-6">
+      <ToastContainer position="bottom-right" theme="dark" />
+
+      <DashboardHeader
+        title="Dashboard Estadístico"
+        subtitle="Análisis de desempeño de investigadores"
+        icon={<ChartBarIcon className="h-8 w-8 text-blue-400" />}
+      />
+
+      <div className="flex justify-between items-center mb-6">
+        <InvestigadorSelector
+          investigadores={
+            Array.isArray(puntajes)
+              ? puntajes.map((p) => ({
+                  id: p.investigador,
+                  nombre: p.nombre_investigador,
+                }))
+              : []
+          }
+          onSelect={setInvestigadorSeleccionado}
+          selectedId={investigadorSeleccionado}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Gráfica de Puntaje General */}
+        <PuntajeGeneral
+          puntajes={puntajes}
+          investigadorSeleccionado={investigadorSeleccionado}
+        />
+
+        {/* Gráfica de Puntaje por Área */}
+        <PuntajePorArea resumenPorArea={resumenPorArea} />
+      </div>
+
+      {/* Selector de categoría */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Categoría de Análisis:
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {categorias.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setCategoriaSeleccionada(cat.id)}
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors cursor-pointer ${
+                categoriaSeleccionada === cat.id
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+            >
+              {cat.nombre}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Gráficas por categoría */}
+      <PuntajePorCategoria
+        categoria={categoriaSeleccionada}
+        investigadorSeleccionado={investigadorSeleccionado}
+      />
+    </div>
+  );
+}
+
+export default Dashboard;

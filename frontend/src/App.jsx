@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Home from "./components/Home";
+import Dashboard from "./components/Dashboard"; // Importar el nuevo componente
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import AdminPanel from "./components/AdminPanel";
@@ -19,6 +20,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Home />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
                 </Layout>
               </ProtectedRoute>
             }
