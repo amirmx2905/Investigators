@@ -97,6 +97,12 @@ class JefeArea(models.Model):
         verbose_name_plural = "Jefes de Área"
 
 class Estudiante(models.Model):
+    ESTATUS_CHOICES = [
+        ('Desertor', 'Desertor'),
+        ('Egresado', 'Egresado'),
+        ('Titulado', 'Titulado'),
+    ]
+    
     tipo_estudiante = models.ForeignKey(TipoEstudiante, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
     investigador = models.ForeignKey(Investigador, on_delete=models.CASCADE)
@@ -108,6 +114,7 @@ class Estudiante(models.Model):
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
     activo = models.BooleanField(default=True)
+    estatus = models.CharField(max_length=50, choices=ESTATUS_CHOICES, null=True, blank=True)
     
     def __str__(self):
         return self.nombre

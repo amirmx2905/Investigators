@@ -25,7 +25,8 @@ class EstudianteSerializer(serializers.ModelSerializer):
             'escuela',
             'fecha_inicio',
             'fecha_termino',
-            'activo'
+            'activo',
+            'estatus',
         ]
     
     def get_tipo_estudiante_nombre(self, obj):
