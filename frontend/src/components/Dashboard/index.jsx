@@ -40,7 +40,6 @@ function Dashboard() {
 
         // Cargar todos los puntajes
         const puntajesData = await puntajeService.getAll();
-        console.log("Datos recibidos de la API:", puntajesData);
 
         // Asegurar que puntajes sea un array
         if (Array.isArray(puntajesData)) {
@@ -153,17 +152,18 @@ function Dashboard() {
     );
   }
 
+  // Modificar el layout principal para ser más responsivo
   return (
-    <div className="py-6">
+    <div className="py-4 sm:py-6 px-2 sm:px-0">
       <ToastContainer position="bottom-right" theme="dark" />
 
       <DashboardHeader
         title="Dashboard Estadístico"
         subtitle="Análisis de desempeño de investigadores"
-        icon={<ChartBarIcon className="h-8 w-8 text-blue-400" />}
+        icon={<ChartBarIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />}
       />
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <InvestigadorSelector
           investigadores={
             Array.isArray(puntajes)
@@ -178,7 +178,7 @@ function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
         {/* Gráfica de Puntaje General */}
         <PuntajeGeneral
           puntajes={puntajes}
@@ -190,7 +190,7 @@ function Dashboard() {
       </div>
 
       {/* Selector de categoría */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <label className="block text-sm font-medium text-gray-300 mb-2">
           Categoría de Análisis:
         </label>
@@ -199,7 +199,7 @@ function Dashboard() {
             <button
               key={cat.id}
               onClick={() => setCategoriaSeleccionada(cat.id)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors cursor-pointer ${
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm rounded-full transition-colors cursor-pointer ${
                 categoriaSeleccionada === cat.id
                   ? "bg-blue-600 text-white"
                   : "bg-gray-700 text-gray-300 hover:bg-gray-600"

@@ -43,9 +43,9 @@ function TipOverlay({ onDismiss }) {
 
   return (
     <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-      <div className="bg-gray-800 p-6 rounded-lg border border-blue-500/50 max-w-md w-full mx-4">
-        <h3 className="text-xl font-semibold text-blue-400 mb-3 flex items-center">
-          <LightBulbIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+      <div className="bg-gray-800 p-4 sm:p-6 rounded-lg border border-blue-500/50 max-w-md w-full mx-4">
+        <h3 className="text-lg sm:text-xl font-semibold text-blue-400 mb-2 sm:mb-3 flex items-center">
+          <LightBulbIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
           Consejos
         </h3>
         <ul className="space-y-3 text-gray-300">
@@ -279,7 +279,7 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
 
   useEffect(() => {
     fetchDataAndProcess();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoria, investigadorSeleccionado]);
 
   // Configuración para gráfico de barras
@@ -288,12 +288,12 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top",
+        position: window.innerWidth < 500 ? "bottom" : "top",
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
-          padding: 15,
+          padding: window.innerWidth < 768 ? 8 : 15,
           font: {
-            size: 11,
+            size: window.innerWidth < 768 ? 9 : 11,
           },
           usePointStyle: true,
           pointStyle: "circle",
@@ -304,12 +304,12 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
         text: titulos[categoria] || "Análisis por Categoría",
         color: "rgba(255, 255, 255, 0.9)",
         font: {
-          size: 18,
+          size: window.innerWidth < 768 ? 14 : 18,
           weight: "bold",
         },
         padding: {
-          top: 10,
-          bottom: 20,
+          top: 5,
+          bottom: window.innerWidth < 768 ? 10 : 20,
         },
       },
       tooltip: {
@@ -367,7 +367,7 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
           maxRotation: 45,
           minRotation: 45,
           font: {
-            size: 11,
+            size: window.innerWidth < 768 ? 8 : 11,
           },
         },
         grid: {
@@ -379,9 +379,9 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
         ticks: {
           color: "rgba(255, 255, 255, 0.75)",
           font: {
-            size: 11,
+            size: window.innerWidth < 768 ? 8 : 11,
           },
-          padding: 6,
+          padding: window.innerWidth < 768 ? 3 : 6,
         },
         grid: {
           color: "rgba(55, 65, 81, 0.3)",
@@ -417,12 +417,12 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: window.innerWidth < 768 ? "bottom" : "right",
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
           padding: 15,
           font: {
-            size: 11,
+            size: window.innerWidth < 768 ? 9 : 11,
           },
           usePointStyle: true,
           pointStyle: "circle",
@@ -536,46 +536,46 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
   }
 
   return (
-    <div className="bg-gray-800/70 backdrop-blur-sm p-4 sm:p-6 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 relative">
-      {/* Controladores del gráfico - versión simplificada */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+    <div className="bg-gray-800/70 backdrop-blur-sm p-3 sm:p-4 md:p-6 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 relative">
+      {/* Controladores del gráfico - versión simplificada y más responsiva */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
         {/* Título con icono */}
         <div className="flex items-center">
-          {iconoCategoria[categoria]}
-          <h3 className="text-lg font-semibold text-gray-200">
+          <div className="hidden sm:block">{iconoCategoria[categoria]}</div>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-200">
             {titulos[categoria] || "Análisis por Categoría"}
           </h3>
         </div>
 
-        {/* Contenedor central para los botones de tipo de gráfico */}
+        {/* Contenedor para los botones de tipo de gráfico */}
         <div className="inline-flex bg-gray-700/70 rounded-md p-1">
           <button
             onClick={() => setChartType("bar")}
-            className={`flex items-center px-3 py-1.5 rounded-md text-sm transition-colors cursor-pointer ${
+            className={`flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm transition-colors cursor-pointer ${
               chartType === "bar"
                 ? "bg-blue-600 text-white"
                 : "text-gray-300 hover:bg-gray-600/70"
             }`}
           >
-            <ChartBarIcon className="h-4 w-4 mr-1.5" />
+            <ChartBarIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
             Barras
           </button>
           <button
             onClick={() => setChartType("doughnut")}
-            className={`flex items-center px-3 py-1.5 rounded-md text-sm transition-colors cursor-pointer ${
+            className={`flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm transition-colors cursor-pointer ${
               chartType === "doughnut"
                 ? "bg-blue-600 text-white"
                 : "text-gray-300 hover:bg-gray-600/70"
             }`}
           >
-            <ChartPieIcon className="h-4 w-4 mr-1.5" />
+            <ChartPieIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
             Dona
           </button>
         </div>
       </div>
 
-      {/* Contenedor del gráfico con más altura */}
-      <div className="relative h-[450px]">
+      {/* Contenedor del gráfico con altura adaptable */}
+      <div className="relative h-[300px] sm:h-[350px] md:h-[450px]">
         {showTip && <TipOverlay onDismiss={() => setShowTip(false)} />}
 
         {/* Overlay de actualización */}
@@ -596,8 +596,8 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
         )}
       </div>
 
-      {/* Nota informativa */}
-      <div className="mt-4 pt-3 border-t border-gray-700">
+      {/* Nota informativa responsiva */}
+      <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-gray-700">
         <p className="text-xs text-gray-400">
           <span className="text-blue-400 font-medium">Nota:</span> Los datos
           muestran los{" "}
@@ -612,7 +612,7 @@ function PuntajePorCategoria({ categoria, investigadorSeleccionado }) {
       </div>
 
       {/* Estilos CSS para animaciones */}
-      <style jsx>{`
+      <style jsx = "true">{`
         .typing-animation,
         .typing-animation-2,
         .typing-animation-3 {

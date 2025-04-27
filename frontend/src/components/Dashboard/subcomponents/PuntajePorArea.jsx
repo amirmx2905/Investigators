@@ -51,16 +51,20 @@ function PuntajePorArea({ resumenPorArea }) {
     }
   }, [resumenPorArea]);
 
+  // Modificar las opciones para mejor responsividad
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: window.innerWidth < 500 ? "bottom" : "right",
         labels: {
           color: "rgba(255, 255, 255, 0.8)",
-          boxWidth: 15,
-          padding: 10,
+          boxWidth: window.innerWidth < 768 ? 12 : 15,
+          padding: window.innerWidth < 768 ? 6 : 10,
+          font: {
+            size: window.innerWidth < 768 ? 9 : 12,
+          },
         },
       },
       title: {
@@ -68,7 +72,7 @@ function PuntajePorArea({ resumenPorArea }) {
         text: "Distribución de Puntaje por Área",
         color: "rgba(255, 255, 255, 0.9)",
         font: {
-          size: 16,
+          size: window.innerWidth < 768 ? 14 : 16,
         },
       },
       tooltip: {
@@ -89,9 +93,10 @@ function PuntajePorArea({ resumenPorArea }) {
     },
   };
 
+  // Modificar la altura y el padding responsivo
   return (
-    <div className="bg-gray-800/70 backdrop-blur-sm p-4 sm:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
-      <div className="h-80">
+    <div className="bg-gray-800/70 backdrop-blur-sm p-3 sm:p-4 md:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+      <div className="h-64 sm:h-80">
         <Pie data={chartData} options={options} />
       </div>
     </div>

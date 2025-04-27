@@ -66,6 +66,7 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
     setChartData(data);
   }, [puntajes, investigadorSeleccionado]);
 
+  // Modificar las opciones para mejor responsividad
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -78,6 +79,9 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
           usePointStyle: true,
           pointStyle: "circle",
           padding: 15,
+          font: {
+            size: window.innerWidth < 768 ? 9 : 11,
+          },
         },
       },
       title: {
@@ -85,7 +89,7 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
         text: "Top 10 Investigadores por Puntaje",
         color: "rgba(255, 255, 255, 0.9)",
         font: {
-          size: 18,
+          size: window.innerWidth < 768 ? 14 : 18,
           weight: "bold",
         },
         padding: {
@@ -150,7 +154,7 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
         ticks: {
           color: "rgba(255, 255, 255, 0.7)",
           font: {
-            size: 11,
+            size: window.innerWidth < 768 ? 9 : 11,
           },
         },
         grid: {
@@ -163,7 +167,7 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
           color: "rgba(255, 255, 255, 0.8)",
           font: {
             weight: "500",
-            size: 11,
+            size: window.innerWidth < 768 ? 9 : 11,
           },
         },
         grid: {
@@ -177,9 +181,10 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
     },
   };
 
+  // Modificar la altura y configuración responsiva
   return (
-    <div className="bg-gray-800/70 backdrop-blur-sm p-4 sm:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
-      <div className="h-96">
+    <div className="bg-gray-800/70 backdrop-blur-sm p-3 sm:p-4 md:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+      <div className="h-64 sm:h-80 md:h-96">
         <Bar data={chartData} options={options} />
       </div>
     </div>
