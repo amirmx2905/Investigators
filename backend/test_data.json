@@ -2224,6 +2224,20 @@
     }
 },
 {
+    "model": "investigators.tipoevento",
+    "pk": 11,
+    "fields": {
+        "nombre": "Diplomado"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 12,
+    "fields": {
+        "nombre": "Charla"
+    }
+},
+{
     "model": "investigators.rolevento",
     "pk": 1,
     "fields": {
