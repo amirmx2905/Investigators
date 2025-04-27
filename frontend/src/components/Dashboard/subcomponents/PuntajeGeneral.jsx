@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,8 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import axios from "axios";
 
-// Registrar componentes necesarios de Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -20,53 +20,112 @@ ChartJS.register(
   Legend
 );
 
-function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
+function PuntajeGeneral({ investigadorSeleccionado }) {
+  // Eliminar initialPuntajes de los parámetros ya que no lo estamos usando
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const [allPuntajes, setAllPuntajes] = useState([]);
 
-  useEffect(() => {
-    // Asegurarnos de que puntajes es un array
-    if (!Array.isArray(puntajes) || puntajes.length === 0) {
-      setChartData({ labels: [], datasets: [] });
-      return;
+  // Función para procesar los datos - definirla primero
+  const procesarDatos = useCallback(
+    (datos) => {
+      // Asegurarnos de que datos es un array
+      if (!Array.isArray(datos) || datos.length === 0) {
+        setChartData({ labels: [], datasets: [] });
+        return;
+      }
+
+      // Filtrar por investigador si hay uno seleccionado
+      const puntajesFiltrados = investigadorSeleccionado
+        ? datos.filter((p) => p.investigador === investigadorSeleccionado)
+        : datos;
+
+      // Filtrar investigadores con puntaje 0 o nulo
+      const puntajesConValor = puntajesFiltrados.filter(
+        (p) => p.puntos_totales !== null && p.puntos_totales > 0
+      );
+
+      // Ordenar por puntaje total (de mayor a menor)
+      const puntajesOrdenados = [...puntajesConValor].sort(
+        (a, b) => b.puntos_totales - a.puntos_totales
+      );
+
+      // Limitar a los 10 mejores para evitar sobrecarga visual
+      const puntajesTop = puntajesOrdenados.slice(0, 10);
+
+      // Preparar datos para la gráfica
+      const data = {
+        labels: puntajesTop.map((p) => p.nombre_investigador),
+        datasets: [
+          {
+            label: "Puntaje Total",
+            data: puntajesTop.map((p) => p.puntos_totales),
+            backgroundColor: "rgba(59, 130, 246, 0.8)",
+            borderColor: "rgba(59, 130, 246, 1)",
+            borderWidth: 1,
+            borderRadius: 4,
+          },
+        ],
+      };
+
+      setChartData(data);
+    },
+    [investigadorSeleccionado]
+  );
+
+  // Función para obtener todas las páginas de puntajes - definirla después
+  const fetchAllPuntajes = useCallback(async () => {
+    try {
+      setIsLoading(true);
+
+      // Obtener la primera página para ver cuántas páginas hay en total
+      const response = await axios.get("/api/puntajes/");
+      const firstPageData = response.data;
+
+      // Guardar los resultados de la primera página
+      let allResults = [...firstPageData.results];
+
+      // Si hay más páginas, obtenerlas
+      if (firstPageData.total_pages > 1) {
+        const additionalRequests = [];
+
+        // Crear solicitudes para todas las páginas adicionales
+        for (let page = 2; page <= firstPageData.total_pages; page++) {
+          additionalRequests.push(axios.get(`/api/puntajes/?page=${page}`));
+        }
+
+        // Ejecutar todas las solicitudes en paralelo
+        const additionalResponses = await Promise.all(additionalRequests);
+
+        // Agregar los resultados de cada página adicional
+        additionalResponses.forEach((response) => {
+          allResults = [...allResults, ...response.data.results];
+        });
+      }
+
+      console.log("Total de investigadores obtenidos:", allResults.length);
+
+      // Actualizar el estado y procesar los datos
+      setAllPuntajes(allResults);
+      procesarDatos(allResults);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error al obtener todos los puntajes:", error);
+      setIsLoading(false);
     }
+  }, [procesarDatos]); // Añadir procesarDatos como dependencia
 
-    // Filtrar por investigador si hay uno seleccionado
-    const puntajesFiltrados = investigadorSeleccionado
-      ? puntajes.filter((p) => p.investigador === investigadorSeleccionado)
-      : puntajes;
+  // Efecto para cargar todos los datos al inicio
+  useEffect(() => {
+    fetchAllPuntajes();
+  }, [fetchAllPuntajes]);
 
-    // Filtrar investigadores con puntaje 0 o nulo
-    const puntajesConValor = puntajesFiltrados.filter(
-      (p) => p.puntos_totales !== null && p.puntos_totales > 0
-    );
+  // Efecto para procesar datos cuando cambia el investigador seleccionado
+  useEffect(() => {
+    procesarDatos(allPuntajes);
+  }, [investigadorSeleccionado, allPuntajes, procesarDatos]);
 
-    // Ordenar por puntaje total (de mayor a menor)
-    const puntajesOrdenados = [...puntajesConValor].sort(
-      (a, b) => b.puntos_totales - a.puntos_totales
-    );
-
-    // Limitar a los 10 mejores para evitar sobrecarga visual
-    const puntajesTop = puntajesOrdenados.slice(0, 10);
-
-    // Preparar datos para la gráfica
-    const data = {
-      labels: puntajesTop.map((p) => p.nombre_investigador),
-      datasets: [
-        {
-          label: "Puntaje Total",
-          data: puntajesTop.map((p) => p.puntos_totales),
-          backgroundColor: "rgba(59, 130, 246, 0.8)", // Azul más saturado
-          borderColor: "rgba(59, 130, 246, 1)",
-          borderWidth: 1,
-          borderRadius: 4, // Barras con bordes redondeados
-        },
-      ],
-    };
-
-    setChartData(data);
-  }, [puntajes, investigadorSeleccionado]);
-
-  // Modificar las opciones para mejor responsividad
+  // Mantener las opciones existentes
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -181,9 +240,41 @@ function PuntajeGeneral({ puntajes, investigadorSeleccionado }) {
     },
   };
 
-  // Modificar la altura y configuración responsiva
   return (
-    <div className="bg-gray-800/70 backdrop-blur-sm p-3 sm:p-4 md:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+    <div className="bg-gray-800/70 backdrop-blur-sm p-3 sm:p-4 md:p-5 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 relative">
+      {/* Botón para actualizar manualmente */}
+      <button
+        onClick={fetchAllPuntajes}
+        className="cursor-pointer absolute top-2 right-2 z-10 p-1.5 bg-blue-600/80 hover:bg-blue-600 rounded-full text-white shadow-lg transition-colors"
+        title="Actualizar datos"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+      </button>
+
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-[2px] flex items-center justify-center z-20 rounded">
+          <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 mb-3"></div>
+            <p className="text-blue-400">
+              Cargando todos los investigadores...
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="h-64 sm:h-80 md:h-96">
         <Bar data={chartData} options={options} />
       </div>

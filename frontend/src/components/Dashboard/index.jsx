@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ArrowPathIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 import { puntajeService } from "../../api/services/puntajeService";
 import DashboardHeader from "./subcomponents/DashboardHeader";
@@ -38,28 +39,51 @@ function Dashboard() {
       try {
         setLoading(true);
 
-        // Cargar todos los puntajes
-        const puntajesData = await puntajeService.getAll();
+        // Función para obtener todos los investigadores (todas las páginas)
+        const fetchAllInvestigadores = async () => {
+          // Obtener la primera página para ver cuántas páginas hay en total
+          const response = await axios.get("/api/puntajes/");
+          const firstPageData = response.data;
+
+          // Guardar los resultados de la primera página
+          let allResults = [...firstPageData.results];
+
+          // Si hay más páginas, obtenerlas
+          if (firstPageData.total_pages > 1) {
+            const additionalRequests = [];
+
+            // Crear solicitudes para todas las páginas adicionales
+            for (let page = 2; page <= firstPageData.total_pages; page++) {
+              additionalRequests.push(axios.get(`/api/puntajes/?page=${page}`));
+            }
+
+            // Ejecutar todas las solicitudes en paralelo
+            const additionalResponses = await Promise.all(additionalRequests);
+
+            // Agregar los resultados de cada página adicional
+            additionalResponses.forEach((response) => {
+              allResults = [...allResults, ...response.data.results];
+            });
+          }
+
+          return allResults;
+        };
+
+        // Cargar todos los puntajes (todas las páginas)
+        const puntajesData = await fetchAllInvestigadores();
 
         // Asegurar que puntajes sea un array
         if (Array.isArray(puntajesData)) {
           setPuntajes(puntajesData);
-        } else if (
-          puntajesData &&
-          puntajesData.results &&
-          Array.isArray(puntajesData.results)
-        ) {
-          // Si la API devuelve {results: [...]}
-          setPuntajes(puntajesData.results);
+          console.log("Total de investigadores cargados:", puntajesData.length);
         } else {
-          // Si no es un array ni tiene results, inicializar como array vacío
+          // Si no es un array, inicializar como array vacío
           console.error("Formato de respuesta inesperado:", puntajesData);
           setPuntajes([]);
         }
 
         // Cargar resumen por área
         const resumenData = await puntajeService.getResumenPorArea();
-        // Asegurar que resumenPorArea sea un array
         if (Array.isArray(resumenData)) {
           setResumenPorArea(resumenData);
         } else if (
@@ -69,18 +93,21 @@ function Dashboard() {
         ) {
           setResumenPorArea(resumenData.results);
         } else {
-          console.error(
-            "Formato de respuesta inesperado para resumen por área:",
-            resumenData
-          );
           setResumenPorArea([]);
         }
 
         setLoading(false);
+        // Limpiar cualquier error previo cuando la carga es exitosa
+        setError(null);
       } catch (err) {
-        setError("Error al cargar los datos estadísticos");
+        console.error("Error al cargar datos:", err);
+        // Establecer el mensaje de error
+        setError("Error al cargar los datos. Por favor, intente nuevamente.");
         setLoading(false);
-        console.error(err);
+        // Mostrar toast de error
+        toast.error("Error al cargar datos. Intente nuevamente.", {
+          position: "bottom-right",
+        });
       }
     };
 
@@ -123,7 +150,13 @@ function Dashboard() {
 
       toast.success("Puntajes actualizados correctamente");
       setActualizando(false);
+      // Limpiar errores previos
+      setError(null);
     } catch (err) {
+      // Establecer el mensaje de error
+      setError(
+        "Error al actualizar los puntajes. Por favor, intente nuevamente."
+      );
       toast.error("Error al actualizar los puntajes");
       setActualizando(false);
       console.error(err);
