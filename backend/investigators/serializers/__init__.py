@@ -18,3 +18,4 @@ from .rol_evento_serializer import RolEventoSerializer
 from .evento_serializer import EventoSerializer, InvestigadorEventoSerializer
 from .unidad_serializer import UnidadSerializer
 from .jefe_area_serializer import JefeAreaSerializer
+from .puntaje_serializer import PuntajeInvestigadorSerializer

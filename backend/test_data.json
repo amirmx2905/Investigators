@@ -933,6 +933,21 @@
     }
 },
 {
+    "model": "investigators.investigador",
+    "pk": 20,
+    "fields": {
+        "area": 6,
+        "nivel_edu": 3,
+        "especialidad": 1,
+        "nivel_snii": 4,
+        "fecha_asignacion_snii": "2025-03-03",
+        "nombre": "Trinity",
+        "correo": "trinity@example.com",
+        "celular": "1231231232",
+        "activo": true
+    }
+},
+{
     "model": "investigators.jefearea",
     "pk": 1,
     "fields": {
@@ -989,7 +1004,7 @@
     "fields": {
         "tipo_estudiante": 2,
         "carrera": 2,
-        "investigador": 2,
+        "investigador": 20,
         "nombre": "Ana Torres",
         "correo": "ana.torres@example.com",
         "celular": "5559876543",
@@ -998,7 +1013,7 @@
         "fecha_inicio": "2025-02-01",
         "fecha_termino": "2025-11-30",
         "activo": false,
-        "estatus": "Desertor"
+        "estatus": "Titulado"
     }
 },
 {
@@ -1007,7 +1022,7 @@
     "fields": {
         "tipo_estudiante": 3,
         "carrera": 3,
-        "investigador": 3,
+        "investigador": 20,
         "nombre": "Luis Gómez",
         "correo": "luis.gomez@example.com",
         "celular": "5554567890",
@@ -1015,8 +1030,8 @@
         "escuela": "UAM",
         "fecha_inicio": "2025-03-01",
         "fecha_termino": "2025-10-31",
-        "activo": true,
-        "estatus": null
+        "activo": false,
+        "estatus": "Titulado"
     }
 },
 {
@@ -1327,6 +1342,38 @@
     "fields": {
         "linea": 6,
         "investigador": 19
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 25,
+    "fields": {
+        "linea": 1,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 26,
+    "fields": {
+        "linea": 2,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 27,
+    "fields": {
+        "linea": 10,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 28,
+    "fields": {
+        "linea": 5,
+        "investigador": 20
     }
 },
 {
@@ -1889,7 +1936,7 @@
         "doi": "10.1234/medioambiente.2025.007",
         "url": "https://example.com/medioambiente",
         "estatus": true,
-        "estado": "En Proceso"
+        "estado": "Publicado"
     }
 },
 {
@@ -2033,7 +2080,7 @@
     "fields": {
         "articulo": 7,
         "investigador": 3,
-        "orden_autor": 1
+        "orden_autor": 3
     }
 },
 {
@@ -2151,6 +2198,15 @@
         "articulo": 1,
         "investigador": 10,
         "orden_autor": 4
+    }
+},
+{
+    "model": "investigators.detarticulo",
+    "pk": 56,
+    "fields": {
+        "articulo": 7,
+        "investigador": 20,
+        "orden_autor": 1
     }
 },
 {
@@ -2537,7 +2593,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-24T09:13:49.338Z",
-        "ultimo_acceso": "2025-04-27T09:21:11.804Z",
+        "ultimo_acceso": "2025-04-27T20:26:26.761Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2552,7 +2608,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-25T06:13:40.344Z",
-        "ultimo_acceso": "2025-03-31T05:02:32.381Z",
+        "ultimo_acceso": "2025-04-27T11:39:16.371Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2735,6 +2791,216 @@
         "ultimo_acceso": null,
         "intentos_login": 0,
         "activo": true
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 1,
+    "fields": {
+        "investigador": 1,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 7,
+        "puntos_articulos": 6,
+        "puntos_eventos": 3,
+        "puntos_totales": 21,
+        "ultima_actualizacion": "2025-04-27T11:34:41.196Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 2,
+    "fields": {
+        "investigador": 2,
+        "puntos_estudiantes_maestria": 2,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 3,
+        "puntos_eventos": 1,
+        "puntos_totales": 16,
+        "ultima_actualizacion": "2025-04-27T11:34:41.203Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 3,
+    "fields": {
+        "investigador": 3,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 12,
+        "puntos_eventos": 2,
+        "puntos_totales": 24,
+        "ultima_actualizacion": "2025-04-27T19:06:06.480Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 4,
+    "fields": {
+        "investigador": 4,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 1,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 11,
+        "ultima_actualizacion": "2025-04-27T11:34:41.216Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 5,
+    "fields": {
+        "investigador": 5,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 8,
+        "puntos_eventos": 1,
+        "puntos_totales": 17,
+        "ultima_actualizacion": "2025-04-27T11:34:41.221Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 6,
+    "fields": {
+        "investigador": 6,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 3,
+        "puntos_eventos": 1,
+        "puntos_totales": 9,
+        "ultima_actualizacion": "2025-04-27T11:34:41.226Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 7,
+    "fields": {
+        "investigador": 7,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 9,
+        "puntos_eventos": 5,
+        "puntos_totales": 14,
+        "ultima_actualizacion": "2025-04-27T19:06:06.489Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 8,
+    "fields": {
+        "investigador": 8,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 10,
+        "ultima_actualizacion": "2025-04-27T11:34:41.234Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 9,
+    "fields": {
+        "investigador": 9,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 22,
+        "ultima_actualizacion": "2025-04-27T11:34:41.239Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 10,
+    "fields": {
+        "investigador": 10,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 12,
+        "puntos_eventos": 0,
+        "puntos_totales": 27,
+        "ultima_actualizacion": "2025-04-27T11:34:41.243Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 11,
+    "fields": {
+        "investigador": 14,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 3,
+        "puntos_eventos": 0,
+        "puntos_totales": 8,
+        "ultima_actualizacion": "2025-04-27T11:34:41.245Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 12,
+    "fields": {
+        "investigador": 15,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 0,
+        "puntos_eventos": 0,
+        "puntos_totales": 5,
+        "ultima_actualizacion": "2025-04-27T11:34:41.248Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 13,
+    "fields": {
+        "investigador": 19,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 0,
+        "puntos_eventos": 0,
+        "puntos_totales": 0,
+        "ultima_actualizacion": "2025-04-27T11:34:41.250Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 14,
+    "fields": {
+        "investigador": 20,
+        "puntos_estudiantes_maestria": 5,
+        "puntos_estudiantes_doctorado": 8,
+        "puntos_lineas_investigacion": 15,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 10,
+        "puntos_eventos": 0,
+        "puntos_totales": 38,
+        "ultima_actualizacion": "2025-04-27T19:06:06.495Z"
     }
 }
 ]

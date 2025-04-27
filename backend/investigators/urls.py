@@ -7,7 +7,8 @@ from .views import (
     TipoEstudianteViewSet, EstudianteViewSet, LineaViewSet,
     TipoHerramientaViewSet, HerramientaViewSet, ArticuloViewSet,
     TipoEventoViewSet, RolEventoViewSet, EventoViewSet, UnidadViewSet,
-    JefeAreaViewSet, CustomTokenObtainView, TokenRefreshView, TokenLogoutView
+    JefeAreaViewSet, CustomTokenObtainView, TokenRefreshView, TokenLogoutView,
+    PuntajeInvestigadorViewSet
 )
 from .views.import_view import JSONImportView
 
@@ -31,6 +32,7 @@ router.register(r'roleseventos', RolEventoViewSet)
 router.register(r'eventos', EventoViewSet)
 router.register(r'unidades', UnidadViewSet)
 router.register(r'jefesareas', JefeAreaViewSet)
+router.register(r'puntajes', PuntajeInvestigadorViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
