@@ -124,6 +124,7 @@ class Estudiante(models.Model):
 
 class Linea(models.Model):
     nombre = models.CharField(max_length=100)
+    reconocimiento_institucional = models.BooleanField(default=False)
     investigadores = models.ManyToManyField(Investigador, through='DetLinea')
     
     def __str__(self):

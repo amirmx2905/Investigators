@@ -3,12 +3,13 @@ from investigators.models import Linea, DetLinea, Investigador
 from django.db import transaction
 from django.db.models import Q
 
+# Actualizar LineaListSerializer
 class LineaListSerializer(serializers.ModelSerializer):
     num_investigadores = serializers.SerializerMethodField()
     
     class Meta:
         model = Linea
-        fields = ['id', 'nombre', 'num_investigadores']
+        fields = ['id', 'nombre', 'num_investigadores', 'reconocimiento_institucional']
     
     def get_num_investigadores(self, obj):
         return obj.investigadores.count()
@@ -21,17 +22,19 @@ class InvestigadorLineaSerializer(serializers.ModelSerializer):
         model = Investigador
         fields = ['id', 'nombre', 'correo']
 
+# Actualizar LineaDetailSerializer
 class LineaDetailSerializer(serializers.ModelSerializer):
     investigadores = serializers.SerializerMethodField()
     
     class Meta:
         model = Linea
-        fields = ['id', 'nombre', 'investigadores']
+        fields = ['id', 'nombre', 'investigadores', 'reconocimiento_institucional']
     
     def get_investigadores(self, obj):
         investigators = obj.investigadores.all()
         return InvestigadorLineaSerializer(investigators, many=True).data
 
+# Actualizar LineaSerializer
 class LineaSerializer(serializers.ModelSerializer):
     investigadores = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Investigador.objects.all(), required=False
@@ -39,7 +42,7 @@ class LineaSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Linea
-        fields = ['id', 'nombre', 'investigadores']
+        fields = ['id', 'nombre', 'investigadores', 'reconocimiento_institucional']
     
     @transaction.atomic
     def create(self, validated_data):
@@ -61,8 +64,12 @@ class LineaSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         instance.nombre = validated_data.get('nombre', instance.nombre)
+        # Añadir explícitamente la actualización del campo reconocimiento_institucional
+        if 'reconocimiento_institucional' in validated_data:
+            instance.reconocimiento_institucional = validated_data.get('reconocimiento_institucional')
         instance.save()
         
+        # Resto del código para manejar investigadores...
         if 'investigadores' in validated_data:
             nuevos_investigadores = validated_data.pop('investigadores')
             nuevos_ids = {inv.id for inv in nuevos_investigadores}
