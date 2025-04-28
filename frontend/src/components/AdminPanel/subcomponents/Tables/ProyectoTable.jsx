@@ -22,38 +22,44 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         closeModals();
       }
     };
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
     return () => {
-      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener("keydown", handleEsc);
     };
   }, []);
 
   useEffect(() => {
     if (showTechModal || showTeamModal) {
       const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';      
-      const tabNavigation = document.querySelector('.admin-fadeIn');
+      document.body.style.width = "100%";
+      const tabNavigation = document.querySelector(".admin-fadeIn");
       if (tabNavigation) {
-        tabNavigation.style.zIndex = '20';
+        tabNavigation.style.zIndex = "20";
       }
       if (showTechModal && techModalRef.current) {
         setTimeout(() => {
-          techModalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          techModalRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }, 100);
       } else if (showTeamModal && teamModalRef.current) {
         setTimeout(() => {
-          teamModalRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          teamModalRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }, 100);
       }
     } else {
       const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+        window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
       }
     }
   }, [showTechModal, showTeamModal]);
@@ -87,14 +93,21 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
 
   const getStatusStyles = (status) => {
     const statusMap = {
-      "en progreso": "bg-blue-900/60 text-blue-300",
-      concluido: "bg-emerald-900/60 text-emerald-300",
-      suspendido: "bg-yellow-900/60 text-yellow-300",
-      cancelado: "bg-red-900/60 text-red-300",
+      "en proceso": "bg-blue-500/30 text-blue-200 border border-blue-500/40",
+      terminado:
+        "bg-emerald-500/30 text-emerald-200 border border-emerald-500/40",
+      "instalado en sitio":
+        "bg-purple-500/30 text-purple-200 border border-purple-500/40",
+      suspendido: "bg-amber-500/30 text-amber-200 border border-amber-500/40",
+      cancelado: "bg-red-500/30 text-red-200 border border-red-500/40",
     };
 
-    if (!status) return "bg-gray-900/60 text-gray-300";
-    return statusMap[status.toLowerCase()] || "bg-gray-900/60 text-gray-300";
+    if (!status)
+      return "bg-gray-600/40 text-gray-300 border border-gray-500/30";
+    return (
+      statusMap[status.toLowerCase()] ||
+      "bg-gray-600/40 text-gray-300 border border-gray-500/30"
+    );
   };
 
   const formatColumnValue = (column, value, proyecto) => {
@@ -334,18 +347,18 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
 
       {/* Modal de Tecnologías */}
       {showTechModal && selectedProyecto && (
-        <div 
+        <div
           className="fixed inset-0 z-[99999] overflow-auto bg-gray-900/80 flex items-center justify-center"
           style={{
-            animation: "fadeIn 0.2s ease-out forwards"
+            animation: "fadeIn 0.2s ease-out forwards",
           }}
           onClick={closeModals}
         >
-          <div 
+          <div
             ref={techModalRef}
             className="relative bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] border border-gray-700 my-8"
             style={{
-              animation: "scaleIn 0.3s ease-out forwards"
+              animation: "scaleIn 0.3s ease-out forwards",
             }}
             onClick={(e) => e.stopPropagation()}
             tabIndex={-1}
@@ -353,9 +366,25 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
             {/* Encabezado del modal */}
             <div className="bg-gray-800 px-6 py-4 border-b border-gray-700 flex justify-between items-center">
               <h3 className="text-lg font-medium text-white flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2 text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
                 </svg>
                 Tecnologías del Proyecto
               </h3>
@@ -379,23 +408,37 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                 </svg>
               </button>
             </div>
-            
+
             {/* Información del proyecto */}
             <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div className="flex-grow">
-                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">Proyecto</h4>
-                  <p className="text-blue-300 font-medium text-lg">{selectedProyecto.nombre}</p>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">
+                    Proyecto
+                  </h4>
+                  <p className="text-blue-300 font-medium text-lg">
+                    {selectedProyecto.nombre}
+                  </p>
                 </div>
                 <div className="mt-2 md:mt-0 flex items-center">
                   <div className="flex flex-col text-right">
                     <span className="text-xs text-gray-400">Estado</span>
-                    <span className={`text-sm ${
-                      selectedProyecto.estado?.toLowerCase() === "en progreso" ? "text-blue-300" : 
-                      selectedProyecto.estado?.toLowerCase() === "concluido" ? "text-emerald-300" : 
-                      selectedProyecto.estado?.toLowerCase() === "suspendido" ? "text-yellow-300" :
-                      selectedProyecto.estado?.toLowerCase() === "cancelado" ? "text-red-300" : "text-gray-300"
-                    }`}>
+                    <span
+                      className={`text-sm ${
+                        selectedProyecto.estado?.toLowerCase() === "en progreso"
+                          ? "text-blue-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "concluido"
+                          ? "text-emerald-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "suspendido"
+                          ? "text-yellow-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "cancelado"
+                          ? "text-red-300"
+                          : "text-gray-300"
+                      }`}
+                    >
                       {selectedProyecto.estado || "Desconocido"}
                     </span>
                   </div>
@@ -403,14 +446,18 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
               </div>
               <div className="mt-3 flex items-center">
                 <div className="h-1 flex-grow bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-purple-500/50 rounded-full" style={{ width: '100%' }}></div>
+                  <div
+                    className="h-full bg-purple-500/50 rounded-full"
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
             </div>
-            
+
             {/* Contenido del modal */}
             <div className="p-6 overflow-auto max-h-[50vh]">
-              {(!selectedProyecto.herramientas || selectedProyecto.herramientas.length === 0) ? (
+              {!selectedProyecto.herramientas ||
+              selectedProyecto.herramientas.length === 0 ? (
                 <div className="text-center py-10 text-gray-400 bg-gray-800/20 border border-gray-700/30 rounded-lg">
                   <svg
                     className="mx-auto h-12 w-12 text-gray-500 mb-3"
@@ -426,29 +473,57 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-300">Sin tecnologías</h3>
-                  <p className="mt-1 text-sm text-gray-500">Este proyecto no tiene tecnologías registradas</p>
+                  <h3 className="mt-2 text-sm font-medium text-gray-300">
+                    Sin tecnologías
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Este proyecto no tiene tecnologías registradas
+                  </p>
                 </div>
               ) : (
                 <ul className="space-y-2">
                   {selectedProyecto.herramientas.map((herramienta, idx) => (
-                    <li 
+                    <li
                       key={idx}
                       className="flex items-center p-3 rounded-lg border border-gray-700 bg-gray-800/30 hover:bg-gray-700/50 transition-colors"
                     >
                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-lg font-medium text-blue-300 mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                          />
                         </svg>
                       </div>
                       <div className="flex-grow">
                         <p className="text-white font-medium">
-                          {typeof herramienta === "object" ? herramienta.nombre : `Herramienta #${herramienta}`}
+                          {typeof herramienta === "object"
+                            ? herramienta.nombre
+                            : `Herramienta #${herramienta}`}
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
                           <span className="inline-flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-3 w-3 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                              />
                             </svg>
                             Tecnología
                           </span>
@@ -459,7 +534,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                 </ul>
               )}
             </div>
-            
+
             {/* Pie del modal */}
             <div className="bg-gray-800 px-6 py-4 border-t border-gray-700 flex justify-end">
               <button
@@ -475,18 +550,18 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
 
       {/* Modal de Equipo */}
       {showTeamModal && selectedProyecto && (
-        <div 
+        <div
           className="fixed inset-0 z-[99999] overflow-auto bg-gray-900/80 flex items-center justify-center"
           style={{
-            animation: "fadeIn 0.2s ease-out forwards"
+            animation: "fadeIn 0.2s ease-out forwards",
           }}
           onClick={closeModals}
         >
-          <div 
+          <div
             ref={teamModalRef}
             className="relative bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] border border-gray-700 my-8"
             style={{
-              animation: "scaleIn 0.3s ease-out forwards"
+              animation: "scaleIn 0.3s ease-out forwards",
             }}
             onClick={(e) => e.stopPropagation()}
             tabIndex={-1}
@@ -494,8 +569,19 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
             {/* Encabezado del modal */}
             <div className="bg-gray-800 px-6 py-4 border-b border-gray-700 flex justify-between items-center">
               <h3 className="text-lg font-medium text-white flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
                 </svg>
                 Equipo del Proyecto
               </h3>
@@ -519,23 +605,37 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                 </svg>
               </button>
             </div>
-            
+
             {/* Información del proyecto */}
             <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div className="flex-grow">
-                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">Proyecto</h4>
-                  <p className="text-blue-300 font-medium text-lg">{selectedProyecto.nombre}</p>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider mb-1">
+                    Proyecto
+                  </h4>
+                  <p className="text-blue-300 font-medium text-lg">
+                    {selectedProyecto.nombre}
+                  </p>
                 </div>
                 <div className="mt-2 md:mt-0 flex items-center">
                   <div className="flex flex-col text-right">
                     <span className="text-xs text-gray-400">Estado</span>
-                    <span className={`text-sm ${
-                      selectedProyecto.estado?.toLowerCase() === "en progreso" ? "text-blue-300" : 
-                      selectedProyecto.estado?.toLowerCase() === "concluido" ? "text-emerald-300" : 
-                      selectedProyecto.estado?.toLowerCase() === "suspendido" ? "text-yellow-300" :
-                      selectedProyecto.estado?.toLowerCase() === "cancelado" ? "text-red-300" : "text-gray-300"
-                    }`}>
+                    <span
+                      className={`text-sm ${
+                        selectedProyecto.estado?.toLowerCase() === "en progreso"
+                          ? "text-blue-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "concluido"
+                          ? "text-emerald-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "suspendido"
+                          ? "text-yellow-300"
+                          : selectedProyecto.estado?.toLowerCase() ===
+                            "cancelado"
+                          ? "text-red-300"
+                          : "text-gray-300"
+                      }`}
+                    >
                       {selectedProyecto.estado || "Desconocido"}
                     </span>
                   </div>
@@ -543,44 +643,89 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
               </div>
               <div className="mt-3 flex items-center">
                 <div className="h-1 flex-grow bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500/50 rounded-full" style={{ width: '100%' }}></div>
+                  <div
+                    className="h-full bg-green-500/50 rounded-full"
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
             </div>
-            
+
             {/* Contenido del modal */}
             <div className="p-6 overflow-auto max-h-[50vh]">
               <div className="text-sm text-gray-400 bg-gray-800/80 border border-gray-700/50 p-3 mb-4 rounded">
                 <div className="flex">
                   <div className="mr-2 text-indigo-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m-1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
-                  El líder del proyecto dirige y coordina al equipo de investigadores.
+                  El líder del proyecto dirige y coordina al equipo de
+                  investigadores.
                 </div>
               </div>
-              
+
               {/* Líder del proyecto */}
               <div className="mb-6">
                 <h5 className="text-sm font-medium text-gray-300 mb-2 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1 text-yellow-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z"
+                    />
                   </svg>
                   Líder del Proyecto
                 </h5>
                 <div className="flex items-center p-3 rounded-lg border border-blue-700/30 bg-blue-900/20">
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-xl font-medium text-blue-300 mr-4">
-                    <span>{selectedProyecto.lider_nombre ? selectedProyecto.lider_nombre.charAt(0) : "?"}</span>
+                    <span>
+                      {selectedProyecto.lider_nombre
+                        ? selectedProyecto.lider_nombre.charAt(0)
+                        : "?"}
+                    </span>
                   </div>
                   <div className="flex-grow">
                     <p className="text-white font-medium">
-                      {selectedProyecto.lider_nombre || (selectedProyecto.lider && typeof selectedProyecto.lider === 'object' ? selectedProyecto.lider.nombre : "No asignado")}
+                      {selectedProyecto.lider_nombre ||
+                        (selectedProyecto.lider &&
+                        typeof selectedProyecto.lider === "object"
+                          ? selectedProyecto.lider.nombre
+                          : "No asignado")}
                     </p>
                     <p className="text-xs text-blue-300 mt-0.5">
                       <span className="inline-flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
                         </svg>
                         Líder del proyecto
                       </span>
@@ -591,16 +736,28 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                   </div>
                 </div>
               </div>
-              
+
               {/* Investigadores */}
               <h5 className="text-sm font-medium text-gray-300 mb-3 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
                 </svg>
                 Investigadores Participantes
               </h5>
-              
-              {(!selectedProyecto.investigadores || selectedProyecto.investigadores.length === 0) ? (
+
+              {!selectedProyecto.investigadores ||
+              selectedProyecto.investigadores.length === 0 ? (
                 <div className="text-center py-6 text-gray-400 bg-gray-800/20 border border-gray-700/30 rounded-lg">
                   <svg
                     className="mx-auto h-10 w-10 text-gray-500 mb-2"
@@ -616,31 +773,49 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <h3 className="mt-1 text-sm font-medium text-gray-300">No hay investigadores adicionales</h3>
-                  <p className="mt-1 text-xs text-gray-500">Este proyecto solo cuenta con el líder</p>
+                  <h3 className="mt-1 text-sm font-medium text-gray-300">
+                    No hay investigadores adicionales
+                  </h3>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Este proyecto solo cuenta con el líder
+                  </p>
                 </div>
               ) : (
                 <ul className="space-y-2">
                   {selectedProyecto.investigadores.map((investigador, idx) => (
-                    <li 
+                    <li
                       key={idx}
                       className="flex items-center p-3 rounded-lg border border-gray-700 bg-gray-800/30 hover:bg-gray-700/50 transition-colors"
                     >
                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-green-600/20 border border-green-500/30 flex items-center justify-center text-sm font-medium text-green-300 mr-4">
                         <span>
-                          {typeof investigador === "object" && investigador.nombre 
-                            ? investigador.nombre.charAt(0) 
+                          {typeof investigador === "object" &&
+                          investigador.nombre
+                            ? investigador.nombre.charAt(0)
                             : idx + 1}
                         </span>
                       </div>
                       <div className="flex-grow">
                         <p className="text-white font-medium">
-                          {typeof investigador === "object" ? investigador.nombre : `Investigador #${investigador}`}
+                          {typeof investigador === "object"
+                            ? investigador.nombre
+                            : `Investigador #${investigador}`}
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
                           <span className="inline-flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-3 w-3 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
                             </svg>
                             Investigador colaborador
                           </span>
@@ -651,7 +826,7 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
                 </ul>
               )}
             </div>
-            
+
             {/* Pie del modal */}
             <div className="bg-gray-800 px-6 py-4 border-t border-gray-700 flex justify-end">
               <button
@@ -665,15 +840,25 @@ function ProyectoTable({ proyectos, visibleColumns, onEdit, onDelete }) {
         </div>
       )}
 
-      <style jsx = "true">{`
+      <style jsx="true">{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
         @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
         }
       `}</style>
     </>

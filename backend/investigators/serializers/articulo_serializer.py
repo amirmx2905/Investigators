@@ -12,7 +12,7 @@ class ArticuloListSerializer(serializers.ModelSerializer):
         model = Articulo
         fields = ['id', 'nombre_articulo', 'nombre_revista', 'pais_publicacion', 
                   'fecha_publicacion', 'ano_publicacion', 'doi', 'url', 
-                  'estatus', 'primer_autor', 'num_autores', 'autores']
+                  'estatus', 'estado', 'primer_autor', 'num_autores', 'autores']
     
     def get_primer_autor(self, obj):
         primer_autor = DetArticulo.objects.filter(
@@ -53,7 +53,7 @@ class ArticuloDetailSerializer(serializers.ModelSerializer):
         model = Articulo
         fields = ['id', 'nombre_articulo', 'nombre_revista', 'abstracto',
                   'pais_publicacion', 'fecha_publicacion', 'ano_publicacion',
-                  'doi', 'url', 'estatus', 'autores']
+                  'doi', 'url', 'estatus', 'estado', 'autores']
     
     def get_autores(self, obj):
         detalles = DetArticulo.objects.filter(articulo=obj).select_related('investigador')
@@ -74,7 +74,7 @@ class ArticuloSerializer(serializers.ModelSerializer):
         model = Articulo
         fields = ['id', 'nombre_articulo', 'nombre_revista', 'abstracto',
                   'pais_publicacion', 'fecha_publicacion', 'ano_publicacion',
-                  'doi', 'url', 'estatus', 'autores']
+                  'doi', 'url', 'estatus', 'estado', 'autores']
     
     def get_autores(self, obj):
         detalles = DetArticulo.objects.filter(articulo=obj).select_related('investigador')

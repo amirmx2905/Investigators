@@ -933,6 +933,21 @@
     }
 },
 {
+    "model": "investigators.investigador",
+    "pk": 20,
+    "fields": {
+        "area": 6,
+        "nivel_edu": 3,
+        "especialidad": 1,
+        "nivel_snii": 4,
+        "fecha_asignacion_snii": "2025-03-03",
+        "nombre": "Trinity",
+        "correo": "trinity@example.com",
+        "celular": "1231231232",
+        "activo": true
+    }
+},
+{
     "model": "investigators.jefearea",
     "pk": 1,
     "fields": {
@@ -979,7 +994,8 @@
         "escuela": "UNAM",
         "fecha_inicio": "2025-01-01",
         "fecha_termino": "2025-12-31",
-        "activo": true
+        "activo": true,
+        "estatus": null
     }
 },
 {
@@ -988,7 +1004,7 @@
     "fields": {
         "tipo_estudiante": 2,
         "carrera": 2,
-        "investigador": 2,
+        "investigador": 20,
         "nombre": "Ana Torres",
         "correo": "ana.torres@example.com",
         "celular": "5559876543",
@@ -996,7 +1012,8 @@
         "escuela": "IPN",
         "fecha_inicio": "2025-02-01",
         "fecha_termino": "2025-11-30",
-        "activo": true
+        "activo": false,
+        "estatus": "Titulado"
     }
 },
 {
@@ -1005,7 +1022,7 @@
     "fields": {
         "tipo_estudiante": 3,
         "carrera": 3,
-        "investigador": 3,
+        "investigador": 20,
         "nombre": "Luis Gómez",
         "correo": "luis.gomez@example.com",
         "celular": "5554567890",
@@ -1013,7 +1030,8 @@
         "escuela": "UAM",
         "fecha_inicio": "2025-03-01",
         "fecha_termino": "2025-10-31",
-        "activo": true
+        "activo": false,
+        "estatus": "Titulado"
     }
 },
 {
@@ -1030,7 +1048,8 @@
         "escuela": "ITESM",
         "fecha_inicio": "2025-04-01",
         "fecha_termino": "2025-09-30",
-        "activo": true
+        "activo": true,
+        "estatus": null
     }
 },
 {
@@ -1047,7 +1066,8 @@
         "escuela": "UdeG",
         "fecha_inicio": "2025-05-01",
         "fecha_termino": "2025-08-31",
-        "activo": true
+        "activo": false,
+        "estatus": "Egresado"
     }
 },
 {
@@ -1064,7 +1084,8 @@
         "escuela": "UAEM",
         "fecha_inicio": "2025-06-01",
         "fecha_termino": "2025-07-31",
-        "activo": true
+        "activo": false,
+        "estatus": "Titulado"
     }
 },
 {
@@ -1081,7 +1102,8 @@
         "escuela": "UANL",
         "fecha_inicio": "2025-07-01",
         "fecha_termino": "2025-06-30",
-        "activo": true
+        "activo": true,
+        "estatus": null
     }
 },
 {
@@ -1097,8 +1119,9 @@
         "area": 8,
         "escuela": "UABC",
         "fecha_inicio": "2025-08-01",
-        "fecha_termino": "2025-05-31",
-        "activo": true
+        "fecha_termino": "2025-11-26",
+        "activo": false,
+        "estatus": "Egresado"
     }
 },
 {
@@ -1115,7 +1138,8 @@
         "escuela": "UASLP",
         "fecha_inicio": "2025-09-01",
         "fecha_termino": "2025-04-30",
-        "activo": true
+        "activo": true,
+        "estatus": null
     }
 },
 {
@@ -1132,77 +1156,88 @@
         "escuela": "UQROO",
         "fecha_inicio": "2025-10-01",
         "fecha_termino": "2025-03-31",
-        "activo": true
+        "activo": true,
+        "estatus": null
     }
 },
 {
     "model": "investigators.linea",
     "pk": 1,
     "fields": {
-        "nombre": "Inteligencia Artificial y Aprendizaje Automático"
+        "nombre": "Inteligencia Artificial y Aprendizaje Automático",
+        "reconocimiento_institucional": true
     }
 },
 {
     "model": "investigators.linea",
     "pk": 2,
     "fields": {
-        "nombre": "Ciencias del Medio Ambiente y Cambio Climático"
+        "nombre": "Ciencias del Medio Ambiente y Cambio Climático",
+        "reconocimiento_institucional": false
     }
 },
 {
     "model": "investigators.linea",
     "pk": 3,
     "fields": {
-        "nombre": "Energías Renovables y Sustentabilidad"
+        "nombre": "Energías Renovables y Sustentabilidad",
+        "reconocimiento_institucional": true
     }
 },
 {
     "model": "investigators.linea",
     "pk": 4,
     "fields": {
-        "nombre": "Nanotecnología y Materiales Avanzados"
+        "nombre": "Nanotecnología y Materiales Avanzados",
+        "reconocimiento_institucional": false
     }
 },
 {
     "model": "investigators.linea",
     "pk": 5,
     "fields": {
-        "nombre": "Salud y Ciencias Biomédicas"
+        "nombre": "Salud y Ciencias Biomédicas",
+        "reconocimiento_institucional": true
     }
 },
 {
     "model": "investigators.linea",
     "pk": 6,
     "fields": {
-        "nombre": "Tecnologías de la Información y Comunicación"
+        "nombre": "Tecnologías de la Información y Comunicación",
+        "reconocimiento_institucional": false
     }
 },
 {
     "model": "investigators.linea",
     "pk": 7,
     "fields": {
-        "nombre": "Ciencias Sociales y Humanidades"
+        "nombre": "Ciencias Sociales y Humanidades",
+        "reconocimiento_institucional": true
     }
 },
 {
     "model": "investigators.linea",
     "pk": 8,
     "fields": {
-        "nombre": "Robótica y Automatización"
+        "nombre": "Robótica y Automatización",
+        "reconocimiento_institucional": false
     }
 },
 {
     "model": "investigators.linea",
     "pk": 9,
     "fields": {
-        "nombre": "Educación y Pedagogía"
+        "nombre": "Educación y Pedagogía",
+        "reconocimiento_institucional": true
     }
 },
 {
     "model": "investigators.linea",
     "pk": 10,
     "fields": {
-        "nombre": "Economía y Desarrollo Sostenible"
+        "nombre": "Economía y Desarrollo Sostenible",
+        "reconocimiento_institucional": true
     }
 },
 {
@@ -1307,6 +1342,38 @@
     "fields": {
         "linea": 6,
         "investigador": 19
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 25,
+    "fields": {
+        "linea": 1,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 26,
+    "fields": {
+        "linea": 2,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 27,
+    "fields": {
+        "linea": 10,
+        "investigador": 20
+    }
+},
+{
+    "model": "investigators.detlinea",
+    "pk": 28,
+    "fields": {
+        "linea": 5,
+        "investigador": 20
     }
 },
 {
@@ -1473,7 +1540,7 @@
     "fields": {
         "nombre": "Inteligencia Artificial",
         "lider": 1,
-        "estado": "Completado",
+        "estado": "Terminado",
         "explicacion": "Desarrollo de un modelo de IA para análisis de datos",
         "fecha_inicio": "2025-01-01",
         "fecha_fin": "2025-12-31",
@@ -1486,7 +1553,7 @@
     "fields": {
         "nombre": "Energías Renovables",
         "lider": 2,
-        "estado": "En Progreso",
+        "estado": "Instalado en Sitio",
         "explicacion": "Investigación sobre paneles solares eficientes",
         "fecha_inicio": "2025-02-01",
         "fecha_fin": "2025-11-30",
@@ -1499,7 +1566,7 @@
     "fields": {
         "nombre": "Robótica Futurista",
         "lider": 3,
-        "estado": "Completado",
+        "estado": "Instalado en Sitio",
         "explicacion": "Diseño de un robot autónomo",
         "fecha_inicio": "2024-01-01",
         "fecha_fin": "2024-12-31",
@@ -1512,7 +1579,7 @@
     "fields": {
         "nombre": "Ciberseguridad en la Nube",
         "lider": 4,
-        "estado": "En Progreso",
+        "estado": "En Proceso",
         "explicacion": "Desarrollo de un sistema de seguridad informática",
         "fecha_inicio": "2025-03-01",
         "fecha_fin": "2025-10-31",
@@ -1525,10 +1592,10 @@
     "fields": {
         "nombre": "Biotecnología",
         "lider": 5,
-        "estado": "En Progreso",
+        "estado": "En Proceso",
         "explicacion": "Estudio de microorganismos para aplicaciones médicas",
         "fecha_inicio": "2025-04-01",
-        "fecha_fin": "2025-09-30",
+        "fecha_fin": null,
         "activo": true
     }
 },
@@ -1538,11 +1605,11 @@
     "fields": {
         "nombre": "Educación",
         "lider": 6,
-        "estado": "En Progreso",
+        "estado": "Cancelado",
         "explicacion": "Innovación en métodos de enseñanza",
         "fecha_inicio": "2025-05-01",
         "fecha_fin": "2025-08-31",
-        "activo": true
+        "activo": false
     }
 },
 {
@@ -1551,11 +1618,11 @@
     "fields": {
         "nombre": "Ciencias Ambientales",
         "lider": 7,
-        "estado": "En Progreso",
+        "estado": "Suspendido",
         "explicacion": "Análisis del impacto del cambio climático",
         "fecha_inicio": "2025-06-01",
         "fecha_fin": "2025-07-31",
-        "activo": true
+        "activo": false
     }
 },
 {
@@ -1564,10 +1631,10 @@
     "fields": {
         "nombre": "Machine Learning",
         "lider": 8,
-        "estado": "En Progreso",
+        "estado": "En Proceso",
         "explicacion": "Implementación de un modelo de aprendizaje automático",
         "fecha_inicio": "2025-07-01",
-        "fecha_fin": "2025-06-30",
+        "fecha_fin": "2028-07-30",
         "activo": true
     }
 },
@@ -1577,10 +1644,10 @@
     "fields": {
         "nombre": "Diseño Gráfico",
         "lider": 9,
-        "estado": "En Progreso",
+        "estado": "Instalado en Sitio",
         "explicacion": "Creación de herramientas para diseño gráfico",
         "fecha_inicio": "2025-08-01",
-        "fecha_fin": "2025-05-31",
+        "fecha_fin": null,
         "activo": true
     }
 },
@@ -1590,16 +1657,16 @@
     "fields": {
         "nombre": "Innovación Tecnológica",
         "lider": 10,
-        "estado": "En Progreso",
+        "estado": "Instalado en Sitio",
         "explicacion": "Desarrollo de nuevas tecnologías",
         "fecha_inicio": "2025-09-01",
-        "fecha_fin": "2025-04-30",
+        "fecha_fin": null,
         "activo": true
     }
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 1,
+    "pk": 11,
     "fields": {
         "proyecto": 1,
         "investigador": 1,
@@ -1608,7 +1675,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 2,
+    "pk": 12,
     "fields": {
         "proyecto": 1,
         "investigador": 2,
@@ -1617,7 +1684,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 3,
+    "pk": 13,
     "fields": {
         "proyecto": 2,
         "investigador": 3,
@@ -1626,7 +1693,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 4,
+    "pk": 14,
     "fields": {
         "proyecto": 2,
         "investigador": 4,
@@ -1635,7 +1702,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 5,
+    "pk": 15,
     "fields": {
         "proyecto": 3,
         "investigador": 5,
@@ -1644,7 +1711,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 6,
+    "pk": 16,
     "fields": {
         "proyecto": 3,
         "investigador": 6,
@@ -1653,25 +1720,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 7,
-    "fields": {
-        "proyecto": 4,
-        "investigador": 7,
-        "orden_importancia": 1
-    }
-},
-{
-    "model": "investigators.detproyecto",
-    "pk": 8,
-    "fields": {
-        "proyecto": 4,
-        "investigador": 8,
-        "orden_importancia": 2
-    }
-},
-{
-    "model": "investigators.detproyecto",
-    "pk": 9,
+    "pk": 19,
     "fields": {
         "proyecto": 5,
         "investigador": 9,
@@ -1680,7 +1729,7 @@
 },
 {
     "model": "investigators.detproyecto",
-    "pk": 10,
+    "pk": 20,
     "fields": {
         "proyecto": 5,
         "investigador": 10,
@@ -1688,8 +1737,26 @@
     }
 },
 {
+    "model": "investigators.detproyecto",
+    "pk": 21,
+    "fields": {
+        "proyecto": 4,
+        "investigador": 7,
+        "orden_importancia": 1
+    }
+},
+{
+    "model": "investigators.detproyecto",
+    "pk": 22,
+    "fields": {
+        "proyecto": 4,
+        "investigador": 8,
+        "orden_importancia": 2
+    }
+},
+{
     "model": "investigators.detherramienta",
-    "pk": 1,
+    "pk": 11,
     "fields": {
         "proyecto": 1,
         "herramienta": 1
@@ -1697,7 +1764,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 2,
+    "pk": 12,
     "fields": {
         "proyecto": 1,
         "herramienta": 2
@@ -1705,7 +1772,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 3,
+    "pk": 13,
     "fields": {
         "proyecto": 2,
         "herramienta": 3
@@ -1713,7 +1780,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 4,
+    "pk": 14,
     "fields": {
         "proyecto": 2,
         "herramienta": 4
@@ -1721,7 +1788,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 5,
+    "pk": 15,
     "fields": {
         "proyecto": 3,
         "herramienta": 5
@@ -1729,7 +1796,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 6,
+    "pk": 16,
     "fields": {
         "proyecto": 3,
         "herramienta": 6
@@ -1737,23 +1804,7 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 7,
-    "fields": {
-        "proyecto": 4,
-        "herramienta": 7
-    }
-},
-{
-    "model": "investigators.detherramienta",
-    "pk": 8,
-    "fields": {
-        "proyecto": 4,
-        "herramienta": 8
-    }
-},
-{
-    "model": "investigators.detherramienta",
-    "pk": 9,
+    "pk": 19,
     "fields": {
         "proyecto": 5,
         "herramienta": 9
@@ -1761,10 +1812,26 @@
 },
 {
     "model": "investigators.detherramienta",
-    "pk": 10,
+    "pk": 20,
     "fields": {
         "proyecto": 5,
         "herramienta": 10
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 21,
+    "fields": {
+        "proyecto": 4,
+        "herramienta": 7
+    }
+},
+{
+    "model": "investigators.detherramienta",
+    "pk": 22,
+    "fields": {
+        "proyecto": 4,
+        "herramienta": 8
     }
 },
 {
@@ -1778,7 +1845,8 @@
         "fecha_publicacion": "2025-01-15",
         "doi": "10.1234/ia.2025.001",
         "url": "https://example.com/ia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1792,7 +1860,8 @@
         "fecha_publicacion": "2025-02-10",
         "doi": "10.1234/energia.2025.002",
         "url": "https://example.com/energia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1806,7 +1875,8 @@
         "fecha_publicacion": "2024-03-05",
         "doi": "10.1234/robotica.2024.003",
         "url": "https://example.com/robotica",
-        "estatus": true
+        "estatus": true,
+        "estado": "Terminado"
     }
 },
 {
@@ -1820,7 +1890,8 @@
         "fecha_publicacion": "2025-04-01",
         "doi": "10.1234/ciberseguridad.2025.004",
         "url": "https://example.com/ciberseguridad",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1834,7 +1905,8 @@
         "fecha_publicacion": "2025-05-10",
         "doi": "10.1234/biotecnologia.2025.005",
         "url": "https://example.com/biotecnologia",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1848,7 +1920,8 @@
         "fecha_publicacion": "2025-06-15",
         "doi": "10.1234/educacion.2025.006",
         "url": "https://example.com/educacion",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1862,7 +1935,8 @@
         "fecha_publicacion": "2025-07-20",
         "doi": "10.1234/medioambiente.2025.007",
         "url": "https://example.com/medioambiente",
-        "estatus": true
+        "estatus": true,
+        "estado": "Publicado"
     }
 },
 {
@@ -1876,7 +1950,8 @@
         "fecha_publicacion": "2025-08-05",
         "doi": "10.1234/ml.2025.008",
         "url": "https://example.com/ml",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1890,7 +1965,8 @@
         "fecha_publicacion": "2025-09-15",
         "doi": "10.1234/diseno.2025.009",
         "url": "https://example.com/diseno",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -1904,7 +1980,8 @@
         "fecha_publicacion": "2025-10-01",
         "doi": "10.1234/innovacion.2025.010",
         "url": "https://example.com/innovacion",
-        "estatus": true
+        "estatus": true,
+        "estado": "En Proceso"
     }
 },
 {
@@ -2003,7 +2080,7 @@
     "fields": {
         "articulo": 7,
         "investigador": 3,
-        "orden_autor": 1
+        "orden_autor": 3
     }
 },
 {
@@ -2124,6 +2201,15 @@
     }
 },
 {
+    "model": "investigators.detarticulo",
+    "pk": 56,
+    "fields": {
+        "articulo": 7,
+        "investigador": 20,
+        "orden_autor": 1
+    }
+},
+{
     "model": "investigators.tipoevento",
     "pk": 1,
     "fields": {
@@ -2191,6 +2277,20 @@
     "pk": 10,
     "fields": {
         "nombre": "Exposición"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 11,
+    "fields": {
+        "nombre": "Diplomado"
+    }
+},
+{
+    "model": "investigators.tipoevento",
+    "pk": 12,
+    "fields": {
+        "nombre": "Charla"
     }
 },
 {
@@ -2493,7 +2593,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-24T09:13:49.338Z",
-        "ultimo_acceso": "2025-04-01T18:39:08.722Z",
+        "ultimo_acceso": "2025-04-27T20:26:26.761Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2508,7 +2608,7 @@
         "investigador": null,
         "estudiante": null,
         "fecha_creacion": "2025-03-25T06:13:40.344Z",
-        "ultimo_acceso": "2025-03-31T05:02:32.381Z",
+        "ultimo_acceso": "2025-04-27T11:39:16.371Z",
         "intentos_login": 0,
         "activo": true
     }
@@ -2691,6 +2791,216 @@
         "ultimo_acceso": null,
         "intentos_login": 0,
         "activo": true
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 1,
+    "fields": {
+        "investigador": 1,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 7,
+        "puntos_articulos": 6,
+        "puntos_eventos": 3,
+        "puntos_totales": 21,
+        "ultima_actualizacion": "2025-04-27T11:34:41.196Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 2,
+    "fields": {
+        "investigador": 2,
+        "puntos_estudiantes_maestria": 2,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 3,
+        "puntos_eventos": 1,
+        "puntos_totales": 16,
+        "ultima_actualizacion": "2025-04-27T11:34:41.203Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 3,
+    "fields": {
+        "investigador": 3,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 12,
+        "puntos_eventos": 2,
+        "puntos_totales": 24,
+        "ultima_actualizacion": "2025-04-27T19:06:06.480Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 4,
+    "fields": {
+        "investigador": 4,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 1,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 11,
+        "ultima_actualizacion": "2025-04-27T11:34:41.216Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 5,
+    "fields": {
+        "investigador": 5,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 8,
+        "puntos_eventos": 1,
+        "puntos_totales": 17,
+        "ultima_actualizacion": "2025-04-27T11:34:41.221Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 6,
+    "fields": {
+        "investigador": 6,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 3,
+        "puntos_eventos": 1,
+        "puntos_totales": 9,
+        "ultima_actualizacion": "2025-04-27T11:34:41.226Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 7,
+    "fields": {
+        "investigador": 7,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 9,
+        "puntos_eventos": 5,
+        "puntos_totales": 14,
+        "ultima_actualizacion": "2025-04-27T19:06:06.489Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 8,
+    "fields": {
+        "investigador": 8,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 3,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 10,
+        "ultima_actualizacion": "2025-04-27T11:34:41.234Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 9,
+    "fields": {
+        "investigador": 9,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 6,
+        "puntos_eventos": 1,
+        "puntos_totales": 22,
+        "ultima_actualizacion": "2025-04-27T11:34:41.239Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 10,
+    "fields": {
+        "investigador": 10,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 10,
+        "puntos_articulos": 12,
+        "puntos_eventos": 0,
+        "puntos_totales": 27,
+        "ultima_actualizacion": "2025-04-27T11:34:41.243Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 11,
+    "fields": {
+        "investigador": 14,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 3,
+        "puntos_eventos": 0,
+        "puntos_totales": 8,
+        "ultima_actualizacion": "2025-04-27T11:34:41.245Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 12,
+    "fields": {
+        "investigador": 15,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 5,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 0,
+        "puntos_eventos": 0,
+        "puntos_totales": 5,
+        "ultima_actualizacion": "2025-04-27T11:34:41.248Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 13,
+    "fields": {
+        "investigador": 19,
+        "puntos_estudiantes_maestria": 0,
+        "puntos_estudiantes_doctorado": 0,
+        "puntos_lineas_investigacion": 0,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 0,
+        "puntos_eventos": 0,
+        "puntos_totales": 0,
+        "ultima_actualizacion": "2025-04-27T11:34:41.250Z"
+    }
+},
+{
+    "model": "investigators.puntajeinvestigador",
+    "pk": 14,
+    "fields": {
+        "investigador": 20,
+        "puntos_estudiantes_maestria": 5,
+        "puntos_estudiantes_doctorado": 8,
+        "puntos_lineas_investigacion": 15,
+        "puntos_proyectos": 0,
+        "puntos_articulos": 10,
+        "puntos_eventos": 0,
+        "puntos_totales": 38,
+        "ultima_actualizacion": "2025-04-27T19:06:06.495Z"
     }
 }
 ]

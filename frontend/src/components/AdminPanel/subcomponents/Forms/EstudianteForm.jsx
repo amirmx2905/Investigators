@@ -16,7 +16,16 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
     fecha_inicio: "",
     fecha_termino: "",
     activo: true,
+    estatus: "", // Añadimos el campo de estatus al estado inicial
   });
+
+  // Definimos las opciones de estatus
+  const ESTATUS_OPTIONS = [
+    { value: "", label: "Sin estatus" },
+    { value: "Desertor", label: "Desertor" },
+    { value: "Egresado", label: "Egresado" },
+    { value: "Titulado", label: "Titulado" },
+  ];
 
   const [areas, setAreas] = useState([]);
   const [carreras, setCarreras] = useState([]);
@@ -25,7 +34,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedInvestigador, setSelectedInvestigador] = useState("");
@@ -40,12 +49,12 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
 
     return parseInt(value, 10);
   };
-  
+
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
-    
+
     return date.toISOString().split("T")[0];
   };
 
@@ -61,12 +70,20 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         carrera: normalizeId(estudiante.carrera),
         investigador: normalizeId(estudiante.investigador),
         escuela: estudiante.escuela || "",
-        fecha_inicio: estudiante.fecha_inicio ? formatDateForInput(estudiante.fecha_inicio) : "",
-        fecha_termino: estudiante.fecha_termino ? formatDateForInput(estudiante.fecha_termino) : "",
+        fecha_inicio: estudiante.fecha_inicio
+          ? formatDateForInput(estudiante.fecha_inicio)
+          : "",
+        fecha_termino: estudiante.fecha_termino
+          ? formatDateForInput(estudiante.fecha_termino)
+          : "",
         activo: estudiante.activo !== undefined ? estudiante.activo : true,
+        estatus: estudiante.estatus || "",
       });
-      
-      if (estudiante.investigador && typeof estudiante.investigador === 'object') {
+
+      if (
+        estudiante.investigador &&
+        typeof estudiante.investigador === "object"
+      ) {
         setSelectedInvestigador(estudiante.investigador.nombre || "");
       }
     } else {
@@ -82,12 +99,13 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         fecha_inicio: "",
         fecha_termino: "",
         activo: true,
+        estatus: "",
       });
       setSelectedInvestigador("");
       setSearchTerm("");
     }
   }, [estudiante, isOpen]);
-  
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -140,7 +158,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         setCarreras(sortedCarreras);
         setTiposEstudiante(sortedTiposEstudiante);
         setInvestigadores(sortedInvestigadores);
-        
+
         if (estudiante && estudiante.investigador) {
           const inv = sortedInvestigadores.find(
             (i) => i.id === normalizeId(estudiante.investigador)
@@ -195,8 +213,27 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
         [name]: type === "checkbox" ? checked : value,
       }));
     }
+
+    if (name === "estatus") {
+      if (
+        value === "Desertor" ||
+        value === "Egresado" ||
+        value === "Titulado"
+      ) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value,
+          activo: false,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+    }
   };
-  
+
   const handleSelectInvestigador = (item) => {
     const { id, nombre } = item;
     setSelectedInvestigador(nombre);
@@ -204,13 +241,13 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
     setShowDropdown(false);
     setFormData((prev) => ({ ...prev, investigador: id }));
   };
-  
+
   const getFilteredInvestigadores = () => {
     return investigadores.filter((inv) =>
       inv.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
-  
+
   const handleClearInvestigador = () => {
     setSelectedInvestigador("");
     setSearchTerm("");
@@ -224,21 +261,25 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
 
     try {
       const dataToSend = { ...formData };
-      
+
       if (dataToSend.fecha_inicio && dataToSend.fecha_termino) {
-        if (new Date(dataToSend.fecha_termino) < new Date(dataToSend.fecha_inicio)) {
-          throw new Error("La fecha de término debe ser posterior a la fecha de inicio");
+        if (
+          new Date(dataToSend.fecha_termino) < new Date(dataToSend.fecha_inicio)
+        ) {
+          throw new Error(
+            "La fecha de término debe ser posterior a la fecha de inicio"
+          );
         }
       }
-      
+
       if (dataToSend.fecha_inicio === "") {
         dataToSend.fecha_inicio = null;
       }
-      
+
       if (dataToSend.fecha_termino === "") {
         dataToSend.fecha_termino = null;
       }
-      
+
       console.log("Datos a enviar:", dataToSend);
 
       let result;
@@ -282,7 +323,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
       setLoading(false);
     }
   };
-  
+
   const filteredInvestigadores = getFilteredInvestigadores();
 
   return (
@@ -477,7 +518,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
               </select>
             </div>
           </div>
-          
+
           {/* Escuela */}
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -492,7 +533,7 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
-          
+
           {/* Fecha de inicio y Fecha de término */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -522,6 +563,30 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
             </div>
           </div>
 
+          {/* Estatus */}
+          <div className="w-full">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Estatus del Estudiante
+            </label>
+            <select
+              name="estatus"
+              value={formData.estatus}
+              onChange={handleChange}
+              className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-emerald-500 focus:border-emerald-500"
+            >
+              {ESTATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-sm text-gray-400">
+              {formData.estatus
+                ? `Al seleccionar ${formData.estatus}, el estudiante se marcará como inactivo.`
+                : "Si el estudiante ha completado su carrera o ha dejado de estudiar, seleccione el estatus correspondiente."}
+            </p>
+          </div>
+
           {/* Estado */}
           <div className="pt-4 pb-4 flex justify-center text-center">
             <input
@@ -530,13 +595,27 @@ function EstudianteForm({ isOpen, onClose, estudiante = null, onSuccess }) {
               name="activo"
               checked={formData.activo}
               onChange={handleChange}
-              className="cursor-pointer h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600 rounded focus:ring-emerald-600"
+              disabled={["Desertor", "Egresado", "Titulado"].includes(
+                formData.estatus
+              )}
+              className={`cursor-pointer h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600 rounded focus:ring-emerald-600 ${
+                ["Desertor", "Egresado", "Titulado"].includes(formData.estatus)
+                  ? "opacity-50"
+                  : ""
+              }`}
             />
             <label
               htmlFor="estudiante-activo"
-              className="ml-2 text-sm text-gray-300 cursor-pointer"
+              className={`ml-2 text-sm text-gray-300 cursor-pointer ${
+                ["Desertor", "Egresado", "Titulado"].includes(formData.estatus)
+                  ? "opacity-50"
+                  : ""
+              }`}
             >
-              Estudiante Activo
+              Estudiante Activo{" "}
+              {["Desertor", "Egresado", "Titulado"].includes(
+                formData.estatus
+              ) && "(Deshabilitado por estatus)"}
             </label>
           </div>
 

@@ -59,15 +59,21 @@ function ProyectoCard({ proyecto, index, onEdit, onDelete }) {
 
   const getStatusStyles = (status) => {
     const statusMap = {
-      activo: "bg-green-900/60 text-green-300",
-      "en progreso": "bg-blue-900/60 text-blue-300",
-      completado: "bg-emerald-900/60 text-emerald-300",
-      suspendido: "bg-yellow-900/60 text-yellow-300",
-      cancelado: "bg-red-900/60 text-red-300",
+      "en proceso": "bg-blue-500/30 text-blue-200 border border-blue-500/40",
+      terminado:
+        "bg-emerald-500/30 text-emerald-200 border border-emerald-500/40",
+      "instalado en sitio":
+        "bg-purple-500/30 text-purple-200 border border-purple-500/40",
+      suspendido: "bg-amber-500/30 text-amber-200 border border-amber-500/40",
+      cancelado: "bg-red-500/30 text-red-200 border border-red-500/40",
     };
 
-    if (!status) return "bg-gray-900/60 text-gray-300";
-    return statusMap[status.toLowerCase()] || "bg-gray-900/60 text-gray-300";
+    if (!status)
+      return "bg-gray-600/40 text-gray-300 border border-gray-500/30";
+    return (
+      statusMap[status.toLowerCase()] ||
+      "bg-gray-600/40 text-gray-300 border border-gray-500/30"
+    );
   };
 
   // eslint-disable-next-line no-unused-vars

@@ -19,6 +19,7 @@ function Layout({ children }) {
 
   const isAdminPanel = location.pathname === "/admin";
   const isHomePage = location.pathname === "/home";
+  const isDashboard = location.pathname === "/dashboard";
 
   useLayoutStyles();
 
@@ -63,6 +64,13 @@ function Layout({ children }) {
     }
   };
 
+  const navigateToDashboard = () => {
+    navigate("/dashboard");
+    if (menuOpen) {
+      setMenuOpen(false);
+    }
+  };
+
   const navigateBack = () => {
     navigate("/home");
     if (menuOpen) {
@@ -76,7 +84,6 @@ function Layout({ children }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 text-white relative overflow-hidden">
-      
       {/* Elementos de fondo */}
       <Backdrop />
 
@@ -89,20 +96,24 @@ function Layout({ children }) {
         isAdmin={isAdmin()}
         isAdminPanel={isAdminPanel}
         isHomePage={isHomePage}
+        isDashboard={isDashboard}
         onLogout={handleLogout}
         onNavigateToAdmin={navigateToAdmin}
         onNavigateBack={navigateBack}
+        onNavigateToDashboard={navigateToDashboard}
       />
-      {/* Barra superior */}
 
+      {/* Barra superior */}
       <Header
         isMobile={isMobile}
         menuOpen={menuOpen}
         toggleMenu={toggleMenu}
         navigateToHome={navigateToHome}
+        navigateToDashboard={navigateToDashboard}
         isAdmin={isAdmin()}
         isAdminPanel={isAdminPanel}
         isHomePage={isHomePage}
+        isDashboard={isDashboard}
         handleLogout={handleLogout}
       />
 
@@ -113,7 +124,6 @@ function Layout({ children }) {
 
       {/* Pie de página */}
       <Footer />
-      
     </div>
   );
 }

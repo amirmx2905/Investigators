@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import FormModal from "./FormModal";
 import api from "../../../../api/apiConfig";
 import { investigadorService } from "../../../../api/services/investigadorService";
@@ -26,6 +26,11 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
   const [fetchingData, setFetchingData] = useState(false);
   const [error, setError] = useState(null);
 
+  const [lineaSearch, setLineaSearch] = useState("");
+  const [showLineasDropdown, setShowLineasDropdown] = useState(false);
+  const [selectedLineas, setSelectedLineas] = useState([]);
+  const lineasRef = useRef(null);
+
   const normalizeId = (value) => {
     if (value === null || value === undefined || value === "") return "";
     if (typeof value === "object" && value !== null && "id" in value) {
@@ -42,12 +47,14 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         try {
           const response = await api.get(`/investigadores/${investigador.id}/`);
           const lineasData = response.data.lineas || [];
-          const lineaId = lineasData.length > 0 ? lineasData[0].id : null;
-          
-          setFormData(prev => ({
+          const lineasIds = lineasData.map((linea) => linea.id);
+
+          setFormData((prev) => ({
             ...prev,
-            lineas_ids: lineaId ? [lineaId] : []
+            lineas_ids: lineasIds,
           }));
+
+          setSelectedLineas(lineasData);
         } catch (error) {
           console.error("Error al obtener líneas del investigador:", error);
         }
@@ -67,7 +74,7 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         activo: investigador.activo !== undefined ? investigador.activo : true,
         lineas_ids: [],
       });
-      
+
       if (investigador.id) {
         fetchInvestigadorLineas();
       }
@@ -84,8 +91,21 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
         activo: true,
         lineas_ids: [],
       });
+      setSelectedLineas([]);
     }
   }, [investigador, isOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (lineasRef.current && !lineasRef.current.contains(event.target)) {
+        setShowLineasDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
@@ -100,14 +120,19 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
       setFetchingData(true);
       setError(null);
       try {
-        const [areasRes, nivelesEduRes, especialidadesRes, nivelesSNIIRes, lineasRes] =
-          await Promise.all([
-            api.get("/areas/?page_size=1000"),
-            api.get("/niveleducacion/?page_size=1000"),
-            api.get("/especialidades/?page_size=1000"),
-            api.get("/nivelsnii/?page_size=1000"),
-            api.get("/lineas/?page_size=1000"),
-          ]);
+        const [
+          areasRes,
+          nivelesEduRes,
+          especialidadesRes,
+          nivelesSNIIRes,
+          lineasRes,
+        ] = await Promise.all([
+          api.get("/areas/?page_size=1000"),
+          api.get("/niveleducacion/?page_size=1000"),
+          api.get("/especialidades/?page_size=1000"),
+          api.get("/nivelsnii/?page_size=1000"),
+          api.get("/lineas/?page_size=1000"),
+        ]);
 
         const areasData = areasRes.data.results || areasRes.data || [];
         const nivelesEduData =
@@ -116,8 +141,7 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
           especialidadesRes.data.results || especialidadesRes.data || [];
         const nivelesSNIIData =
           nivelesSNIIRes.data.results || nivelesSNIIRes.data || [];
-        const lineasData =
-          lineasRes.data.results || lineasRes.data || [];
+        const lineasData = lineasRes.data.results || lineasRes.data || [];
 
         const sortedAreas = Array.isArray(areasData)
           ? [...areasData].sort((a, b) => a.id - b.id)
@@ -193,12 +217,37 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     }
   };
 
-  const handleLineaChange = (e) => {
-    const value = e.target.value;
-    setFormData(prev => ({
+  // Función para filtrar líneas disponibles
+  const getFilteredLineas = () => {
+    return lineas.filter(
+      (l) =>
+        l.nombre.toLowerCase().includes(lineaSearch.toLowerCase()) &&
+        !formData.lineas_ids.includes(l.id)
+    );
+  };
+
+  // Función para agregar una línea
+  const handleSelectLinea = (linea) => {
+    if (!formData.lineas_ids.includes(linea.id)) {
+      const updatedIds = [...formData.lineas_ids, linea.id];
+      setFormData((prev) => ({
+        ...prev,
+        lineas_ids: updatedIds,
+      }));
+      setSelectedLineas((prev) => [...prev, linea]);
+    }
+    setLineaSearch("");
+    setShowLineasDropdown(false);
+  };
+
+  // Función para eliminar una línea
+  const handleRemoveLinea = (id) => {
+    const updatedIds = formData.lineas_ids.filter((lId) => lId !== id);
+    setFormData((prev) => ({
       ...prev,
-      lineas_ids: value ? [parseInt(value, 10)] : []
+      lineas_ids: updatedIds,
     }));
+    setSelectedLineas((prev) => prev.filter((l) => l.id !== id));
   };
 
   const handleSubmit = async (e) => {
@@ -250,13 +299,6 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getCurrentLineaValue = () => {
-    if (formData.lineas_ids && formData.lineas_ids.length > 0) {
-      return formData.lineas_ids[0].toString();
-    }
-    return "";
   };
 
   return (
@@ -410,23 +452,92 @@ function InvestigadorForm({ isOpen, onClose, investigador = null, onSuccess }) {
               />
             </div>
 
-            {/* Línea de Investigación */}
+            {/* Líneas de Investigación - Selectores múltiples */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                Línea de Investigación
+                Líneas de Investigación
               </label>
-              <select
-                value={getCurrentLineaValue()}
-                onChange={handleLineaChange}
-                className="cursor-pointer w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">-- Seleccionar Línea --</option>
-                {lineas.map((linea) => (
-                  <option key={linea.id} value={linea.id}>
-                    {linea.nombre}
-                  </option>
-                ))}
-              </select>
+              <div className="mb-3 relative">
+                <input
+                  type="text"
+                  placeholder="Buscar y agregar líneas..."
+                  value={lineaSearch}
+                  onChange={(e) => {
+                    setLineaSearch(e.target.value);
+                    setShowLineasDropdown(true);
+                  }}
+                  onFocus={() => setShowLineasDropdown(true)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+                />
+
+                {showLineasDropdown && (
+                  <div
+                    ref={lineasRef}
+                    className="absolute z-40 mt-1 w-full bg-gray-800 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                  >
+                    <div className="py-1">
+                      {lineaSearch.length > 0 ? (
+                        getFilteredLineas().length > 0 ? (
+                          getFilteredLineas().map((linea) => (
+                            <div
+                              key={linea.id}
+                              onClick={() => handleSelectLinea(linea)}
+                              className="cursor-pointer px-4 py-2 hover:bg-gray-700 text-gray-200"
+                            >
+                              {linea.nombre}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-gray-400">
+                            No se encontraron líneas disponibles
+                          </div>
+                        )
+                      ) : (
+                        <div className="px-4 py-2 text-gray-400">
+                          Escribe para buscar líneas
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Lista de líneas seleccionadas */}
+              {selectedLineas.length > 0 && (
+                <div className="mt-2 bg-gray-800/50 rounded-md p-2">
+                  <div className="text-sm text-gray-300 mb-2">
+                    Líneas de investigación seleccionadas:
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedLineas.map((linea) => (
+                      <div
+                        key={linea.id}
+                        className="bg-purple-900/40 text-purple-200 px-2 py-1 rounded-md text-xs flex items-center"
+                      >
+                        <span>{linea.nombre || `Línea #${linea.id}`}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveLinea(linea.id)}
+                          className="ml-2 text-purple-300 hover:text-purple-100"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

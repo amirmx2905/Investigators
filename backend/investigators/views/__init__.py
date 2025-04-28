@@ -19,6 +19,7 @@ from .evento_view import EventoViewSet
 from .unidad_view import UnidadViewSet
 from .jefe_area_view import JefeAreaViewSet
 from .token_view import CustomTokenObtainView, TokenRefreshView, TokenLogoutView
+from .puntaje_view import PuntajeInvestigadorViewSet
 
 __all__ = [
     'OrderedModelViewSet',
@@ -44,4 +45,5 @@ __all__ = [
     'CustomTokenObtainView',
     'TokenRefreshView',
     'TokenLogoutView',
+    'PuntajeInvestigadorViewSet',
 ]

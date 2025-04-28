@@ -97,6 +97,12 @@ class JefeArea(models.Model):
         verbose_name_plural = "Jefes de Área"
 
 class Estudiante(models.Model):
+    ESTATUS_CHOICES = [
+        ('Desertor', 'Desertor'),
+        ('Egresado', 'Egresado'),
+        ('Titulado', 'Titulado'),
+    ]
+    
     tipo_estudiante = models.ForeignKey(TipoEstudiante, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
     investigador = models.ForeignKey(Investigador, on_delete=models.CASCADE)
@@ -108,6 +114,7 @@ class Estudiante(models.Model):
     fecha_inicio = models.DateField()
     fecha_termino = models.DateField(null=True, blank=True)
     activo = models.BooleanField(default=True)
+    estatus = models.CharField(max_length=50, choices=ESTATUS_CHOICES, null=True, blank=True)
     
     def __str__(self):
         return self.nombre
@@ -117,6 +124,7 @@ class Estudiante(models.Model):
 
 class Linea(models.Model):
     nombre = models.CharField(max_length=100)
+    reconocimiento_institucional = models.BooleanField(default=False)
     investigadores = models.ManyToManyField(Investigador, through='DetLinea')
     
     def __str__(self):
@@ -184,14 +192,22 @@ class DetHerramienta(models.Model):
         unique_together = ('proyecto', 'herramienta')
 
 class Articulo(models.Model):
+    ESTADO_CHOICES = [
+        ('En Proceso', 'En Proceso'),
+        ('Terminado', 'Terminado'),
+        ('En Revista', 'En Revista'),
+        ('Publicado', 'Publicado'),
+    ]
+    
     nombre_articulo = models.CharField(max_length=200)
-    nombre_revista = models.CharField(max_length=100)
+    nombre_revista = models.CharField(max_length=100, blank=True, null=True)  # Modificado aquí
     abstracto = models.TextField(blank=True, null=True)
     pais_publicacion = models.CharField(max_length=100)
     fecha_publicacion = models.DateField()
     doi = models.CharField(max_length=100, blank=True, null=True)
     url = models.URLField(max_length=200, blank=True, null=True)
     estatus = models.BooleanField(default=True)
+    estado = models.CharField(max_length=50, choices=ESTADO_CHOICES, default='En Proceso')
     investigadores = models.ManyToManyField(Investigador, through='DetArticulo')
     
     def __str__(self):
@@ -349,3 +365,20 @@ class Usuario(models.Model):
         if self.is_staff:
             return {'*'}
         return set()
+
+class PuntajeInvestigador(models.Model):
+    investigador = models.OneToOneField(Investigador, on_delete=models.CASCADE, related_name='puntaje')
+    puntos_estudiantes_maestria = models.IntegerField(default=0)
+    puntos_estudiantes_doctorado = models.IntegerField(default=0)
+    puntos_lineas_investigacion = models.IntegerField(default=0)
+    puntos_proyectos = models.IntegerField(default=0)
+    puntos_articulos = models.IntegerField(default=0)
+    puntos_eventos = models.IntegerField(default=0)
+    puntos_totales = models.IntegerField(default=0)
+    ultima_actualizacion = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Puntaje de {self.investigador.nombre}"
+    
+    class Meta:
+        verbose_name_plural = "Puntajes de Investigadores"

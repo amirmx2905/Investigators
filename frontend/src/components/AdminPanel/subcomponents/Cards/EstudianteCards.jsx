@@ -100,6 +100,11 @@ function EstudianteCards({ items, onEdit, onDelete }) {
 function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
   const [expanded, setExpanded] = useState(false);
 
+  const inactivoPorEstatus = ["Desertor", "Egresado", "Titulado"].includes(
+    estudiante.estatus
+  );
+  const mostrarComoActivo = estudiante.activo && !inactivoPorEstatus;
+
   const formatDate = (dateString) => {
     if (!dateString) return "Sin fecha";
     const date = new Date(dateString);
@@ -135,9 +140,15 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
             {/* Indicador de estado (activo/inactivo) */}
             <span
               className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-gray-800 ${
-                estudiante.activo ? "bg-green-500" : "bg-red-500"
+                mostrarComoActivo ? "bg-green-500" : "bg-red-500"
               }`}
-              title={estudiante.activo ? "Activo" : "Inactivo"}
+              title={
+                mostrarComoActivo
+                  ? "Activo"
+                  : inactivoPorEstatus
+                  ? `Inactivo (${estudiante.estatus})`
+                  : "Inactivo"
+              }
             ></span>
           </div>
 
@@ -227,12 +238,16 @@ function EstudianteCard({ estudiante, index, onEdit, onDelete, tieneUsuario }) {
           <div className="flex items-center">
             <span
               className={`px-2 py-0.5 text-xs rounded-full ${
-                estudiante.activo
+                mostrarComoActivo
                   ? "bg-green-900/60 text-green-300"
                   : "bg-red-900/60 text-red-300"
               }`}
             >
-              {estudiante.activo ? "Activo" : "Inactivo"}
+              {mostrarComoActivo
+                ? "Activo"
+                : inactivoPorEstatus
+                ? `${estudiante.estatus}`
+                : "Inactivo"}
             </span>
           </div>
         </div>

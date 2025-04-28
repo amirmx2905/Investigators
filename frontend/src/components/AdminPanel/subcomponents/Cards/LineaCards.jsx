@@ -12,31 +12,35 @@ function LineaCards({ items, onEdit, onDelete }) {
       setExpandedId(null);
       return;
     }
-    
+
     setExpandedId(id);
     setCargandoDetalle(true);
-    
+
     try {
-      const response = await api.get(`/lineas-investigacion/${id}/investigadores/`);
+      const response = await api.get(
+        `/lineas-investigacion/${id}/investigadores/`
+      );
       const investigadoresData = response.data || [];
-      
+
       // Obtener estadísticas si están disponibles
       let estadisticas = {};
       try {
-        const statsResponse = await api.get(`/lineas-investigacion/${id}/estadisticas/`);
+        const statsResponse = await api.get(
+          `/lineas-investigacion/${id}/estadisticas/`
+        );
         estadisticas = statsResponse.data || {};
       } catch (error) {
         console.error(`Error al cargar estadísticas de la línea ${id}:`, error);
       }
-      
+
       // Encontrar la línea en los items
-      const lineaActual = items.find(item => item.id === id);
-      
+      const lineaActual = items.find((item) => item.id === id);
+
       if (lineaActual) {
         setLineaDetalle({
           ...lineaActual,
           investigadores: investigadoresData,
-          estadisticas
+          estadisticas,
         });
       }
     } catch (error) {
@@ -88,7 +92,16 @@ function LineaCards({ items, onEdit, onDelete }) {
   );
 }
 
-function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle, cargandoDetalle }) {
+function LineaCard({
+  linea,
+  index,
+  onEdit,
+  onDelete,
+  expanded,
+  onExpand,
+  detalle,
+  cargandoDetalle,
+}) {
   return (
     <div
       className={`bg-gray-800/80 border border-gray-700 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-purple-900/20 ${
@@ -106,14 +119,37 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
         <div className="flex items-center mb-2">
           <div className="flex-shrink-0 h-12 w-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl relative">
             {linea.nombre ? linea.nombre.charAt(0).toUpperCase() : "L"}
+
+            {/* Indicador de reconocimiento institucional */}
+            {linea.reconocimiento_institucional && (
+              <div
+                className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-purple-500 border-2 border-gray-800 flex items-center justify-center"
+                title="Reconocimiento Institucional"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
 
           <div className="ml-3 flex-grow min-w-0">
             <h3 className="font-semibold text-white flex items-center space-x-2">
-              <span className="truncate">{linea.nombre}</span>
+            <span className="truncate">{linea.nombre}</span>
             </h3>
             <p className="text-sm text-gray-400 truncate">
-              linea de investigación
+              línea de investigación
             </p>
           </div>
 
@@ -164,8 +200,21 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
               />
             </svg>
             <span className="text-gray-400">ID:</span>
-            <span className="ml-1.5 font-medium text-gray-200">
-              {linea.id}
+            <span className="ml-1.5 font-medium text-gray-200">{linea.id}</span>
+          </div>
+
+          {/* Agrego badge para el estado de reconocimiento */}
+          <div>
+            <span
+              className={`px-2 py-1 text-xs rounded-full ${
+                linea.reconocimiento_institucional
+                  ? "bg-purple-500/30 text-purple-200 border border-purple-500/40"
+                  : "bg-gray-600/40 text-gray-300 border border-gray-500/30"
+              }`}
+            >
+              {linea.reconocimiento_institucional
+                ? "Reconocimiento Institucional"
+                : "Sin Reconocimiento"}
             </span>
           </div>
         </div>
@@ -179,6 +228,44 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
               </div>
             ) : detalle ? (
               <div className="space-y-6">
+                {/* Sección de Reconocimiento */}
+                <div className="bg-gray-800/60 hover:bg-gray-800/80 border border-gray-700 rounded-lg p-3 mb-4">
+                  <div className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-5 w-5 mr-2 ${
+                        detalle.reconocimiento_institucional
+                          ? "text-purple-400"
+                          : "text-gray-400"
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span className="text-gray-300 font-medium">
+                      Estado de Reconocimiento:
+                    </span>
+                    <span
+                      className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+                        detalle.reconocimiento_institucional
+                          ? "bg-purple-500/30 text-purple-200 border border-purple-500/40"
+                          : "bg-gray-600/40 text-gray-300 border border-gray-500/30"
+                      }`}
+                    >
+                      {detalle.reconocimiento_institucional
+                        ? "Reconocimiento Institucional"
+                        : "Sin Reconocimiento"}
+                    </span>
+                  </div>
+                </div>
+
                 {/* Sección de Investigadores */}
                 <div className="space-y-2">
                   <h4 className="text-lg text-white font-medium flex items-center">
@@ -198,11 +285,12 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
                     </svg>
                     Investigadores Asociados
                   </h4>
-                  
-                  {detalle.investigadores && detalle.investigadores.length > 0 ? (
+
+                  {detalle.investigadores &&
+                  detalle.investigadores.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                      {detalle.investigadores.map(investigador => (
-                        <div 
+                      {detalle.investigadores.map((investigador) => (
+                        <div
                           key={investigador.id}
                           className="bg-gray-800/60 hover:bg-gray-800/80 border border-gray-700 rounded-lg p-3 flex items-center"
                         >
@@ -210,8 +298,12 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
                             {investigador.nombre.charAt(0).toUpperCase()}
                           </div>
                           <div className="ml-3">
-                            <h5 className="font-medium text-white">{investigador.nombre}</h5>
-                            <p className="text-xs text-gray-400">{investigador.correo}</p>
+                            <h5 className="font-medium text-white">
+                              {investigador.nombre}
+                            </h5>
+                            <p className="text-xs text-gray-400">
+                              {investigador.correo}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -222,40 +314,47 @@ function LineaCard({ linea, index, onEdit, onDelete, expanded, onExpand, detalle
                     </div>
                   )}
                 </div>
-                
+
                 {/* Aquí puedes agregar más secciones si tienes estadísticas disponibles */}
-                {detalle.estadisticas && Object.keys(detalle.estadisticas).length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-lg text-white font-medium flex items-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2 text-purple-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                        />
-                      </svg>
-                      Estadísticas
-                    </h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {Object.entries(detalle.estadisticas).map(([key, value]) => (
-                        <div 
-                          key={key}
-                          className="bg-gray-800/60 border border-gray-700 rounded-lg p-4 text-center"
+                {detalle.estadisticas &&
+                  Object.keys(detalle.estadisticas).length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-lg text-white font-medium flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 mr-2 text-purple-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
                         >
-                          <h6 className="text-gray-400 text-sm mb-1">{key}</h6>
-                          <p className="text-xl font-semibold text-purple-300">{value}</p>
-                        </div>
-                      ))}
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                          />
+                        </svg>
+                        Estadísticas
+                      </h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {Object.entries(detalle.estadisticas).map(
+                          ([key, value]) => (
+                            <div
+                              key={key}
+                              className="bg-gray-800/60 border border-gray-700 rounded-lg p-4 text-center"
+                            >
+                              <h6 className="text-gray-400 text-sm mb-1">
+                                {key}
+                              </h6>
+                              <p className="text-xl font-semibold text-purple-300">
+                                {value}
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             ) : (
               <div className="text-center py-6 text-gray-400">

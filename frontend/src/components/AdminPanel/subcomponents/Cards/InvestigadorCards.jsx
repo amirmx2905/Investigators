@@ -229,7 +229,7 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
   if (!investigador) return null;
 
   const nivelSNII = getNivelSNII(investigador);
-  const lineaInvestigacion = getLineaInvestigacion(investigador);
+  const lineasInvestigacion = getLineasInvestigacion(investigador);
 
   const formatDate = (dateString) => {
     if (!dateString) return "No especificada";
@@ -383,7 +383,8 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
           icon="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
           color="from-blue-600/20 to-indigo-600/10"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Cambio de grid-cols-3 a grid-cols-2 para mantener la disposición 2x2 hasta 1024px */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
             <InfoCard
               icon="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
               label="Área"
@@ -404,12 +405,40 @@ function DetalleInvestigador({ investigador, tieneUsuario, onEdit, onDelete }) {
               label="Nivel de Educación"
               value={investigador.nivel_edu_nombre || "No registrado"}
             />
-            <InfoCard
-              icon="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-              label="Línea de Investigación"
-              value={lineaInvestigacion}
-            />
           </div>
+
+          {/* Nueva sección para mostrar todas las líneas de investigación */}
+          {lineasInvestigacion.count > 0 && (
+            <div className="mt-4 bg-gray-700/30 rounded-lg p-3">
+              <h4 className="text-white font-medium mb-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2 text-blue-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Líneas de Investigación ({lineasInvestigacion.count})
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {lineasInvestigacion.items.map((linea, index) => (
+                  <span
+                    key={linea.id || index}
+                    className="bg-purple-900/40 text-purple-300 px-2 py-1 rounded-md text-sm"
+                  >
+                    {linea.nombre}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </Section>
 
         {/* Sección 2: Jefatura de Área */}
@@ -850,7 +879,7 @@ function InvestigadorCard({
   onExpand,
 }) {
   const nivelSNII = getNivelSNII(investigador);
-  const lineaInvestigacion = getLineaInvestigacion(investigador);
+  const lineasInvestigacion = getLineasInvestigacion(investigador);
 
   const handleCardClick = (e) => {
     if (e.target.closest("button[data-action]")) return;
@@ -976,9 +1005,11 @@ function InvestigadorCard({
               </span>
             </div>
             <div className="bg-gray-700/40 p-2 rounded col-span-2">
-              <span className="text-gray-400">Línea:</span>
+              <span className="text-gray-400">
+                Líneas ({lineasInvestigacion.count}):
+              </span>
               <span className="ml-1.5 text-gray-200 block truncate">
-                {lineaInvestigacion}
+                {lineasInvestigacion.text}
               </span>
             </div>
           </div>
@@ -1092,12 +1123,12 @@ function InvestigadorCard({
               </div>
               <span
                 className={`text-gray-200 font-medium truncate max-w-[60%] ${
-                  lineaInvestigacion === "Sin línea asignada"
+                  lineasInvestigacion.text === "Sin líneas asignadas"
                     ? "text-gray-400"
                     : ""
                 }`}
               >
-                {lineaInvestigacion}
+                {lineasInvestigacion.text}
               </span>
             </div>
 
@@ -1255,11 +1286,20 @@ function getNivelSNII(investigador) {
   };
 }
 
-function getLineaInvestigacion(investigador) {
+// Reemplazar esta función para obtener todas las líneas de investigación
+function getLineasInvestigacion(investigador) {
   if (investigador.lineas && investigador.lineas.length > 0) {
-    return investigador.lineas[0].nombre;
+    return {
+      count: investigador.lineas.length,
+      items: investigador.lineas,
+      text: investigador.lineas.map((linea) => linea.nombre).join(", "),
+    };
   }
-  return "Sin línea asignada";
+  return {
+    count: 0,
+    items: [],
+    text: "Sin líneas asignadas",
+  };
 }
 
 function getStatusStyles(status) {

@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../../../api/apiConfig";
 
-function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete }) {
+function EstudianteTable({
+  estudiantes = [],
+  visibleColumns,
+  onEdit,
+  onDelete,
+}) {
   const [showTable, setShowTable] = useState(false);
   const [estudiantesConUsuario, setEstudiantesConUsuario] = useState([]);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
@@ -24,7 +29,7 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
 
         const idsConUsuario = usuarios
           .filter((usuario) => usuario.estudiante !== null)
-          .map((usuario) => usuario.estudiante);        
+          .map((usuario) => usuario.estudiante);
         setEstudiantesConUsuario(idsConUsuario);
       } catch (error) {
         console.error("Error al cargar usuarios asignados:", error);
@@ -54,19 +59,29 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
 
   const formatColumnValue = (column, value, estudiante) => {
     if (column === "activo") {
+      // Verificar primero el estatus
+      const inactivoPorEstatus = ["Desertor", "Egresado", "Titulado"].includes(
+        estudiante.estatus
+      );
+      const mostrarComoActivo = value && !inactivoPorEstatus;
+
       return (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            value
+            mostrarComoActivo
               ? "bg-green-900/60 text-green-300"
               : "bg-red-900/60 text-red-300"
           }`}
         >
-          {value ? "Activo" : "Inactivo"}
+          {mostrarComoActivo
+            ? "Activo"
+            : inactivoPorEstatus
+            ? `Inactivo (${estudiante.estatus})`
+            : "Inactivo"}
         </span>
       );
     }
-    
+
     if (column === "id") {
       const tieneUsuario = estudiantesConUsuario.includes(value);
       return (
@@ -102,7 +117,7 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
         </div>
       );
     }
-    
+
     if (column === "nombre") {
       return (
         <div className="flex items-center">
@@ -115,15 +130,15 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
         </div>
       );
     }
-    
+
     if (column === "area") {
       return estudiante.area_nombre || "Sin asignar";
     }
-    
+
     if (column === "carrera") {
       return estudiante.carrera_nombre || "Sin asignar";
     }
-    
+
     if (column === "tipo_estudiante") {
       return (
         <span className="text-xs px-2 py-0.5 rounded-full border bg-emerald-900/40 text-emerald-300 border-emerald-500/30">
@@ -131,32 +146,33 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
         </span>
       );
     }
-    
+
     if (column === "investigador") {
       return estudiante.investigador_nombre || "Sin asesor";
     }
-    
+
     if (column === "celular" && (value === null || value === "")) {
       return "No registrado";
     }
-    
+
     if (column === "escuela") {
       return value || "No registrado";
     }
-    
+
     if (column === "fecha_inicio" || column === "fecha_termino") {
-      if (!value) return column === "fecha_termino" ? "Sin fecha" : "No registrado";
-      
+      if (!value)
+        return column === "fecha_termino" ? "Sin fecha" : "No registrado";
+
       const date = new Date(value);
       if (isNaN(date.getTime())) return value;
-      
+
       return new Intl.DateTimeFormat("es-MX", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       }).format(date);
     }
-    
+
     return value || "—";
   };
 
@@ -245,11 +261,7 @@ function EstudianteTable({ estudiantes = [], visibleColumns, onEdit, onDelete })
                     key={column}
                     className="px-4 py-2 whitespace-nowrap text-sm text-gray-200"
                   >
-                    {formatColumnValue(
-                      column,
-                      estudiante[column],
-                      estudiante
-                    )}
+                    {formatColumnValue(column, estudiante[column], estudiante)}
                   </td>
                 ))}
                 <td className="px-4 py-2 whitespace-nowrap text-sm">
