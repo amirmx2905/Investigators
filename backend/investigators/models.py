@@ -11,7 +11,7 @@ class Unidad(models.Model):
     class Meta:
         verbose_name_plural = "Unidades"
 
-class Area(models.Model):
+class Area(models.Model): # FALTA CRUD
     unidad = models.ForeignKey(Unidad, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
     
@@ -83,7 +83,7 @@ class Investigador(models.Model):
     class Meta:
         verbose_name_plural = "Investigadores"
 
-class JefeArea(models.Model):
+class JefeArea(models.Model): # FALTA CRUD
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     investigador = models.ForeignKey(Investigador, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
@@ -140,7 +140,7 @@ class DetLinea(models.Model):
     class Meta:
         unique_together = ('linea', 'investigador')
 
-class TipoHerramienta(models.Model):
+class TipoHerramienta(models.Model): #FALTA CRUD
     nombre = models.CharField(max_length=50)
     
     def __str__(self):
@@ -149,7 +149,7 @@ class TipoHerramienta(models.Model):
     class Meta:
         verbose_name_plural = "Tipos de Herramientas"
 
-class Herramienta(models.Model):
+class Herramienta(models.Model): # FALTA CRUD
     nombre = models.CharField(max_length=100)
     tipo_herramienta = models.ForeignKey(TipoHerramienta, on_delete=models.CASCADE)
     
@@ -230,7 +230,7 @@ class DetArticulo(models.Model):
     class Meta:
         unique_together = ('articulo', 'investigador')
 
-class TipoEvento(models.Model):
+class TipoEvento(models.Model): # FALTA CRUD
     nombre = models.CharField(max_length=50)
     
     def __str__(self):
@@ -239,7 +239,7 @@ class TipoEvento(models.Model):
     class Meta:
         verbose_name_plural = "Tipos de Eventos"
 
-class RolEvento(models.Model):
+class RolEvento(models.Model): # FALTA CRUD
     nombre = models.CharField(max_length=50)
     
     def __str__(self):
