@@ -13,7 +13,8 @@ const getTiposEstudiante = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get(`/tipos-estudiante/?${params.toString()}`);
+    // Cambia "tipos-estudiante" por "tiposestudiante" para que coincida con tu URL de backend
+    const response = await api.get(`/tiposestudiante/?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error("Error en getTiposEstudiante:", error);
@@ -21,9 +22,10 @@ const getTiposEstudiante = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
+// También hay que cambiar las demás URLs en este archivo
 const getTipoEstudiante = async (id) => {
   try {
-    const response = await api.get(`/tipos-estudiante/${id}/`);
+    const response = await api.get(`/tiposestudiante/${id}/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener tipo de estudiante con ID ${id}:`, error);
@@ -33,7 +35,7 @@ const getTipoEstudiante = async (id) => {
 
 const createTipoEstudiante = async (data) => {
   try {
-    const response = await api.post("/tipos-estudiante/", data);
+    const response = await api.post("/tiposestudiante/", data);
     return response.data;
   } catch (error) {
     console.error("Error al crear tipo de estudiante:", error);
@@ -43,7 +45,7 @@ const createTipoEstudiante = async (data) => {
 
 const updateTipoEstudiante = async (id, data) => {
   try {
-    const response = await api.put(`/tipos-estudiante/${id}/`, data);
+    const response = await api.put(`/tiposestudiante/${id}/`, data);
     return response.data;
   } catch (error) {
     console.error(`Error al actualizar tipo de estudiante con ID ${id}:`, error);
@@ -53,7 +55,7 @@ const updateTipoEstudiante = async (id, data) => {
 
 const deleteTipoEstudiante = async (id) => {
   try {
-    await api.delete(`/tipos-estudiante/${id}/`);
+    await api.delete(`/tiposestudiante/${id}/`);
     return { success: true };
   } catch (error) {
     console.error(`Error al eliminar tipo de estudiante con ID ${id}:`, error);
@@ -63,7 +65,7 @@ const deleteTipoEstudiante = async (id) => {
 
 const getEstudiantesPorTipo = async (id) => {
   try {
-    const response = await api.get(`/tipos-estudiante/${id}/estudiantes/`);
+    const response = await api.get(`/tiposestudiante/${id}/estudiantes/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener estudiantes del tipo ${id}:`, error);

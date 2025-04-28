@@ -10,6 +10,7 @@ import { especialidadService } from "../../../api/services/especialidadService";
 import { unidadService } from "../../../api/services/unidadService";
 import { lineaService } from "../../../api/services/lineaService";
 import { nivelService } from "../../../api/services/nivelService";
+import { tipoestudianteService } from "../../../api/services/tipoestudianteService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -30,6 +31,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [unidades, setUnidades] = useState([]);
   const [lineas, setLineas] = useState([]);
   const [niveles, setNiveles] = useState([]);
+  const [tiposestudiante, setTiposestudiante] = useState([]); // Cambiado para coincidir con dataUtils.js
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -164,6 +166,21 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setNiveles([]);
             }
             break;
+          case "tiposestudiante":
+            try {
+              data = await tipoestudianteService.getTiposEstudiante(
+                page,
+                pageSize,
+                filterOptions
+              );
+              console.log("Datos recibidos de tipos estudiante:", data); 
+              setTiposestudiante(data.results || []); // Usar el estado correcto
+            } catch (err) {
+              console.error(`Error al cargar tipos de estudiante: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setTiposestudiante([]); // Usar el estado correcto
+            }
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -272,6 +289,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     unidades,
     lineas,
     niveles,
+    tiposestudiante, // Asegurarse de que el nombre coincida con lo que se usa en dataUtils.js
     isMobile,
     currentPage,
     itemsPerPage,

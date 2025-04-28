@@ -14,6 +14,7 @@ import { especialidadService } from "../../api/services/especialidadService";
 import { lineaService } from "../../api/services/lineaService";
 import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
+import { tipoestudianteService } from "../../api/services/tipoestudianteService"; // Añadido
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -34,6 +35,7 @@ import {
   UnidadForm,
   LineaForm,
   NivelForm,
+  TipoEstudianteForm, // Añadido
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -67,6 +69,7 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
+    tiposestudiante, // Asegúrate de que este estado exista en useAdminPanel
     activeTab,
     changeTab,
     refreshData,
@@ -162,6 +165,8 @@ function AdminPanel() {
         await lineaService.deleteLinea(item.id);
       } else if (type === "nivel") {
         await nivelService.deleteNivel(item.id);
+      } else if (type === "tipoestudiante") { // Añadido
+        await tipoestudianteService.deleteTipoEstudiante(item.id);
       }
 
       refreshData();
@@ -309,6 +314,15 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "tipoestudiante": // Añadido
+        return (
+          <TipoEstudianteForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoestudiante={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -336,6 +350,7 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
+    tiposestudiante, // Añadido - asegúrate de que este parámetro se recibe en getTabData
     handleEdit,
     handleDeleteClick
   );

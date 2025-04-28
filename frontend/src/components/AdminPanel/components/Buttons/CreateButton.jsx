@@ -49,6 +49,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "nivel";
       label = "Nivel";
       break;
+    case "tiposestudiante":
+      type = "tipoestudiante";
+      label = "Tipo de Estudiante";
+      break;
     default:
       type = "";
       label = "";

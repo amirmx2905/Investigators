@@ -19,6 +19,7 @@ import {
   UnidadCards,
   LineaCards,
   NivelCards,
+  TipoestudiantesCards,
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -47,6 +48,7 @@ export const getTabData = (
   unidades,
   lineas,
   niveles,
+  tiposestudiante,
   handleEdit,
   handleDeleteClick
 ) => {
@@ -86,6 +88,9 @@ export const getTabData = (
     case "niveles":
       type = "nivel";
       break;
+    case "tiposestudiante":
+      type = "tipoestudiante";
+      break;
     default:
       type = "usuario";
   }
@@ -102,6 +107,7 @@ export const getTabData = (
     unidades: sortColumnsByOrder(visibleColumns.unidades || [], "unidades"),
     lineas: sortColumnsByOrder(visibleColumns.lineas || [], "lineas"),
     niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
+    tiposestudiante: sortColumnsByOrder(visibleColumns.tiposestudiante || [],"tiposestudiante"),
   };
 
   const tabConfig = {
@@ -201,6 +207,15 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: NivelCards,
       columns: orderedColumns.niveles,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tiposestudiante: {
+      title: "Lista de Tipos de Estudiantes",
+      items: tiposestudiante || [],
+      TableComponent: null,
+      CardComponent: TipoestudiantesCards,
+      columns: orderedColumns.tiposestudiante,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
