@@ -11,6 +11,7 @@ import { unidadService } from "../../../api/services/unidadService";
 import { lineaService } from "../../../api/services/lineaService";
 import { nivelService } from "../../../api/services/nivelService";
 import { tipoestudianteService } from "../../../api/services/tipoestudianteService";
+import { roleventoService } from "../../../api/services/roleventoService";
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -31,7 +32,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [unidades, setUnidades] = useState([]);
   const [lineas, setLineas] = useState([]);
   const [niveles, setNiveles] = useState([]);
-  const [tiposestudiante, setTiposestudiante] = useState([]); // Cambiado para coincidir con dataUtils.js
+  const [tiposestudiante, setTiposestudiante] = useState([]);
+  const [roleventos, setRoleventos] = useState([]); // Nuevo estado para roles de eventos
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -166,6 +168,20 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setNiveles([]);
             }
             break;
+          case "roleventos":
+            try {
+              data = await roleventoService.getRolEventos(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setRoleventos(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar roles de eventos: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setRoleventos([]);
+            }
+            break;
           case "tiposestudiante":
             try {
               data = await tipoestudianteService.getTiposEstudiante(
@@ -174,11 +190,11 @@ export const useAdminPanel = (initialResource = "usuarios") => {
                 filterOptions
               );
               console.log("Datos recibidos de tipos estudiante:", data); 
-              setTiposestudiante(data.results || []); // Usar el estado correcto
+              setTiposestudiante(data.results || []);
             } catch (err) {
               console.error(`Error al cargar tipos de estudiante: ${err.message}`);
               data = { results: [], count: 0, total_pages: 1, current_page: 1 };
-              setTiposestudiante([]); // Usar el estado correcto
+              setTiposestudiante([]);
             }
             break;
           default:
@@ -289,7 +305,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     unidades,
     lineas,
     niveles,
-    tiposestudiante, // Asegurarse de que el nombre coincida con lo que se usa en dataUtils.js
+    tiposestudiante,
+    roleventos, // Exponer el nuevo estado
     isMobile,
     currentPage,
     itemsPerPage,

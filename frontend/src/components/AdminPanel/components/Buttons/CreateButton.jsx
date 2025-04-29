@@ -53,6 +53,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "tipoestudiante";
       label = "Tipo de Estudiante";
       break;
+    case "roleventos":
+      type = "rolevento";
+      label = "Rol de Evento";
+      break;
     default:
       type = "";
       label = "";

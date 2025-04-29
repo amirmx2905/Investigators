@@ -20,6 +20,7 @@ import {
   LineaCards,
   NivelCards,
   TipoestudiantesCards,
+  RoleventoCards, // Importar los componentes de tarjetas para roles de eventos
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -49,6 +50,7 @@ export const getTabData = (
   lineas,
   niveles,
   tiposestudiante,
+  roleventos, // Añadir roleventos como parámetro
   handleEdit,
   handleDeleteClick
 ) => {
@@ -91,6 +93,9 @@ export const getTabData = (
     case "tiposestudiante":
       type = "tipoestudiante";
       break;
+    case "roleventos":
+      type = "rolevento";
+      break;
     default:
       type = "usuario";
   }
@@ -108,6 +113,7 @@ export const getTabData = (
     lineas: sortColumnsByOrder(visibleColumns.lineas || [], "lineas"),
     niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
     tiposestudiante: sortColumnsByOrder(visibleColumns.tiposestudiante || [],"tiposestudiante"),
+    roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
   };
 
   const tabConfig = {
@@ -216,6 +222,15 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: TipoestudiantesCards,
       columns: orderedColumns.tiposestudiante,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    roleventos: {
+      title: "Lista de Roles de Eventos",
+      items: roleventos || [],
+      TableComponent: null, // Puedes crear una tabla específica o dejarlo como null
+      CardComponent: RoleventoCards,
+      columns: orderedColumns.roleventos,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

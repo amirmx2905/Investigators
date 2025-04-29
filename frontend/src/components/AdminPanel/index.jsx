@@ -14,7 +14,8 @@ import { especialidadService } from "../../api/services/especialidadService";
 import { lineaService } from "../../api/services/lineaService";
 import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
-import { tipoestudianteService } from "../../api/services/tipoestudianteService"; // Añadido
+import { tipoestudianteService } from "../../api/services/tipoestudianteService";
+import { roleventoService } from "../../api/services/roleventoService"; // Importar roleventoService
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -35,7 +36,8 @@ import {
   UnidadForm,
   LineaForm,
   NivelForm,
-  TipoEstudianteForm, // Añadido
+  TipoEstudianteForm,
+  RoleventoForm, // Importar RoleventoForm
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -69,7 +71,8 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
-    tiposestudiante, // Asegúrate de que este estado exista en useAdminPanel
+    tiposestudiante,
+    roleventos, // Añadir roleventos al destructuring
     activeTab,
     changeTab,
     refreshData,
@@ -165,8 +168,10 @@ function AdminPanel() {
         await lineaService.deleteLinea(item.id);
       } else if (type === "nivel") {
         await nivelService.deleteNivel(item.id);
-      } else if (type === "tipoestudiante") { // Añadido
+      } else if (type === "tipoestudiante") {
         await tipoestudianteService.deleteTipoEstudiante(item.id);
+      } else if (type === "rolevento") { // Añadir caso para rolevento
+        await roleventoService.deleteRolEvento(item.id);
       }
 
       refreshData();
@@ -314,12 +319,21 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case "tipoestudiante": // Añadido
+      case "tipoestudiante":
         return (
           <TipoEstudianteForm
             isOpen={isOpen}
             onClose={handleCloseForm}
             tipoestudiante={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "rolevento": // Añadir caso para rolevento
+        return (
+          <RoleventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            rolevento={item}
             onSuccess={handleFormSuccess}
           />
         );
@@ -350,7 +364,8 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
-    tiposestudiante, // Añadido - asegúrate de que este parámetro se recibe en getTabData
+    tiposestudiante,
+    roleventos, // Añadir roleventos a getTabData
     handleEdit,
     handleDeleteClick
   );

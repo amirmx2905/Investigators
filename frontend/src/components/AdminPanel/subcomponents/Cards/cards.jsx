@@ -10,3 +10,4 @@ export { default as UnidadCards } from './UnidadCards';
 export { default as LineaCards } from './LineaCards';
 export { default as NivelCards } from './NivelCards';
 export { default as TipoestudiantesCards } from './TipoestudiantesCards';
+export { default as RoleventoCards } from './RoleventoCards';
