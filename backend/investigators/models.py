@@ -83,7 +83,7 @@ class Investigador(models.Model):
     class Meta:
         verbose_name_plural = "Investigadores"
 
-class JefeArea(models.Model): # FALTA CRUD
+class JefeArea(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     investigador = models.ForeignKey(Investigador, on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
@@ -239,7 +239,7 @@ class TipoEvento(models.Model): # FALTA CRUD
     class Meta:
         verbose_name_plural = "Tipos de Eventos"
 
-class RolEvento(models.Model): # FALTA CRUD
+class RolEvento(models.Model):
     nombre = models.CharField(max_length=50)
     
     def __str__(self):
