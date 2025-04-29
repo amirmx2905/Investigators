@@ -15,7 +15,8 @@ import { lineaService } from "../../api/services/lineaService";
 import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
 import { tipoestudianteService } from "../../api/services/tipoestudianteService";
-import { roleventoService } from "../../api/services/roleventoService"; // Importar roleventoService
+import { roleventoService } from "../../api/services/roleventoService";
+import { jefeareaService } from "../../api/services/jefeareaService"; // Importar jefeareaService
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -37,7 +38,8 @@ import {
   LineaForm,
   NivelForm,
   TipoEstudianteForm,
-  RoleventoForm, // Importar RoleventoForm
+  RoleventoForm,
+  JefeareaForm, // Importar JefeareaForm
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -72,7 +74,8 @@ function AdminPanel() {
     lineas,
     niveles,
     tiposestudiante,
-    roleventos, // Añadir roleventos al destructuring
+    roleventos,
+    jefesareas, // Añadir jefesareas al destructuring
     activeTab,
     changeTab,
     refreshData,
@@ -170,8 +173,10 @@ function AdminPanel() {
         await nivelService.deleteNivel(item.id);
       } else if (type === "tipoestudiante") {
         await tipoestudianteService.deleteTipoEstudiante(item.id);
-      } else if (type === "rolevento") { // Añadir caso para rolevento
+      } else if (type === "rolevento") {
         await roleventoService.deleteRolEvento(item.id);
+      } else if (type === "jefearea") { // Añadir caso para jefearea
+        await jefeareaService.deleteJefeArea(item.id);
       }
 
       refreshData();
@@ -328,12 +333,21 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case "rolevento": // Añadir caso para rolevento
+      case "rolevento":
         return (
           <RoleventoForm
             isOpen={isOpen}
             onClose={handleCloseForm}
             rolevento={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "jefearea": // Añadir caso para jefearea
+        return (
+          <JefeareaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            jefeArea={item}
             onSuccess={handleFormSuccess}
           />
         );
@@ -365,7 +379,8 @@ function AdminPanel() {
     lineas,
     niveles,
     tiposestudiante,
-    roleventos, // Añadir roleventos a getTabData
+    roleventos,
+    jefesareas, // Añadir jefesareas a getTabData
     handleEdit,
     handleDeleteClick
   );
@@ -451,6 +466,7 @@ function AdminPanel() {
           deleteModal.item?.nombre_articulo ||
           deleteModal.item?.nombre_evento ||
           deleteModal.item?.nombre_carrera ||
+          deleteModal.item?.area_nombre || // Añadir campo específico para jefesareas
           ""
         }
         itemType={

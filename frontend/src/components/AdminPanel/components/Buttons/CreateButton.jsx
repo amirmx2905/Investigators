@@ -57,6 +57,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "rolevento";
       label = "Rol de Evento";
       break;
+    case "jefesareas":
+      type = "jefearea";
+      label = "Jefe de Área";
+      break;
     default:
       type = "";
       label = "";

@@ -20,7 +20,8 @@ import {
   LineaCards,
   NivelCards,
   TipoestudiantesCards,
-  RoleventoCards, // Importar los componentes de tarjetas para roles de eventos
+  RoleventoCards,
+  JefeareaCards, // Importar el componente de tarjetas para jefes de área
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -50,7 +51,8 @@ export const getTabData = (
   lineas,
   niveles,
   tiposestudiante,
-  roleventos, // Añadir roleventos como parámetro
+  roleventos,
+  jefesareas, // Añadir jefesareas como parámetro
   handleEdit,
   handleDeleteClick
 ) => {
@@ -96,6 +98,9 @@ export const getTabData = (
     case "roleventos":
       type = "rolevento";
       break;
+    case "jefesareas": // Añadir caso para jefes de área
+      type = "jefearea";
+      break;
     default:
       type = "usuario";
   }
@@ -114,6 +119,7 @@ export const getTabData = (
     niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
     tiposestudiante: sortColumnsByOrder(visibleColumns.tiposestudiante || [],"tiposestudiante"),
     roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
+    jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"), // Añadir ordenación para jefes de área
   };
 
   const tabConfig = {
@@ -228,9 +234,18 @@ export const getTabData = (
     roleventos: {
       title: "Lista de Roles de Eventos",
       items: roleventos || [],
-      TableComponent: null, // Puedes crear una tabla específica o dejarlo como null
+      TableComponent: null, 
       CardComponent: RoleventoCards,
       columns: orderedColumns.roleventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    jefesareas: { // Añadir configuración para jefes de área
+      title: "Lista de Jefes de Área",
+      items: jefesareas || [],
+      TableComponent: null,
+      CardComponent: JefeareaCards,
+      columns: orderedColumns.jefesareas,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

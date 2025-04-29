@@ -12,6 +12,7 @@ import { lineaService } from "../../../api/services/lineaService";
 import { nivelService } from "../../../api/services/nivelService";
 import { tipoestudianteService } from "../../../api/services/tipoestudianteService";
 import { roleventoService } from "../../../api/services/roleventoService";
+import { jefeareaService } from "../../../api/services/jefeareaService"; // Nueva importación
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -33,7 +34,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [lineas, setLineas] = useState([]);
   const [niveles, setNiveles] = useState([]);
   const [tiposestudiante, setTiposestudiante] = useState([]);
-  const [roleventos, setRoleventos] = useState([]); // Nuevo estado para roles de eventos
+  const [roleventos, setRoleventos] = useState([]);
+  const [jefesareas, setJefesareas] = useState([]); // Nuevo estado para jefes de área
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -197,6 +199,20 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setTiposestudiante([]);
             }
             break;
+          case "jefesareas": // Nuevo caso para jefes de área
+            try {
+              data = await jefeareaService.getJefesAreas(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setJefesareas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar jefes de área: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setJefesareas([]);
+            }
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -306,7 +322,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     lineas,
     niveles,
     tiposestudiante,
-    roleventos, // Exponer el nuevo estado
+    roleventos,
+    jefesareas, // Exponer el nuevo estado
     isMobile,
     currentPage,
     itemsPerPage,
