@@ -16,7 +16,8 @@ import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
 import { tipoestudianteService } from "../../api/services/tipoestudianteService";
 import { roleventoService } from "../../api/services/roleventoService";
-import { jefeareaService } from "../../api/services/jefeareaService"; // Importar jefeareaService
+import { jefeareaService } from "../../api/services/jefeareaService"; 
+import { tipoherramientaService } from "../../api/services/tipoherramientaService"; // Importar tipoherramientaService
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -39,7 +40,8 @@ import {
   NivelForm,
   TipoEstudianteForm,
   RoleventoForm,
-  JefeareaForm, // Importar JefeareaForm
+  JefeareaForm,
+  TipoHerramientaForm, // Importar TipoHerramientaForm
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -75,7 +77,8 @@ function AdminPanel() {
     niveles,
     tiposestudiante,
     roleventos,
-    jefesareas, // Añadir jefesareas al destructuring
+    jefesareas,
+    tipoherramientas, // Añadir tipoherramientas al destructuring
     activeTab,
     changeTab,
     refreshData,
@@ -175,8 +178,10 @@ function AdminPanel() {
         await tipoestudianteService.deleteTipoEstudiante(item.id);
       } else if (type === "rolevento") {
         await roleventoService.deleteRolEvento(item.id);
-      } else if (type === "jefearea") { // Añadir caso para jefearea
+      } else if (type === "jefearea") {
         await jefeareaService.deleteJefeArea(item.id);
+      } else if (type === "tipoherramienta") { // Añadir caso para tipoherramienta
+        await tipoherramientaService.deleteTipoHerramienta(item.id);
       }
 
       refreshData();
@@ -342,12 +347,21 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case "jefearea": // Añadir caso para jefearea
+      case "jefearea":
         return (
           <JefeareaForm
             isOpen={isOpen}
             onClose={handleCloseForm}
             jefeArea={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "tipoherramienta": // Añadir caso para tipoherramienta
+        return (
+          <TipoHerramientaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoHerramienta={item}
             onSuccess={handleFormSuccess}
           />
         );
@@ -380,7 +394,8 @@ function AdminPanel() {
     niveles,
     tiposestudiante,
     roleventos,
-    jefesareas, // Añadir jefesareas a getTabData
+    jefesareas,
+    tipoherramientas, // Añadir tipoherramientas a getTabData
     handleEdit,
     handleDeleteClick
   );
@@ -466,7 +481,7 @@ function AdminPanel() {
           deleteModal.item?.nombre_articulo ||
           deleteModal.item?.nombre_evento ||
           deleteModal.item?.nombre_carrera ||
-          deleteModal.item?.area_nombre || // Añadir campo específico para jefesareas
+          deleteModal.item?.area_nombre || 
           ""
         }
         itemType={

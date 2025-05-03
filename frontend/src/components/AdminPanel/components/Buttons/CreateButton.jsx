@@ -61,6 +61,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "jefearea";
       label = "Jefe de Área";
       break;
+    case "tipoherramientas":
+      type = "tipoherramienta";
+      label = "Tipo de Herramienta";
+      break;
     default:
       type = "";
       label = "";

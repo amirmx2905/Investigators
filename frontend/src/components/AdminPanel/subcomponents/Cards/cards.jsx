@@ -11,4 +11,5 @@ export { default as LineaCards } from './LineaCards';
 export { default as NivelCards } from './NivelCards';
 export { default as TipoestudiantesCards } from './TipoestudiantesCards';
 export { default as RoleventoCards } from './RoleventoCards';
-export { default as JefeareaCards } from './JefeareaCards'; // Exportar el componente de tarjetas para jefes de área
+export { default as JefeareaCards } from './JefeareaCards'; 
+export { default as TipoHerramientaCards } from './TipoHerramientaCards'; 

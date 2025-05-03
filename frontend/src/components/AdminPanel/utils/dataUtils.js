@@ -21,7 +21,8 @@ import {
   NivelCards,
   TipoestudiantesCards,
   RoleventoCards,
-  JefeareaCards, // Importar el componente de tarjetas para jefes de área
+  JefeareaCards,
+  TipoHerramientaCards, 
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -52,7 +53,8 @@ export const getTabData = (
   niveles,
   tiposestudiante,
   roleventos,
-  jefesareas, // Añadir jefesareas como parámetro
+  jefesareas,
+  tipoherramientas, 
   handleEdit,
   handleDeleteClick
 ) => {
@@ -98,8 +100,11 @@ export const getTabData = (
     case "roleventos":
       type = "rolevento";
       break;
-    case "jefesareas": // Añadir caso para jefes de área
+    case "jefesareas":
       type = "jefearea";
+      break;
+    case "tipoherramientas": 
+      type = "tipoherramienta";
       break;
     default:
       type = "usuario";
@@ -119,7 +124,8 @@ export const getTabData = (
     niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
     tiposestudiante: sortColumnsByOrder(visibleColumns.tiposestudiante || [],"tiposestudiante"),
     roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
-    jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"), // Añadir ordenación para jefes de área
+    jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"),
+    tipoherramientas: sortColumnsByOrder(visibleColumns.tipoherramientas || [], "tipoherramientas"),
   };
 
   const tabConfig = {
@@ -240,12 +246,21 @@ export const getTabData = (
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
-    jefesareas: { // Añadir configuración para jefes de área
+    jefesareas: {
       title: "Lista de Jefes de Área",
       items: jefesareas || [],
       TableComponent: null,
       CardComponent: JefeareaCards,
       columns: orderedColumns.jefesareas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tipoherramientas: { 
+      title: "Lista de Tipos de Herramientas",
+      items: tipoherramientas || [],
+      TableComponent: null,
+      CardComponent: TipoHerramientaCards,
+      columns: orderedColumns.tipoherramientas,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
