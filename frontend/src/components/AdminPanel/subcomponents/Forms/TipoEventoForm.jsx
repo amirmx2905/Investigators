@@ -52,10 +52,8 @@ function TipoEventoForm({ isOpen, onClose, tipoEvento = null, onSuccess }) {
     try {
       if (isEdit) {
         await tipoeventoService.updateTipoEvento(tipoEvento.id, formData);
-        showNotification("Tipo de evento actualizado correctamente");
       } else {
         await tipoeventoService.createTipoEvento(formData);
-        showNotification("Tipo de evento creado correctamente");
       }
       onSuccess();
       onClose();
