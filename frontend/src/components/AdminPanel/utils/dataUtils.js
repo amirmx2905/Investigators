@@ -24,7 +24,8 @@ import {
   JefeareaCards,
   TipoHerramientaCards,
   HerramientaCards,
-  TipoEventoCards, // Importamos el componente TipoEventoCards
+  TipoEventoCards,
+  AreaCards // Importamos el componente AreaCards
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -58,7 +59,8 @@ export const getTabData = (
   jefesareas,
   tipoherramientas,
   herramientas,
-  tiposeventos, // Añadimos tiposeventos a los parámetros
+  tiposeventos,
+  areas, // Añadimos áreas a los parámetros
   handleEdit,
   handleDeleteClick
 ) => {
@@ -113,8 +115,11 @@ export const getTabData = (
     case "herramientas": 
       type = "herramienta";
       break;
-    case "tiposeventos": // Añadimos el caso para tipos de eventos
+    case "tiposeventos":
       type = "tipoevento";
+      break;
+    case "areas": // Añadimos el caso para áreas
+      type = "area";
       break;
     default:
       type = "usuario";
@@ -137,7 +142,8 @@ export const getTabData = (
     jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"),
     tipoherramientas: sortColumnsByOrder(visibleColumns.tipoherramientas || [], "tipoherramientas"),
     herramientas: sortColumnsByOrder(visibleColumns.herramientas || [], "herramientas"),
-    tiposeventos: sortColumnsByOrder(visibleColumns.tiposeventos || [], "tiposeventos"), // Añadimos tiposeventos a las columnas ordenadas
+    tiposeventos: sortColumnsByOrder(visibleColumns.tiposeventos || [], "tiposeventos"),
+    areas: sortColumnsByOrder(visibleColumns.areas || [], "areas"), // Añadimos áreas a las columnas ordenadas
   };
 
   const tabConfig = {
@@ -285,12 +291,21 @@ export const getTabData = (
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
-    tiposeventos: { // Añadimos la configuración para la pestaña de tipos de eventos
+    tiposeventos: {
       title: "Lista de Tipos de Eventos",
       items: tiposeventos || [],
       TableComponent: null,
       CardComponent: TipoEventoCards,
       columns: orderedColumns.tiposeventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    areas: { // Añadimos la configuración para la pestaña de áreas
+      title: "Lista de Áreas",
+      items: areas || [],
+      TableComponent: null,
+      CardComponent: AreaCards,
+      columns: orderedColumns.areas,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

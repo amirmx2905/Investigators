@@ -73,6 +73,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "tipoevento";
       label = "Tipo de Evento";
       break;
+    case "areas":
+      type = "area";
+      label = "Área";
+      break;
     default:
       type = "";
       label = "";

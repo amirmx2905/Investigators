@@ -15,3 +15,5 @@ export { default as JefeareaCards } from './JefeareaCards';
 export { default as TipoHerramientaCards } from './TipoHerramientaCards'; 
 export { default as HerramientaCards } from './HerramientaCards';
 export { default as TipoEventoCards } from './TipoEventoCards';
+export { default as AreaCards } from './AreaCards';
+

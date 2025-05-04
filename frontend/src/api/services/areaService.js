@@ -1,5 +1,12 @@
 import api from "../apiConfig";
 
+/**
+ * Obtiene la lista de áreas con paginación y filtros opcionales
+ * @param {number} page - Número de página
+ * @param {number} pageSize - Cantidad de elementos por página
+ * @param {object} filters - Filtros a aplicar
+ * @returns {Promise<object>} Respuesta paginada con las áreas
+ */
 const getAreas = async (page = 1, pageSize = 10, filters = {}) => {
   try {
     const params = new URLSearchParams();
@@ -21,6 +28,11 @@ const getAreas = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
+/**
+ * Obtiene un área específica por su ID
+ * @param {number} id - ID del área
+ * @returns {Promise<object>} Información del área
+ */
 const getArea = async (id) => {
   try {
     const response = await api.get(`/areas/${id}/`);
@@ -31,6 +43,11 @@ const getArea = async (id) => {
   }
 };
 
+/**
+ * Crea una nueva área
+ * @param {object} data - Datos del área a crear
+ * @returns {Promise<object>} Área creada
+ */
 const createArea = async (data) => {
   try {
     const response = await api.post("/areas/", data);
@@ -41,6 +58,12 @@ const createArea = async (data) => {
   }
 };
 
+/**
+ * Actualiza un área existente
+ * @param {number} id - ID del área
+ * @param {object} data - Datos actualizados del área
+ * @returns {Promise<object>} Área actualizada
+ */
 const updateArea = async (id, data) => {
   try {
     const response = await api.put(`/areas/${id}/`, data);
@@ -51,6 +74,11 @@ const updateArea = async (id, data) => {
   }
 };
 
+/**
+ * Elimina un área
+ * @param {number} id - ID del área a eliminar
+ * @returns {Promise<object>} Objeto con el estado de la operación
+ */
 const deleteArea = async (id) => {
   try {
     await api.delete(`/areas/${id}/`);
@@ -61,12 +89,28 @@ const deleteArea = async (id) => {
   }
 };
 
+/**
+ * Obtiene las jefaturas de un área específica
+ * @param {number} id - ID del área
+ * @returns {Promise<array>} Lista de jefaturas del área
+ */
+const getJefaturasArea = async (id) => {
+  try {
+    const response = await api.get(`/areas/${id}/jefaturas/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error al obtener jefaturas del área ${id}:`, error);
+    throw error;
+  }
+};
+
 export const areaService = {
   getAreas,
   getArea,
   createArea,
   updateArea,
   deleteArea,
+  getJefaturasArea
 };
 
 export default areaService;

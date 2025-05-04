@@ -16,3 +16,4 @@ export { default as TipoHerramientaForm } from './TipoHerramientaForm';
 export { default as DeleteConfirmation } from './DeleteConfirmation';
 export { default as HerramientaForm } from './HerramientaForm';
 export { default as TipoEventoForm } from './TipoEventoForm';
+export { default as AreaForm } from './AreaForm';

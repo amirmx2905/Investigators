@@ -30,7 +30,8 @@ const ContentDisplay = ({
     "jefesareas",
     "tipoherramientas",
     "herramientas",
-    "tiposeventos" // Añadimos tiposeventos a la lista de módulos que solo usan tarjetas
+    "tiposeventos", // Tipos de eventos
+    "areas" // Añadimos áreas a la lista de módulos que solo usan tarjetas
   ]; 
 
   const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
@@ -62,7 +63,8 @@ const ContentDisplay = ({
         jefesareas={activeTab === "jefesareas" ? items || [] : []} 
         tipoherramientas={activeTab === "tipoherramientas" ? items || [] : []}
         herramientas={activeTab === "herramientas" ? items || [] : []}
-        tiposeventos={activeTab === "tiposeventos" ? items || [] : []} // Añadir soporte para tiposeventos
+        tiposeventos={activeTab === "tiposeventos" ? items || [] : []} 
+        areas={activeTab === "areas" ? items || [] : []} // Añadimos soporte para áreas
         visibleColumns={columns}
         onEdit={onEdit}
         onDelete={onDelete}

@@ -15,7 +15,8 @@ import { roleventoService } from "../../../api/services/roleventoService";
 import { jefeareaService } from "../../../api/services/jefeareaService";
 import { tipoherramientaService } from "../../../api/services/tipoherramientaService";
 import { herramientaService } from "../../../api/services/herramientaService";
-import { tipoeventoService } from "../../../api/services/tipoeventoService"; // Nueva importación
+import { tipoeventoService } from "../../../api/services/tipoeventoService";
+import { areaService } from "../../../api/services/areaService"; // Importamos el servicio de áreas
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -41,7 +42,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [jefesareas, setJefesareas] = useState([]);
   const [tipoherramientas, setTipoherramientas] = useState([]);
   const [herramientas, setHerramientas] = useState([]);
-  const [tiposeventos, setTiposeventos] = useState([]); // Nuevo estado para tipos de eventos
+  const [tiposeventos, setTiposeventos] = useState([]);
+  const [areas, setAreas] = useState([]); // Nuevo estado para áreas
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -247,7 +249,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setHerramientas([]);
             }
             break;
-          case "tiposeventos": // Nuevo caso para tipos de eventos
+          case "tiposeventos":
             try {
               data = await tipoeventoService.getTiposEvento(
                 page,
@@ -259,6 +261,20 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               console.error(`Error al cargar tipos de evento: ${err.message}`);
               data = { results: [], count: 0, total_pages: 1, current_page: 1 };
               setTiposeventos([]);
+            }
+            break;
+          case "areas": // Nuevo caso para áreas
+            try {
+              data = await areaService.getAreas(
+                page, 
+                pageSize,
+                filterOptions
+              );
+              setAreas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar áreas: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setAreas([]);
             }
             break;
           default:
@@ -374,7 +390,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     jefesareas,
     tipoherramientas,
     herramientas,
-    tiposeventos, // Exponer el nuevo estado de tipos de eventos
+    tiposeventos,
+    areas, // Exponemos el nuevo estado de áreas
     isMobile,
     currentPage,
     itemsPerPage,
