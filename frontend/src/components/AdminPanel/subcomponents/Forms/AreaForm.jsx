@@ -128,8 +128,6 @@ function AreaForm({ isOpen, onClose, area = null, onSuccess }) {
       } else {
         result = await areaService.createArea(dataToSend);
       }
-
-      showNotification(`Área ${area ? 'actualizada' : 'creada'} correctamente`);
       onSuccess(result);
     } catch (err) {
       console.error("Error al guardar área:", err);

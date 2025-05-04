@@ -52,10 +52,8 @@ function UnidadForm({ isOpen, onClose, unidad = null, onSuccess }) {
     try {
       if (isEdit) {
         await unidadService.updateUnidad(unidad.id, formData);
-        showNotification("Unidad actualizada correctamente");
       } else {
         await unidadService.createUnidad(formData);
-        showNotification("Unidad creada correctamente");
       }
       onSuccess();
       onClose();
