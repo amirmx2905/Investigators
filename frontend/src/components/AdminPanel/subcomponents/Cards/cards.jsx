@@ -9,3 +9,11 @@ export { default as EspecialidadCards } from './EspecialidadCards';
 export { default as UnidadCards } from './UnidadCards';
 export { default as LineaCards } from './LineaCards';
 export { default as NivelCards } from './NivelCards';
+export { default as TipoestudiantesCards } from './TipoestudiantesCards';
+export { default as RoleventoCards } from './RoleventoCards';
+export { default as JefeareaCards } from './JefeareaCards'; 
+export { default as TipoHerramientaCards } from './TipoHerramientaCards'; 
+export { default as HerramientaCards } from './HerramientaCards';
+export { default as TipoEventoCards } from './TipoEventoCards';
+export { default as AreaCards } from './AreaCards';
+

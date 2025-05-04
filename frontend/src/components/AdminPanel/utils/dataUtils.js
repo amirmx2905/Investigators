@@ -19,6 +19,13 @@ import {
   UnidadCards,
   LineaCards,
   NivelCards,
+  TipoestudiantesCards,
+  RoleventoCards,
+  JefeareaCards,
+  TipoHerramientaCards,
+  HerramientaCards,
+  TipoEventoCards,
+  AreaCards // Importamos el componente AreaCards
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -47,6 +54,13 @@ export const getTabData = (
   unidades,
   lineas,
   niveles,
+  tiposestudiante,
+  roleventos,
+  jefesareas,
+  tipoherramientas,
+  herramientas,
+  tiposeventos,
+  areas, // Añadimos áreas a los parámetros
   handleEdit,
   handleDeleteClick
 ) => {
@@ -86,6 +100,27 @@ export const getTabData = (
     case "niveles":
       type = "nivel";
       break;
+    case "tiposestudiante":
+      type = "tipoestudiante";
+      break;
+    case "roleventos":
+      type = "rolevento";
+      break;
+    case "jefesareas":
+      type = "jefearea";
+      break;
+    case "tipoherramientas": 
+      type = "tipoherramienta";
+      break;
+    case "herramientas": 
+      type = "herramienta";
+      break;
+    case "tiposeventos":
+      type = "tipoevento";
+      break;
+    case "areas": // Añadimos el caso para áreas
+      type = "area";
+      break;
     default:
       type = "usuario";
   }
@@ -102,6 +137,13 @@ export const getTabData = (
     unidades: sortColumnsByOrder(visibleColumns.unidades || [], "unidades"),
     lineas: sortColumnsByOrder(visibleColumns.lineas || [], "lineas"),
     niveles: sortColumnsByOrder(visibleColumns.niveles || [], "niveles"),
+    tiposestudiante: sortColumnsByOrder(visibleColumns.tiposestudiante || [],"tiposestudiante"),
+    roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
+    jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"),
+    tipoherramientas: sortColumnsByOrder(visibleColumns.tipoherramientas || [], "tipoherramientas"),
+    herramientas: sortColumnsByOrder(visibleColumns.herramientas || [], "herramientas"),
+    tiposeventos: sortColumnsByOrder(visibleColumns.tiposeventos || [], "tiposeventos"),
+    areas: sortColumnsByOrder(visibleColumns.areas || [], "areas"), // Añadimos áreas a las columnas ordenadas
   };
 
   const tabConfig = {
@@ -201,6 +243,69 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: NivelCards,
       columns: orderedColumns.niveles,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tiposestudiante: {
+      title: "Lista de Tipos de Estudiantes",
+      items: tiposestudiante || [],
+      TableComponent: null,
+      CardComponent: TipoestudiantesCards,
+      columns: orderedColumns.tiposestudiante,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    roleventos: {
+      title: "Lista de Roles de Eventos",
+      items: roleventos || [],
+      TableComponent: null, 
+      CardComponent: RoleventoCards,
+      columns: orderedColumns.roleventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    jefesareas: {
+      title: "Lista de Jefes de Área",
+      items: jefesareas || [],
+      TableComponent: null,
+      CardComponent: JefeareaCards,
+      columns: orderedColumns.jefesareas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tipoherramientas: { 
+      title: "Lista de Tipos de Herramientas",
+      items: tipoherramientas || [],
+      TableComponent: null,
+      CardComponent: TipoHerramientaCards,
+      columns: orderedColumns.tipoherramientas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    herramientas: { 
+      title: "Lista de Herramientas",
+      items: herramientas || [],
+      TableComponent: null,
+      CardComponent: HerramientaCards,
+      columns: orderedColumns.herramientas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tiposeventos: {
+      title: "Lista de Tipos de Eventos",
+      items: tiposeventos || [],
+      TableComponent: null,
+      CardComponent: TipoEventoCards,
+      columns: orderedColumns.tiposeventos,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    areas: { // Añadimos la configuración para la pestaña de áreas
+      title: "Lista de Áreas",
+      items: areas || [],
+      TableComponent: null,
+      CardComponent: AreaCards,
+      columns: orderedColumns.areas,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

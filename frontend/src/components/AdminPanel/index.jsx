@@ -14,6 +14,13 @@ import { especialidadService } from "../../api/services/especialidadService";
 import { lineaService } from "../../api/services/lineaService";
 import { nivelService } from "../../api/services/nivelService";
 import { unidadService } from "../../api/services/unidadService";
+import { tipoestudianteService } from "../../api/services/tipoestudianteService";
+import { roleventoService } from "../../api/services/roleventoService";
+import { jefeareaService } from "../../api/services/jefeareaService"; 
+import { tipoherramientaService } from "../../api/services/tipoherramientaService";
+import { herramientaService } from "../../api/services/herramientaService";
+import { tipoeventoService } from "../../api/services/tipoeventoService"; 
+import { areaService } from "../../api/services/areaService"; // Importamos el servicio de áreas
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -34,6 +41,13 @@ import {
   UnidadForm,
   LineaForm,
   NivelForm,
+  TipoEstudianteForm,
+  RoleventoForm,
+  JefeareaForm,
+  TipoHerramientaForm,
+  HerramientaForm,
+  TipoEventoForm,
+  AreaForm, // Importamos el formulario AreaForm
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -67,6 +81,13 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
+    tiposestudiante,
+    roleventos,
+    jefesareas,
+    tipoherramientas,
+    herramientas,
+    tiposeventos,
+    areas, // Añadimos areas al destructuring
     activeTab,
     changeTab,
     refreshData,
@@ -162,6 +183,20 @@ function AdminPanel() {
         await lineaService.deleteLinea(item.id);
       } else if (type === "nivel") {
         await nivelService.deleteNivel(item.id);
+      } else if (type === "tipoestudiante") {
+        await tipoestudianteService.deleteTipoEstudiante(item.id);
+      } else if (type === "rolevento") {
+        await roleventoService.deleteRolEvento(item.id);
+      } else if (type === "jefearea") {
+        await jefeareaService.deleteJefeArea(item.id);
+      } else if (type === "tipoherramienta") {
+        await tipoherramientaService.deleteTipoHerramienta(item.id);
+      } else if (type === "herramienta") {
+        await herramientaService.deleteHerramienta(item.id);
+      } else if (type === "tipoevento") {
+        await tipoeventoService.deleteTipoEvento(item.id);
+      } else if (type === "area") { // Añadimos caso para eliminar área
+        await areaService.deleteArea(item.id);
       }
 
       refreshData();
@@ -309,6 +344,69 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
+      case "tipoestudiante":
+        return (
+          <TipoEstudianteForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoestudiante={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "rolevento":
+        return (
+          <RoleventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            rolevento={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "jefearea":
+        return (
+          <JefeareaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            jefeArea={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "tipoherramienta":
+        return (
+          <TipoHerramientaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoHerramienta={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "herramienta":
+        return (
+          <HerramientaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            herramienta={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "tipoevento":
+        return (
+          <TipoEventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoEvento={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "area": // Añadimos caso para el formulario de área
+        return (
+          <AreaForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            area={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
       default:
         return null;
     }
@@ -336,6 +434,13 @@ function AdminPanel() {
     unidades,
     lineas,
     niveles,
+    tiposestudiante,
+    roleventos,
+    jefesareas,
+    tipoherramientas,
+    herramientas,
+    tiposeventos,
+    areas, // Añadimos áreas a getTabData
     handleEdit,
     handleDeleteClick
   );
@@ -421,6 +526,7 @@ function AdminPanel() {
           deleteModal.item?.nombre_articulo ||
           deleteModal.item?.nombre_evento ||
           deleteModal.item?.nombre_carrera ||
+          deleteModal.item?.area_nombre || 
           ""
         }
         itemType={

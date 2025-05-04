@@ -1,94 +1,92 @@
-import api from "../apiConfig";
-
-const getJefesArea = async (page = 1, pageSize = 10, filters = {}) => {
-  try {
-    const params = new URLSearchParams();
-
-    params.append("page", page);
-    params.append("page_size", pageSize);
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
-        params.append(key, value);
-      }
-    });
-
-    const response = await api.get(`/jefes-area/?${params.toString()}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error en getJefesArea:", error);
-    throw error;
-  }
-};
-
-const getJefeArea = async (id) => {
-  try {
-    const response = await api.get(`/jefes-area/${id}/`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error al obtener jefe de área con ID ${id}:`, error);
-    throw error;
-  }
-};
-
-const createJefeArea = async (data) => {
-  try {
-    const response = await api.post("/jefes-area/", data);
-    return response.data;
-  } catch (error) {
-    console.error("Error al crear jefe de área:", error);
-    throw error;
-  }
-};
-
-const updateJefeArea = async (id, data) => {
-  try {
-    const response = await api.put(`/jefes-area/${id}/`, data);
-    return response.data;
-  } catch (error) {
-    console.error(`Error al actualizar jefe de área con ID ${id}:`, error);
-    throw error;
-  }
-};
-
-const deleteJefeArea = async (id) => {
-  try {
-    await api.delete(`/jefes-area/${id}/`);
-    return { success: true };
-  } catch (error) {
-    console.error(`Error al eliminar jefe de área con ID ${id}:`, error);
-    throw error;
-  }
-};
-
-const getInvestigadoresPorJefeArea = async (id) => {
-  try {
-    const response = await api.get(`/jefes-area/${id}/investigadores/`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error al obtener investigadores del jefe de área ${id}:`, error);
-    throw error;
-  }
-};
-
-const getEstadisticasJefeArea = async (id) => {
-  try {
-    const response = await api.get(`/jefes-area/${id}/estadisticas/`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error al obtener estadísticas del jefe de área ${id}:`, error);
-    throw error;
-  }
-};
+import api from '../apiConfig';
 
 export const jefeareaService = {
-  getJefesArea,
-  getJefeArea,
-  createJefeArea,
-  updateJefeArea,
-  deleteJefeArea,
-  getInvestigadoresPorJefeArea,
-  getEstadisticasJefeArea,
-};
+  /**
+   * Obtener todos los jefes de área con paginación opcional
+   */
+  getJefesAreas: async (page = 1, pageSize = 10, params = {}) => {
+    try {
+      const response = await api.get('/jefesareas/', {
+        params: {
+          page,
+          page_size: pageSize,
+          ...params
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener jefes de área:', error);
+      throw error;
+    }
+  },
 
-export default jefeareaService;
+  /**
+   * Obtener un jefe de área por su ID
+   */
+  getJefeAreaById: async (id) => {
+    try {
+      const response = await api.get(`/jefesareas/${id}/`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener jefe de área con ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Crear un nuevo jefe de área
+   */
+  createJefeArea: async (jefeAreaData) => {
+    try {
+      const response = await api.post('/jefesareas/', jefeAreaData);
+      return response.data;
+    } catch (error) {
+      console.error('Error al crear jefe de área:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Actualizar un jefe de área existente
+   */
+  updateJefeArea: async (id, jefeAreaData) => {
+    try {
+      const response = await api.patch(`/jefesareas/${id}/`, jefeAreaData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al actualizar jefe de área con ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Eliminar un jefe de área
+   */
+  deleteJefeArea: async (id) => {
+    try {
+      const response = await api.delete(`/jefesareas/${id}/`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al eliminar jefe de área con ID ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Obtener jefes de área activos
+   */
+  getJefesAreasActivos: async () => {
+    try {
+      const response = await api.get('/jefesareas/', {
+        params: {
+          activo: true,
+          page_size: 1000
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener jefes de área activos:', error);
+      throw error;
+    }
+  }
+};

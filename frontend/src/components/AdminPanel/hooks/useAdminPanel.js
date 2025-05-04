@@ -10,6 +10,13 @@ import { especialidadService } from "../../../api/services/especialidadService";
 import { unidadService } from "../../../api/services/unidadService";
 import { lineaService } from "../../../api/services/lineaService";
 import { nivelService } from "../../../api/services/nivelService";
+import { tipoestudianteService } from "../../../api/services/tipoestudianteService";
+import { roleventoService } from "../../../api/services/roleventoService";
+import { jefeareaService } from "../../../api/services/jefeareaService";
+import { tipoherramientaService } from "../../../api/services/tipoherramientaService";
+import { herramientaService } from "../../../api/services/herramientaService";
+import { tipoeventoService } from "../../../api/services/tipoeventoService";
+import { areaService } from "../../../api/services/areaService"; // Importamos el servicio de áreas
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -30,6 +37,13 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [unidades, setUnidades] = useState([]);
   const [lineas, setLineas] = useState([]);
   const [niveles, setNiveles] = useState([]);
+  const [tiposestudiante, setTiposestudiante] = useState([]);
+  const [roleventos, setRoleventos] = useState([]);
+  const [jefesareas, setJefesareas] = useState([]);
+  const [tipoherramientas, setTipoherramientas] = useState([]);
+  const [herramientas, setHerramientas] = useState([]);
+  const [tiposeventos, setTiposeventos] = useState([]);
+  const [areas, setAreas] = useState([]); // Nuevo estado para áreas
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -164,6 +178,105 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setNiveles([]);
             }
             break;
+          case "roleventos":
+            try {
+              data = await roleventoService.getRolEventos(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setRoleventos(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar roles de eventos: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setRoleventos([]);
+            }
+            break;
+          case "tiposestudiante":
+            try {
+              data = await tipoestudianteService.getTiposEstudiante(
+                page,
+                pageSize,
+                filterOptions
+              );
+              console.log("Datos recibidos de tipos estudiante:", data); 
+              setTiposestudiante(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar tipos de estudiante: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setTiposestudiante([]);
+            }
+            break;
+          case "jefesareas":
+            try {
+              data = await jefeareaService.getJefesAreas(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setJefesareas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar jefes de área: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setJefesareas([]);
+            }
+            break;
+          case "tipoherramientas":
+            try {
+              data = await tipoherramientaService.getTiposHerramienta(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setTipoherramientas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar tipos de herramienta: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setTipoherramientas([]);
+            }
+            break;
+          case "herramientas":
+            try {
+              data = await herramientaService.getHerramientas(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setHerramientas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar herramientas: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setHerramientas([]);
+            }
+            break;
+          case "tiposeventos":
+            try {
+              data = await tipoeventoService.getTiposEvento(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setTiposeventos(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar tipos de evento: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setTiposeventos([]);
+            }
+            break;
+          case "areas": // Nuevo caso para áreas
+            try {
+              data = await areaService.getAreas(
+                page, 
+                pageSize,
+                filterOptions
+              );
+              setAreas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar áreas: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setAreas([]);
+            }
+            break;
           default:
             throw new Error("Recurso no soportado");
         }
@@ -272,6 +385,13 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     unidades,
     lineas,
     niveles,
+    tiposestudiante,
+    roleventos,
+    jefesareas,
+    tipoherramientas,
+    herramientas,
+    tiposeventos,
+    areas, // Exponemos el nuevo estado de áreas
     isMobile,
     currentPage,
     itemsPerPage,

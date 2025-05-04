@@ -9,5 +9,11 @@ export { default as EspecialidadForm } from './EspecialidadForm';
 export { default as UnidadForm } from './UnidadForm';
 export { default as LineaForm } from './LineaForm';
 export { default as NivelForm } from './NivelForm';
-
+export { default as TipoEstudianteForm } from './TipoEstudianteForm';
+export { default as RoleventoForm } from './RoleventoForm';
+export { default as JefeareaForm } from './JefeareaForm';
+export { default as TipoHerramientaForm } from './TipoHerramientaForm';
 export { default as DeleteConfirmation } from './DeleteConfirmation';
+export { default as HerramientaForm } from './HerramientaForm';
+export { default as TipoEventoForm } from './TipoEventoForm';
+export { default as AreaForm } from './AreaForm';

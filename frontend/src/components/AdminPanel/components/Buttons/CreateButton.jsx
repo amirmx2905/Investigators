@@ -49,6 +49,34 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "nivel";
       label = "Nivel";
       break;
+    case "tiposestudiante":
+      type = "tipoestudiante";
+      label = "Tipo de Estudiante";
+      break;
+    case "roleventos":
+      type = "rolevento";
+      label = "Rol de Evento";
+      break;
+    case "jefesareas":
+      type = "jefearea";
+      label = "Jefe de Área";
+      break;
+    case "tipoherramientas":
+      type = "tipoherramienta";
+      label = "Tipo de Herramienta";
+      break;
+    case "herramientas":
+      type = "herramienta";
+      label = "Herramienta";
+      break;
+      case "tiposeventos":
+      type = "tipoevento";
+      label = "Tipo de Evento";
+      break;
+    case "areas":
+      type = "area";
+      label = "Área";
+      break;
     default:
       type = "";
       label = "";

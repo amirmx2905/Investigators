@@ -19,7 +19,20 @@ const ContentDisplay = ({
   handlePageChange,
 }) => {
   // Lista de módulos que solo usan tarjetas
-  const cardsOnlyModules = ["carreras","especialidades","unidades","lineas","niveles"]; // Alan, aquí puedes agregar más módulos en el futuro  
+  const cardsOnlyModules = [
+    "carreras",
+    "especialidades",
+    "unidades",
+    "lineas",
+    "niveles",
+    "tiposestudiante",
+    "roleventos",
+    "jefesareas",
+    "tipoherramientas",
+    "herramientas",
+    "tiposeventos", // Tipos de eventos
+    "areas" // Añadimos áreas a la lista de módulos que solo usan tarjetas
+  ]; 
 
   const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
 
@@ -45,6 +58,13 @@ const ContentDisplay = ({
         unidades={activeTab === "unidades" ? items || [] : []}
         lineas={activeTab === "lineas" ? items || [] : []}
         niveles={activeTab === "niveles" ? items || [] : []}
+        tiposestudiantes={activeTab === "tiposestudiantes" ? items || [] : []}
+        roleventos={activeTab === "roleventos" ? items || [] : []}
+        jefesareas={activeTab === "jefesareas" ? items || [] : []} 
+        tipoherramientas={activeTab === "tipoherramientas" ? items || [] : []}
+        herramientas={activeTab === "herramientas" ? items || [] : []}
+        tiposeventos={activeTab === "tiposeventos" ? items || [] : []} 
+        areas={activeTab === "areas" ? items || [] : []} // Añadimos soporte para áreas
         visibleColumns={columns}
         onEdit={onEdit}
         onDelete={onDelete}

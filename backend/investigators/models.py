@@ -230,7 +230,7 @@ class DetArticulo(models.Model):
     class Meta:
         unique_together = ('articulo', 'investigador')
 
-class TipoEvento(models.Model):
+class TipoEvento(models.Model): 
     nombre = models.CharField(max_length=50)
     
     def __str__(self):

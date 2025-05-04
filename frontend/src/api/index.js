@@ -13,6 +13,7 @@ import { especialidadService } from "./services/especialidadService";
 import { tipoeventoService } from "./services/tipoeventoService";
 import { tipoherramientaService } from "./services/tipoherramientaService";
 import { nivelService } from "./services/nivelService";
+import { tipoestudianteService } from "./services/tipoestudianteService";
 
 
 export {
@@ -31,4 +32,5 @@ export {
   nivelService,
   tipoeventoService,
   tipoherramientaService,
+  tipoestudianteService,
 };
