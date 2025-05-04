@@ -14,7 +14,8 @@ import { tipoestudianteService } from "../../../api/services/tipoestudianteServi
 import { roleventoService } from "../../../api/services/roleventoService";
 import { jefeareaService } from "../../../api/services/jefeareaService";
 import { tipoherramientaService } from "../../../api/services/tipoherramientaService";
-import { herramientaService } from "../../../api/services/herramientaService"; // Nueva importación
+import { herramientaService } from "../../../api/services/herramientaService";
+import { tipoeventoService } from "../../../api/services/tipoeventoService"; // Nueva importación
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -39,7 +40,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [roleventos, setRoleventos] = useState([]);
   const [jefesareas, setJefesareas] = useState([]);
   const [tipoherramientas, setTipoherramientas] = useState([]);
-  const [herramientas, setHerramientas] = useState([]); // Nuevo estado para herramientas
+  const [herramientas, setHerramientas] = useState([]);
+  const [tiposeventos, setTiposeventos] = useState([]); // Nuevo estado para tipos de eventos
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -231,7 +233,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setTipoherramientas([]);
             }
             break;
-          case "herramientas": // Nuevo caso para herramientas
+          case "herramientas":
             try {
               data = await herramientaService.getHerramientas(
                 page,
@@ -243,6 +245,20 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               console.error(`Error al cargar herramientas: ${err.message}`);
               data = { results: [], count: 0, total_pages: 1, current_page: 1 };
               setHerramientas([]);
+            }
+            break;
+          case "tiposeventos": // Nuevo caso para tipos de eventos
+            try {
+              data = await tipoeventoService.getTiposEvento(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setTiposeventos(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar tipos de evento: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setTiposeventos([]);
             }
             break;
           default:
@@ -357,7 +373,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     roleventos,
     jefesareas,
     tipoherramientas,
-    herramientas, // Exponer el nuevo estado de herramientas
+    herramientas,
+    tiposeventos, // Exponer el nuevo estado de tipos de eventos
     isMobile,
     currentPage,
     itemsPerPage,

@@ -1,5 +1,12 @@
 import api from "../apiConfig";
 
+/**
+ * Obtiene la lista de tipos de evento con paginación y filtros opcionales
+ * @param {number} page - Número de página
+ * @param {number} pageSize - Cantidad de elementos por página
+ * @param {object} filters - Filtros a aplicar
+ * @returns {Promise<object>} Respuesta paginada con los tipos de evento
+ */
 const getTiposEvento = async (page = 1, pageSize = 10, filters = {}) => {
   try {
     const params = new URLSearchParams();
@@ -13,7 +20,7 @@ const getTiposEvento = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    const response = await api.get(`/tipos-evento/?${params.toString()}`);
+    const response = await api.get(`/tiposeventos/?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error("Error en getTiposEvento:", error);
@@ -21,9 +28,14 @@ const getTiposEvento = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
+/**
+ * Obtiene un tipo de evento específico por su ID
+ * @param {number} id - ID del tipo de evento
+ * @returns {Promise<object>} Información del tipo de evento
+ */
 const getTipoEvento = async (id) => {
   try {
-    const response = await api.get(`/tipos-evento/${id}/`);
+    const response = await api.get(`/tiposeventos/${id}/`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener tipo de evento con ID ${id}:`, error);
@@ -31,9 +43,14 @@ const getTipoEvento = async (id) => {
   }
 };
 
+/**
+ * Crea un nuevo tipo de evento
+ * @param {object} data - Datos del tipo de evento a crear
+ * @returns {Promise<object>} Tipo de evento creado
+ */
 const createTipoEvento = async (data) => {
   try {
-    const response = await api.post("/tipos-evento/", data);
+    const response = await api.post("/tiposeventos/", data);
     return response.data;
   } catch (error) {
     console.error("Error al crear tipo de evento:", error);
@@ -41,9 +58,15 @@ const createTipoEvento = async (data) => {
   }
 };
 
+/**
+ * Actualiza un tipo de evento existente
+ * @param {number} id - ID del tipo de evento
+ * @param {object} data - Datos actualizados del tipo de evento
+ * @returns {Promise<object>} Tipo de evento actualizado
+ */
 const updateTipoEvento = async (id, data) => {
   try {
-    const response = await api.put(`/tipos-evento/${id}/`, data);
+    const response = await api.put(`/tiposeventos/${id}/`, data);
     return response.data;
   } catch (error) {
     console.error(`Error al actualizar tipo de evento con ID ${id}:`, error);
@@ -51,9 +74,14 @@ const updateTipoEvento = async (id, data) => {
   }
 };
 
+/**
+ * Elimina un tipo de evento
+ * @param {number} id - ID del tipo de evento a eliminar
+ * @returns {Promise<object>} Objeto con el estado de la operación
+ */
 const deleteTipoEvento = async (id) => {
   try {
-    await api.delete(`/tipos-evento/${id}/`);
+    await api.delete(`/tiposeventos/${id}/`);
     return { success: true };
   } catch (error) {
     console.error(`Error al eliminar tipo de evento con ID ${id}:`, error);
@@ -61,13 +89,17 @@ const deleteTipoEvento = async (id) => {
   }
 };
 
-const getEventosPorTipo = async (id) => {
+/**
+ * Obtiene estadísticas de uso de los tipos de evento
+ * @returns {Promise<array>} Estadísticas de tipos de evento
+ */
+const getTipoEventoStats = async () => {
   try {
-    const response = await api.get(`/tipos-evento/${id}/eventos/`);
+    const response = await api.get('/tiposeventos/stats/');
     return response.data;
   } catch (error) {
-    console.error(`Error al obtener eventos del tipo ${id}:`, error);
-    throw error;
+    console.error("Error al obtener estadísticas de tipos de evento:", error);
+    return [];
   }
 };
 
@@ -77,7 +109,7 @@ export const tipoeventoService = {
   createTipoEvento,
   updateTipoEvento,
   deleteTipoEvento,
-  getEventosPorTipo,
+  getTipoEventoStats,
 };
 
 export default tipoeventoService;

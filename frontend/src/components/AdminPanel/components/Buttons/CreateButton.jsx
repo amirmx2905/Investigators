@@ -69,6 +69,10 @@ const CreateButton = ({ activeTab, onClick }) => {
       type = "herramienta";
       label = "Herramienta";
       break;
+      case "tiposeventos":
+      type = "tipoevento";
+      label = "Tipo de Evento";
+      break;
     default:
       type = "";
       label = "";

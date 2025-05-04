@@ -23,7 +23,8 @@ import {
   RoleventoCards,
   JefeareaCards,
   TipoHerramientaCards,
-  HerramientaCards, // Importamos el componente HerramientaCards
+  HerramientaCards,
+  TipoEventoCards, // Importamos el componente TipoEventoCards
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -56,7 +57,8 @@ export const getTabData = (
   roleventos,
   jefesareas,
   tipoherramientas,
-  herramientas, // Añadimos herramientas a los parámetros
+  herramientas,
+  tiposeventos, // Añadimos tiposeventos a los parámetros
   handleEdit,
   handleDeleteClick
 ) => {
@@ -108,8 +110,11 @@ export const getTabData = (
     case "tipoherramientas": 
       type = "tipoherramienta";
       break;
-    case "herramientas": // Añadimos el caso para herramientas
+    case "herramientas": 
       type = "herramienta";
+      break;
+    case "tiposeventos": // Añadimos el caso para tipos de eventos
+      type = "tipoevento";
       break;
     default:
       type = "usuario";
@@ -131,7 +136,8 @@ export const getTabData = (
     roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
     jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"),
     tipoherramientas: sortColumnsByOrder(visibleColumns.tipoherramientas || [], "tipoherramientas"),
-    herramientas: sortColumnsByOrder(visibleColumns.herramientas || [], "herramientas"), // Añadimos herramientas a las columnas ordenadas
+    herramientas: sortColumnsByOrder(visibleColumns.herramientas || [], "herramientas"),
+    tiposeventos: sortColumnsByOrder(visibleColumns.tiposeventos || [], "tiposeventos"), // Añadimos tiposeventos a las columnas ordenadas
   };
 
   const tabConfig = {
@@ -270,12 +276,21 @@ export const getTabData = (
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },
-    herramientas: { // Añadimos la configuración para la pestaña de herramientas
+    herramientas: { 
       title: "Lista de Herramientas",
       items: herramientas || [],
       TableComponent: null,
       CardComponent: HerramientaCards,
       columns: orderedColumns.herramientas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    tiposeventos: { // Añadimos la configuración para la pestaña de tipos de eventos
+      title: "Lista de Tipos de Eventos",
+      items: tiposeventos || [],
+      TableComponent: null,
+      CardComponent: TipoEventoCards,
+      columns: orderedColumns.tiposeventos,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

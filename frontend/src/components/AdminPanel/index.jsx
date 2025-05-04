@@ -18,7 +18,8 @@ import { tipoestudianteService } from "../../api/services/tipoestudianteService"
 import { roleventoService } from "../../api/services/roleventoService";
 import { jefeareaService } from "../../api/services/jefeareaService"; 
 import { tipoherramientaService } from "../../api/services/tipoherramientaService";
-import { herramientaService } from "../../api/services/herramientaService"; // Importar herramientaService
+import { herramientaService } from "../../api/services/herramientaService";
+import { tipoeventoService } from "../../api/services/tipoeventoService"; // Importamos el servicio tipoeventoService
 import { showNotification, copyToClipboard } from "./utils/notificationsUtils";
 import { setupAdminPanelStyles } from "./styles/adminPanelStyles";
 import { getTabData } from "./utils/dataUtils";
@@ -43,7 +44,8 @@ import {
   RoleventoForm,
   JefeareaForm,
   TipoHerramientaForm,
-  HerramientaForm, // Importar HerramientaForm
+  HerramientaForm,
+  TipoEventoForm, // Importamos el formulario TipoEventoForm
   DeleteConfirmation,
 } from "./subcomponents/Forms/forms";
 
@@ -81,7 +83,8 @@ function AdminPanel() {
     roleventos,
     jefesareas,
     tipoherramientas,
-    herramientas, // Añadir herramientas al destructuring
+    herramientas,
+    tiposeventos, // Añadimos tiposeventos al destructuring
     activeTab,
     changeTab,
     refreshData,
@@ -185,8 +188,10 @@ function AdminPanel() {
         await jefeareaService.deleteJefeArea(item.id);
       } else if (type === "tipoherramienta") {
         await tipoherramientaService.deleteTipoHerramienta(item.id);
-      } else if (type === "herramienta") { // Añadir caso para herramienta
+      } else if (type === "herramienta") {
         await herramientaService.deleteHerramienta(item.id);
+      } else if (type === "tipoevento") { // Añadimos caso para eliminar tipo de evento
+        await tipoeventoService.deleteTipoEvento(item.id);
       }
 
       refreshData();
@@ -370,12 +375,21 @@ function AdminPanel() {
             onSuccess={handleFormSuccess}
           />
         );
-      case "herramienta": // Añadir caso para herramienta
+      case "herramienta":
         return (
           <HerramientaForm
             isOpen={isOpen}
             onClose={handleCloseForm}
             herramienta={item}
+            onSuccess={handleFormSuccess}
+          />
+        );
+      case "tipoevento": // Añadimos caso para el formulario de tipo de evento
+        return (
+          <TipoEventoForm
+            isOpen={isOpen}
+            onClose={handleCloseForm}
+            tipoEvento={item}
             onSuccess={handleFormSuccess}
           />
         );
@@ -410,7 +424,8 @@ function AdminPanel() {
     roleventos,
     jefesareas,
     tipoherramientas,
-    herramientas, // Añadir herramientas a getTabData
+    herramientas,
+    tiposeventos, // Añadimos tiposeventos a getTabData
     handleEdit,
     handleDeleteClick
   );
