@@ -229,3 +229,4 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 - [@amirmx2905](https://github.com/amirmx2905)
 - [@WatchfulInk](https://github.com/WatchfulInk)
+- [@SaVa-dev](https://github.com/SaVa-dev)
