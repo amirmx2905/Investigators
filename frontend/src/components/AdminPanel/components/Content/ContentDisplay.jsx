@@ -28,7 +28,8 @@ const ContentDisplay = ({
     "tiposestudiante",
     "roleventos",
     "jefesareas",
-    "tipoherramientas" // Añadir tipoherramientas a la lista de módulos que solo usan tarjetas
+    "tipoherramientas",
+    "herramientas" // Añadimos herramientas a la lista de módulos que solo usan tarjetas
   ]; 
 
   const isCardsOnlyModule = cardsOnlyModules.includes(activeTab);
@@ -58,7 +59,8 @@ const ContentDisplay = ({
         tiposestudiantes={activeTab === "tiposestudiantes" ? items || [] : []}
         roleventos={activeTab === "roleventos" ? items || [] : []}
         jefesareas={activeTab === "jefesareas" ? items || [] : []} 
-        tipoherramientas={activeTab === "tipoherramientas" ? items || [] : []} // Añadir soporte para tipoherramientas
+        tipoherramientas={activeTab === "tipoherramientas" ? items || [] : []}
+        herramientas={activeTab === "herramientas" ? items || [] : []} // Añadir soporte para herramientas
         visibleColumns={columns}
         onEdit={onEdit}
         onDelete={onDelete}

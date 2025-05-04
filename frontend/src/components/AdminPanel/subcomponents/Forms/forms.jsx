@@ -14,3 +14,4 @@ export { default as RoleventoForm } from './RoleventoForm';
 export { default as JefeareaForm } from './JefeareaForm';
 export { default as TipoHerramientaForm } from './TipoHerramientaForm';
 export { default as DeleteConfirmation } from './DeleteConfirmation';
+export { default as HerramientaForm } from './HerramientaForm';

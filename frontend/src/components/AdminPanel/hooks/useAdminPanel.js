@@ -13,7 +13,8 @@ import { nivelService } from "../../../api/services/nivelService";
 import { tipoestudianteService } from "../../../api/services/tipoestudianteService";
 import { roleventoService } from "../../../api/services/roleventoService";
 import { jefeareaService } from "../../../api/services/jefeareaService";
-import { tipoherramientaService } from "../../../api/services/tipoherramientaService"; // Nueva importación
+import { tipoherramientaService } from "../../../api/services/tipoherramientaService";
+import { herramientaService } from "../../../api/services/herramientaService"; // Nueva importación
 
 export const useAdminPanel = (initialResource = "usuarios") => {
   const [resource, setResource] = useState(initialResource);
@@ -37,7 +38,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
   const [tiposestudiante, setTiposestudiante] = useState([]);
   const [roleventos, setRoleventos] = useState([]);
   const [jefesareas, setJefesareas] = useState([]);
-  const [tipoherramientas, setTipoherramientas] = useState([]); // Nuevo estado para tipos de herramientas
+  const [tipoherramientas, setTipoherramientas] = useState([]);
+  const [herramientas, setHerramientas] = useState([]); // Nuevo estado para herramientas
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -215,7 +217,7 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               setJefesareas([]);
             }
             break;
-          case "tipoherramientas": // Nuevo caso para tipos de herramientas
+          case "tipoherramientas":
             try {
               data = await tipoherramientaService.getTiposHerramienta(
                 page,
@@ -227,6 +229,20 @@ export const useAdminPanel = (initialResource = "usuarios") => {
               console.error(`Error al cargar tipos de herramienta: ${err.message}`);
               data = { results: [], count: 0, total_pages: 1, current_page: 1 };
               setTipoherramientas([]);
+            }
+            break;
+          case "herramientas": // Nuevo caso para herramientas
+            try {
+              data = await herramientaService.getHerramientas(
+                page,
+                pageSize,
+                filterOptions
+              );
+              setHerramientas(data.results || []);
+            } catch (err) {
+              console.error(`Error al cargar herramientas: ${err.message}`);
+              data = { results: [], count: 0, total_pages: 1, current_page: 1 };
+              setHerramientas([]);
             }
             break;
           default:
@@ -340,7 +356,8 @@ export const useAdminPanel = (initialResource = "usuarios") => {
     tiposestudiante,
     roleventos,
     jefesareas,
-    tipoherramientas, // Exponer el nuevo estado
+    tipoherramientas,
+    herramientas, // Exponer el nuevo estado de herramientas
     isMobile,
     currentPage,
     itemsPerPage,

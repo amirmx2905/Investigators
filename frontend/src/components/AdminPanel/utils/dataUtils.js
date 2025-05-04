@@ -22,7 +22,8 @@ import {
   TipoestudiantesCards,
   RoleventoCards,
   JefeareaCards,
-  TipoHerramientaCards, 
+  TipoHerramientaCards,
+  HerramientaCards, // Importamos el componente HerramientaCards
 } from "../subcomponents/Cards/cards";
 
 export const sortColumnsByOrder = (columns, tabName) => {
@@ -54,7 +55,8 @@ export const getTabData = (
   tiposestudiante,
   roleventos,
   jefesareas,
-  tipoherramientas, 
+  tipoherramientas,
+  herramientas, // Añadimos herramientas a los parámetros
   handleEdit,
   handleDeleteClick
 ) => {
@@ -106,6 +108,9 @@ export const getTabData = (
     case "tipoherramientas": 
       type = "tipoherramienta";
       break;
+    case "herramientas": // Añadimos el caso para herramientas
+      type = "herramienta";
+      break;
     default:
       type = "usuario";
   }
@@ -126,6 +131,7 @@ export const getTabData = (
     roleventos: sortColumnsByOrder(visibleColumns.roleventos || [], "roleventos"),
     jefesareas: sortColumnsByOrder(visibleColumns.jefesareas || [], "jefesareas"),
     tipoherramientas: sortColumnsByOrder(visibleColumns.tipoherramientas || [], "tipoherramientas"),
+    herramientas: sortColumnsByOrder(visibleColumns.herramientas || [], "herramientas"), // Añadimos herramientas a las columnas ordenadas
   };
 
   const tabConfig = {
@@ -261,6 +267,15 @@ export const getTabData = (
       TableComponent: null,
       CardComponent: TipoHerramientaCards,
       columns: orderedColumns.tipoherramientas,
+      onEdit: (item) => handleEdit(type, item),
+      onDelete: (item) => handleDeleteClick(type, item),
+    },
+    herramientas: { // Añadimos la configuración para la pestaña de herramientas
+      title: "Lista de Herramientas",
+      items: herramientas || [],
+      TableComponent: null,
+      CardComponent: HerramientaCards,
+      columns: orderedColumns.herramientas,
       onEdit: (item) => handleEdit(type, item),
       onDelete: (item) => handleDeleteClick(type, item),
     },

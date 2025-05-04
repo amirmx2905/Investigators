@@ -13,3 +13,4 @@ export { default as TipoestudiantesCards } from './TipoestudiantesCards';
 export { default as RoleventoCards } from './RoleventoCards';
 export { default as JefeareaCards } from './JefeareaCards'; 
 export { default as TipoHerramientaCards } from './TipoHerramientaCards'; 
+export { default as HerramientaCards } from './HerramientaCards';
