@@ -6,11 +6,7 @@ function Header({
   menuOpen,
   toggleMenu,
   navigateToHome,
-  navigateToDashboard,
   isAdmin,
-  isAdminPanel,
-  isHomePage,
-  isDashboard,
   handleLogout,
 }) {
   const navLinkClass = ({ isActive }) =>
@@ -23,14 +19,18 @@ function Header({
   return (
     <header className="sticky top-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-blue-900/50">
       <div className="container mx-auto flex justify-between items-center px-4 py-3">
-        {/* Logo */}
-        <h1
-          className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 cursor-pointer"
+        {/* Logo con imagen de favicon */}
+        <div
+          className="flex items-center cursor-pointer"
           onClick={navigateToHome}
           title="Ir a Home"
         >
-          Investigators
-        </h1>
+          <img
+            src="/favicon.svg"
+            alt="Investigators Logo"
+            className="h-8 sm:h-9 mr-2 logo-animation-svg"
+          />
+        </div>
 
         {/* Menú para dispositivos móviles o escritorio */}
         {isMobile ? (
