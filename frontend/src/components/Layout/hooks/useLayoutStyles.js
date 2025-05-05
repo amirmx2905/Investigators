@@ -399,6 +399,55 @@ function useLayoutStyles() {
         transform: translateY(-9px) rotate(-45deg);
       }
       
+      .hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 36px;
+        height: 30px;
+        cursor: pointer;
+        z-index: 110;
+        position: relative;
+        padding: 5px;
+        border-radius: 6px;
+        background: rgba(30, 64, 175, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        transition: all 0.3s ease;
+        margin-right: 8px;
+      }
+      
+      .hamburger-menu:hover {
+        background: rgba(30, 64, 175, 0.25);
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+      }
+      
+      .hamburger-menu.open {
+        background: rgba(30, 64, 175, 0.3);
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.8);
+      }
+      
+      .hamburger-menu span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background: linear-gradient(90deg, #60a5fa, #93c5fd);
+        border-radius: 3px;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+      
+      .hamburger-menu.open span:first-child {
+        transform: translateY(9px) rotate(45deg);
+      }
+      
+      .hamburger-menu.open span:nth-child(2) {
+        opacity: 0;
+        transform: scale(0);
+      }
+      
+      .hamburger-menu.open span:last-child {
+        transform: translateY(-9px) rotate(-45deg);
+      }
+      
       .menu-glitch-effect {
         overflow: hidden;
         position: relative;

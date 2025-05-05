@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function MobileMenu({
   isOpen,
   isAdmin,
   isAdminPanel,
-  // eslint-disable-next-line no-unused-vars
   isHomePage,
   isDashboard,
   onLogout,
@@ -15,9 +14,9 @@ function MobileMenu({
   return (
     <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
       {isOpen && <div className="scanline"></div>}
-      <div className="flex flex-col items-center space-y-8 px-6 mt-4">
+      <div className="flex flex-col items-center px-6 mt-10 w-full">
         <h2
-          className={`text-xl font-bold mb-6 relative ${
+          className={`text-xl font-bold mb-8 relative ${
             isOpen ? "menu-glitch-effect" : ""
           }`}
           data-text="MENU"
@@ -25,41 +24,63 @@ function MobileMenu({
           MENU
         </h2>
 
-        {/* Botón de Dashboard */}
-        {!isDashboard && (
-          <button
+        <nav className="flex flex-col w-full space-y-5 items-center">
+          {/* Enlaces de navegación */}
+          <NavLink
+            to="/home"
+            onClick={onNavigateBack}
+            className={({ isActive }) =>
+              `py-3 px-4 transition-colors border-b-2 text-center w-full ${
+                isActive || isHomePage
+                  ? "text-blue-400 border-blue-500 bg-blue-900/20"
+                  : "text-gray-300 hover:text-white border-transparent hover:border-blue-500/50 hover:bg-blue-900/10"
+              }`
+            }
+          >
+            Inicio
+          </NavLink>
+
+          <NavLink
+            to="/dashboard"
             onClick={onNavigateToDashboard}
-            className="w-full bg-indigo-600/80 hover:bg-indigo-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm text-center"
+            className={({ isActive }) =>
+              `py-3 px-4 transition-colors border-b-2 text-center w-full ${
+                isActive || isDashboard
+                  ? "text-blue-400 border-blue-500 bg-blue-900/20"
+                  : "text-gray-300 hover:text-white border-transparent hover:border-blue-500/50 hover:bg-blue-900/10"
+              }`
+            }
           >
             Dashboard
-          </button>
-        )}
+          </NavLink>
 
-        {/* Botón de Panel Admin */}
-        {isAdmin &&
-          (isAdminPanel ? (
-            <button
-              onClick={onNavigateBack}
-              className="w-full bg-blue-600/80 hover:bg-blue-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm text-center"
-            >
-              Regresar
-            </button>
-          ) : (
-            <button
+          {isAdmin && (
+            <NavLink
+              to="/admin"
               onClick={onNavigateToAdmin}
-              className="w-full bg-blue-600/80 hover:bg-blue-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect glowing-border backdrop-blur-sm text-center"
+              className={({ isActive }) =>
+                `py-3 px-4 transition-colors border-b-2 text-center w-full ${
+                  isActive || isAdminPanel
+                    ? "text-blue-400 border-blue-500 bg-blue-900/20"
+                    : "text-gray-300 hover:text-white border-transparent hover:border-blue-500/50 hover:bg-blue-900/10"
+                }`
+              }
             >
-              Panel de Control
-            </button>
-          ))}
+              Panel Admin
+            </NavLink>
+          )}
 
-        {/* Botón de Logout */}
-        <button
-          onClick={onLogout}
-          className="w-full bg-gray-600/80 hover:bg-gray-500/90 text-white py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 button-hover-effect backdrop-blur-sm text-center"
-        >
-          Cerrar Sesión
-        </button>
+          {/* Separador */}
+          <div className="border-t border-blue-900/30 my-2 w-full"></div>
+
+          {/* Botón de cerrar sesión */}
+          <button
+            onClick={onLogout}
+            className="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white px-4 rounded-md transition-colors mt-4 py-3 text-center w-full"
+          >
+            Cerrar Sesión
+          </button>
+        </nav>
       </div>
     </div>
   );
