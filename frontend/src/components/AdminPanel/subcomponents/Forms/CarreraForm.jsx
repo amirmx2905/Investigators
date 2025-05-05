@@ -52,10 +52,8 @@ function CarreraForm({ isOpen, onClose, carrera = null, onSuccess }) {
     try {
       if (isEdit) {
         await carreraService.updateCarrera(carrera.id, formData);
-        showNotification("Carrera actualizada correctamente");
       } else {
         await carreraService.createCarrera(formData);
-        showNotification("Carrera creada correctamente");
       }
       onSuccess();
       onClose();

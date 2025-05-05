@@ -54,7 +54,13 @@ function LineaForm({ isOpen, onClose, linea = null, onSuccess }) {
     setError(null);
 
     try {
-      const dataToSend = { ...formData };
+      const dataToSend = {
+        nombre: formData.nombre,
+        reconocimiento_institucional: formData.reconocimiento_institucional,
+      };
+      if (!linea) {
+        dataToSend.investigadores = formData.investigadores;
+      }
       console.log("Datos a enviar:", dataToSend);
 
       let result;

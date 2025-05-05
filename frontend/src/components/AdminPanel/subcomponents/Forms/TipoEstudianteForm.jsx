@@ -52,10 +52,8 @@ function TipoEstudianteForm({ isOpen, onClose, tipoestudiante = null, onSuccess 
     try {
       if (isEdit) {
         await tipoestudianteService.updateTipoEstudiante(tipoestudiante.id, formData);
-        showNotification("Tipo de estudiante actualizado correctamente");
       } else {
         await tipoestudianteService.createTipoEstudiante(formData);
-        showNotification("Tipo de estudiante creado correctamente");
       }
       onSuccess();
       onClose();

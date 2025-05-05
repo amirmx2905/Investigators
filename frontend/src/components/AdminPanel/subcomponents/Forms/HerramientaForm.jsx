@@ -86,10 +86,8 @@ function HerramientaForm({ isOpen, onClose, herramienta = null, onSuccess }) {
     try {
       if (isEdit) {
         await herramientaService.updateHerramienta(herramienta.id, formData);
-        showNotification("Herramienta actualizada correctamente");
       } else {
         await herramientaService.createHerramienta(formData);
-        showNotification("Herramienta creada correctamente");
       }
       onSuccess();
       onClose();

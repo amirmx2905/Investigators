@@ -52,10 +52,8 @@ function EspecialidadForm({ isOpen, onClose, especialidad = null, onSuccess }) {
     try {
       if (isEdit) {
         await especialidadService.updateEspecialidad(especialidad.id, formData);
-        showNotification("Especialidad actualizada correctamente");
       } else {
         await especialidadService.createEspecialidad(formData);
-        showNotification("Especialidad creada correctamente");
       }
       onSuccess();
       onClose();
