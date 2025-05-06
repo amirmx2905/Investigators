@@ -3,9 +3,10 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
+    # URL de administración
     path('admin/', admin.site.urls),
+    # Endpoints de la API
     path('', include('investigators.urls')),  
-
     # Endpoints de OpenAPI 3
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Opcional: UI de Swagger
