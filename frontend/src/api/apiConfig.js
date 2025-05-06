@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// Crear una instancia de axios con la URL base
+// Instancia de axios con la URL base
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
-  withCredentials: true, // Para manejar cookies si tu API las usa
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost/api',
+  withCredentials: true, // Pa manejar las cookies
 });
 
 export default api;

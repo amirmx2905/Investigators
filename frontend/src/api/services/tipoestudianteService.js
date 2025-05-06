@@ -13,7 +13,6 @@ const getTiposEstudiante = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    // Cambia "tipos-estudiante" por "tiposestudiante" para que coincida con tu URL de backend
     const response = await api.get(`/tiposestudiante/?${params.toString()}`);
     return response.data;
   } catch (error) {
@@ -22,7 +21,6 @@ const getTiposEstudiante = async (page = 1, pageSize = 10, filters = {}) => {
   }
 };
 
-// También hay que cambiar las demás URLs en este archivo
 const getTipoEstudiante = async (id) => {
   try {
     const response = await api.get(`/tiposestudiante/${id}/`);

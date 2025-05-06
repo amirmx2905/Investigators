@@ -17,7 +17,6 @@ const getNiveles = async (page = 1, pageSize = 10, filters = {}) => {
     return response.data;
   } catch (error) {
     console.error("Error en getNiveles:", error);
-    // Devolver un objeto vacío para evitar errores en cascada
     return { results: [], count: 0, total_pages: 1, current_page: 1 };
   }
 };
