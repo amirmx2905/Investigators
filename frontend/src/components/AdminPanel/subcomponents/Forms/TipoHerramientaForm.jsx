@@ -54,10 +54,8 @@ function TipoHerramientaForm({ isOpen, onClose, tipoHerramienta = null, onSucces
       
       if (isEdit) {
         await tipoherramientaService.updateTipoHerramienta(tipoHerramienta.id, formData);
-        showNotification("Tipo de herramienta actualizado correctamente");
       } else {
         await tipoherramientaService.createTipoHerramienta(formData);
-        showNotification("Tipo de herramienta creado correctamente");
       }
       onSuccess();
       onClose();

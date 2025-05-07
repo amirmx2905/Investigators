@@ -71,6 +71,13 @@ function HerramientaForm({ isOpen, onClose, herramienta = null, onSuccess }) {
       return false;
     }
     
+    // Validar que sea un valor numérico válido
+    const tipoId = parseInt(formData.tipo_herramienta_id, 10);
+    if (isNaN(tipoId) || tipoId <= 0) {
+      setError("El tipo de herramienta seleccionado no es válido");
+      return false;
+    }
+    
     return true;
   };
 
@@ -84,12 +91,16 @@ function HerramientaForm({ isOpen, onClose, herramienta = null, onSuccess }) {
 
     setLoading(true);
     try {
+      // Crear una copia del objeto formData con tipo_herramienta_id como número entero
+      const formDataToSend = {
+        ...formData,
+        tipo_herramienta_id: parseInt(formData.tipo_herramienta_id, 10)
+      };
+
       if (isEdit) {
-        await herramientaService.updateHerramienta(herramienta.id, formData);
-        showNotification("Herramienta actualizada correctamente");
+        await herramientaService.updateHerramienta(herramienta.id, formDataToSend);
       } else {
-        await herramientaService.createHerramienta(formData);
-        showNotification("Herramienta creada correctamente");
+        await herramientaService.createHerramienta(formDataToSend);
       }
       onSuccess();
       onClose();

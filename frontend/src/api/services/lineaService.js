@@ -12,8 +12,6 @@ const getLineas = async (page = 1, pageSize = 10, filters = {}) => {
         params.append(key, value);
       }
     });
-
-    // Intenta con esta URL en lugar de "lineas-investigacion"
     const response = await api.get(`/lineas/?${params.toString()}`);
     return response.data;
   } catch (error) {

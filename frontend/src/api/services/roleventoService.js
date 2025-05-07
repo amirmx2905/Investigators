@@ -18,14 +18,12 @@ const getRolEventos = async (page = 1, pageSize = 10, filters = {}) => {
       }
     });
 
-    // URL correcta sin duplicar "api"
     const response = await api.get(`/roleseventos/?${params.toString()}`);
     console.log("Respuesta de getRolEventos:", response.data);
 
     return response.data;
   } catch (error) {
     console.error("Error en getRolEventos:", error);
-    // Información detallada para depuración
     if (error.response) {
       console.error(`Error ${error.response.status}: ${error.response.statusText}`);
       console.error("Datos del error:", error.response.data);
@@ -34,7 +32,6 @@ const getRolEventos = async (page = 1, pageSize = 10, filters = {}) => {
     } else {
       console.error("Error al configurar la solicitud:", error.message);
     }
-    // Devolver estructura consistente en caso de error para evitar errores en cascada
     return { results: [], count: 0, total_pages: 1, current_page: 1 };
   }
 };
@@ -93,7 +90,6 @@ const deleteRolEvento = async (id) => {
   }
 };
 
-// Obtiene estadísticas de roles de eventos (usa el endpoint personalizado en el ViewSet)
 const getRolEventoStats = async () => {
   try {
     const response = await api.get('/roleseventos/stats/');
