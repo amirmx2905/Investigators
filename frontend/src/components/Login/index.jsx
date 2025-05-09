@@ -36,7 +36,7 @@ function Login() {
         />
         
         {/* Componente de importación JSON */}
-        <JsonImport />
+        {/*<JsonImport />*/}
       </div>
       
       <LoginToast />
