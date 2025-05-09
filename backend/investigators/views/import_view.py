@@ -11,7 +11,8 @@ from investigators.models import (
     Unidad, Area, Especialidad, NivelEducacion, NivelSNII, Carrera,
     TipoEstudiante, Investigador, JefeArea, Estudiante, Linea, DetLinea,
     TipoHerramienta, Herramienta, Proyecto, DetProyecto, DetHerramienta,
-    Articulo, DetArticulo, TipoEvento, RolEvento, Evento, DetEvento, Usuario
+    Articulo, DetArticulo, TipoEvento, RolEvento, Evento, DetEvento, Usuario,
+    PuntajeInvestigador
 )
 
 MODEL_MAPPING = {
@@ -39,6 +40,7 @@ MODEL_MAPPING = {
     'investigators.evento': Evento,
     'investigators.detevento': DetEvento,
     'investigators.usuario': Usuario,
+    'investigators.puntajeinvestigador': PuntajeInvestigador,
 }
 
 # Define relaciones entre modelos para la importación
@@ -96,6 +98,9 @@ MODEL_RELATIONSHIPS = {
         'investigador': ('investigators.investigador', Investigador),
         'estudiante': ('investigators.estudiante', Estudiante),
     },
+    'investigators.puntajeinvestigador': {
+        'investigador': ('investigators.investigador', Investigador),
+    },
 }
 
 class JSONImportView(APIView):
@@ -129,9 +134,18 @@ class JSONImportView(APIView):
                 return Response({"detail": "No se recibió ningún archivo"}, status=status.HTTP_400_BAD_REQUEST)
             
             try:
-                data = json.load(json_file)
-            except json.JSONDecodeError:
-                return Response({"detail": "El archivo no contiene JSON válido"}, status=status.HTTP_400_BAD_REQUEST)
+                # Decodificar el contenido del archivo
+                content = json_file.read().decode('utf-8')
+                # Eliminar comentarios de tipo línea si existen (como en el archivo test_data.json)
+                content_lines = content.split('\n')
+                cleaned_lines = [line for line in content_lines if not line.strip().startswith('//')]
+                cleaned_content = '\n'.join(cleaned_lines)
+                
+                data = json.loads(cleaned_content)
+            except json.JSONDecodeError as e:
+                return Response({
+                    "detail": f"El archivo no contiene JSON válido: {str(e)}"
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             if not isinstance(data, list):
                 return Response({"detail": "El JSON debe ser una lista de objetos"}, status=status.HTTP_400_BAD_REQUEST)
@@ -174,9 +188,11 @@ class JSONImportView(APIView):
                 'investigators.detarticulo',
                 'investigators.detevento',
                 'investigators.usuario',
+                'investigators.puntajeinvestigador',
             ]
             
             imported_counts = {}
+            skipped_items = {}
             
             # Importar en el orden correcto
             for model_name in import_order:
@@ -189,45 +205,66 @@ class JSONImportView(APIView):
                     
                 items = objects_by_model[model_name]
                 imported_count = 0
+                skipped_count = 0
                 
                 for item in items:
-                    pk = item['pk']
-                    fields = item['fields'].copy()
-                    
-                    # Procesar las relaciones (ForeignKey)
-                    if model_name in MODEL_RELATIONSHIPS:
-                        relationships = MODEL_RELATIONSHIPS[model_name]
-                        for field_name, (related_model_name, RelatedModel) in relationships.items():
-                            if field_name in fields and fields[field_name] is not None:
-                                try:
-                                    # Buscar la instancia relacionada por su ID
-                                    related_id = fields[field_name]
-                                    related_instance = RelatedModel.objects.get(pk=related_id)
-                                    fields[field_name] = related_instance
-                                except RelatedModel.DoesNotExist:
-                                    # Si no existe la relación, establece None o maneja según sea necesario
-                                    fields[field_name] = None
-                    
-                    # Verificar si el objeto ya existe
-                    existing_obj = Model.objects.filter(pk=pk).first()
-                    
-                    if existing_obj:
-                        # Actualizar objeto existente
-                        for field_name, value in fields.items():
-                            setattr(existing_obj, field_name, value)
-                        existing_obj.save()
-                    else:
-                        # Crear nuevo objeto
-                        Model.objects.create(id=pk, **fields)
-                    
-                    imported_count += 1
+                    try:
+                        pk = item['pk']
+                        fields = item['fields'].copy()
+                        
+                        # Manejar elipsis (...) en campos que pueden ser resúmenes
+                        for field, value in fields.items():
+                            if value == "…" or value == "{…}":
+                                if field in MODEL_RELATIONSHIPS.get(model_name, {}):
+                                    fields[field] = None
+                                else:
+                                    fields[field] = ""
+                        
+                        # Procesar las relaciones (ForeignKey)
+                        if model_name in MODEL_RELATIONSHIPS:
+                            relationships = MODEL_RELATIONSHIPS[model_name]
+                            for field_name, (related_model_name, RelatedModel) in relationships.items():
+                                if field_name in fields and fields[field_name] is not None:
+                                    try:
+                                        # Buscar la instancia relacionada por su ID
+                                        related_id = fields[field_name]
+                                        related_instance = RelatedModel.objects.get(pk=related_id)
+                                        fields[field_name] = related_instance
+                                    except RelatedModel.DoesNotExist:
+                                        # Si no existe la relación, establece None
+                                        fields[field_name] = None
+                        
+                        # Verificar si el objeto ya existe
+                        existing_obj = Model.objects.filter(pk=pk).first()
+                        
+                        if existing_obj:
+                            # Actualizar objeto existente
+                            for field_name, value in fields.items():
+                                if hasattr(existing_obj, field_name):
+                                    setattr(existing_obj, field_name, value)
+                            existing_obj.save()
+                        else:
+                            # Crear nuevo objeto
+                            Model.objects.create(id=pk, **fields)
+                        
+                        imported_count += 1
+                    except Exception as e:
+                        skipped_count += 1
+                        if model_name not in skipped_items:
+                            skipped_items[model_name] = []
+                        skipped_items[model_name].append(f"ID {pk}: {str(e)}")
                 
                 imported_counts[model_name] = imported_count
             
-            return Response({
+            response_data = {
                 "detail": "Importación completada con éxito",
                 "imported_counts": imported_counts
-            }, status=status.HTTP_201_CREATED)
+            }
+            
+            if skipped_items:
+                response_data["skipped_items"] = skipped_items
+                
+            return Response(response_data, status=status.HTTP_201_CREATED)
             
         except Exception as e:
             import traceback
